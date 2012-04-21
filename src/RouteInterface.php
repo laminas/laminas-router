@@ -23,13 +23,13 @@ namespace Zend\Mvc\Router;
 use Zend\Stdlib\RequestDescription as Request;
 
 /**
- * Route interface.
+ * RouteInterface interface.
  *
  * @package    Zend_Mvc_Router
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface Route
+interface RouteInterface
 {
     /**
      * Priority used for route stacks.
