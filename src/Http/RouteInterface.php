@@ -18,12 +18,23 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-namespace Zend\Mvc\Router;
+namespace Zend\Mvc\Router\Http;
+
+use Zend\Mvc\Router\RouteInterface as BaseRoute;
 
 /**
+ * Tree specific route interface.
+ * 
  * @package    Zend_Mvc_Router
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface Exception
-{}
+interface RouteInterface extends BaseRoute
+{
+    /**
+     * Get a list of parameters used while assembling.
+     * 
+     * @return array
+     */
+    public function getAssembledParams();
+}
