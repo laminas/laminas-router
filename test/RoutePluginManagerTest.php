@@ -19,49 +19,25 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-namespace ZendTest\Mvc\Router\TestAsset;
+namespace ZendTest\Mvc\Router;
 
-use Zend\Mvc\Router\RouteInterface;
-use Zend\Mvc\Router\RouteMatch;
-use Zend\Stdlib\RequestInterface;
+use Zend\Mvc\Router\RoutePluginManager,
+    PHPUnit_Framework_TestCase as TestCase;
 
 /**
- * Dummy route.
- *
  * @category   Zend
  * @package    Zend_Mvc_Router
  * @subpackage UnitTests
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @group      Zend_Router
  */
-class DummyRouteWithParam extends DummyRoute
+class RoutePluginManagerTest extends TestCase
 {
-    /**
-     * match(): defined by RouteInterface interface.
-     *
-     * @see    Route::match()
-     * @param  RequestInterface $request
-     * @return RouteMatch
-     */
-    public function match(RequestInterface $request)
+    public function testLoadNonExistentRoute()
     {
-        return new RouteMatch(array('foo' => 'bar'));
-    }
-    
-    /**
-     * assemble(): defined by RouteInterface interface.
-     *
-     * @see    Route::assemble()
-     * @param  array $params
-     * @param  array $options
-     * @return mixed
-     */
-    public function assemble(array $params = null, array $options = null)
-    {
-        if (isset($params['foo'])) {
-            return $params['foo'];
-        }
-        
-        return '';
+        $routes = new RoutePluginManager();
+        $this->setExpectedException('Zend\ServiceManager\Exception\ServiceNotFoundException');
+        $routes->get('foo');
     }
 }
