@@ -18,50 +18,23 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-/**
- * @namespace
- */
-namespace Zend\Mvc\Router;
+namespace Zend\Mvc\Router\Http;
+
+use Zend\Mvc\Router\RouteInterface as BaseRoute;
 
 /**
+ * Tree specific route interface.
+ * 
  * @package    Zend_Mvc_Router
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface RouteStack extends Route
+interface RouteInterface extends BaseRoute
 {
     /**
-     * Add a route to the stack.
+     * Get a list of parameters used while assembling.
      * 
-     * @param  string  $name
-     * @param  mixed   $route
-     * @param  integer $priority
-     * @return RouteStack
+     * @return array
      */
-    public function addRoute($name, $route, $priority = null);
-
-    /**
-     * Add multiple routes to the stack.
-     * 
-     * @param  array|Traversable $routes
-     * @return RouteStack
-     */
-    public function addRoutes($routes);
-
-    /**
-     * Remove a route from the stack.
-     * 
-     * @param  string $name
-     * @return RouteStack
-     */
-    public function removeRoute($name);
-
-    /**
-     * Remove all routes from the stack and set new ones.
-     * 
-     * @param  array|Traversable $routes
-     * @return RouteStack
-     */
-    public function setRoutes($routes);
+    public function getAssembledParams();
 }
-

@@ -14,30 +14,30 @@
  *
  * @category   Zend
  * @package    Zend_Mvc_Router
+ * @subpackage UnitTests
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-/**
- * @namespace
- */
-namespace Zend\Mvc\Router\Http;
+namespace ZendTest\Mvc\Router;
 
-use Zend\Mvc\Router\Route as BaseRoute;
+use Zend\Mvc\Router\RoutePluginManager,
+    PHPUnit_Framework_TestCase as TestCase;
 
 /**
- * Tree specific route interface.
- * 
+ * @category   Zend
  * @package    Zend_Mvc_Router
+ * @subpackage UnitTests
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @group      Zend_Router
  */
-interface Route extends BaseRoute
+class RoutePluginManagerTest extends TestCase
 {
-    /**
-     * Get a list of parameters used while assembling.
-     * 
-     * @return array
-     */
-    public function getAssembledParams();
+    public function testLoadNonExistentRoute()
+    {
+        $routes = new RoutePluginManager();
+        $this->setExpectedException('Zend\ServiceManager\Exception\ServiceNotFoundException');
+        $routes->get('foo');
+    }
 }
