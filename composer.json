@@ -14,18 +14,20 @@
     },
     "require": {
         "php": "^5.5 || ^7.0",
-        "zendframework/zend-http": "~2.5",
-        "zendframework/zend-servicemanager": "~2.5",
-        "zendframework/zend-stdlib": "^2.7.5"
+        "container-interop/container-interop": "^1.1",
+        "zendframework/zend-http": "^2.5",
+        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
+        "zendframework/zend-stdlib": "^2.7.5 || ^3.0"
     },
     "require-dev": {
-        "zendframework/zend-console": "~2.5",
-        "zendframework/zend-filter": "~2.5",
-        "zendframework/zend-i18n": "~2.5",
-        "zendframework/zend-uri": "~2.5",
-        "zendframework/zend-validator": "~2.5",
+        "zendframework/zend-console": "^2.6",
+        "zendframework/zend-filter": "^2.6.1",
+        "zendframework/zend-i18n": "^2.6",
+        "zendframework/zend-uri": "^2.5",
+        "zendframework/zend-validator": "^2.6",
         "fabpot/php-cs-fixer": "1.7.*",
-        "phpunit/PHPUnit": "~4.0"
+        "phpunit/PHPUnit": "^4.5",
+        "sebastian/version": "^1.0.4"
     },
     "suggest": {
         "zendframework/zend-console": "Zend\\Console component",
@@ -33,17 +35,26 @@
         "zendframework/zend-i18n": "Zend\\I18n component for translatable segments",
         "zendframework/zend-validator": "Zend\\Validator component"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "2.6-dev",
-            "dev-develop": "3.0-dev"
+            "dev-master": "2.7-dev",
+            "dev-develop": "2.8-dev"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "ZendTest\\Mvc\\Router\\": "test/"
         }
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "upload-coverage": "coveralls",
+        "cs-check": "php-cs-fixer --version && php-cs-fixer fix -v --diff --dry-run",
+        "cs-fix": "php-cs-fixer fix -v",
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-clover clover.xml"
     }
 }
