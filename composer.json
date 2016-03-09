@@ -31,15 +31,18 @@
         "sebastian/version": "^1.0.4"
     },
     "suggest": {
-        "zendframework/zend-console": "Zend\\Console component",
-        "zendframework/zend-filter": "Zend\\Filter component",
-        "zendframework/zend-i18n": "Zend\\I18n component for translatable segments",
-        "zendframework/zend-validator": "Zend\\Validator component"
+        "zendframework/zend-console": "^2.6, if using console routing",
+        "zendframework/zend-filter": "^2.6.1, if using console routing",
+        "zendframework/zend-i18n": "^2.6, if defining translatable HTTP path segments",
+        "zendframework/zend-validator": "^2.6, if using console routing"
     },
     "extra": {
         "branch-alias": {
             "dev-master": "2.7-dev",
             "dev-develop": "2.8-dev"
+        },
+        "zf": {
+            "component": "Zend\\Mvc\\Router"
         }
     },
     "autoload-dev": {
