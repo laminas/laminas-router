@@ -27,7 +27,10 @@ class SimpleRouteStackTest extends TestCase
 
     public function testAddRoutesWithInvalidArgument()
     {
-        $this->setExpectedException('Zend\Router\Exception\InvalidArgumentException', 'addRoutes expects an array or Traversable set of routes');
+        $this->setExpectedException(
+            'Zend\Router\Exception\InvalidArgumentException',
+            'addRoutes expects an array or Traversable set of routes'
+        );
         $stack = new SimpleRouteStack();
         $stack->addRoutes('foo');
     }
@@ -54,7 +57,10 @@ class SimpleRouteStackTest extends TestCase
 
     public function testSetRoutesWithInvalidArgument()
     {
-        $this->setExpectedException('Zend\Router\Exception\InvalidArgumentException', 'addRoutes expects an array or Traversable set of routes');
+        $this->setExpectedException(
+            'Zend\Router\Exception\InvalidArgumentException',
+            'addRoutes expects an array or Traversable set of routes'
+        );
         $stack = new SimpleRouteStack();
         $stack->setRoutes('foo');
     }
@@ -100,7 +106,10 @@ class SimpleRouteStackTest extends TestCase
 
     public function testAddRouteWithInvalidArgument()
     {
-        $this->setExpectedException('Zend\Router\Exception\InvalidArgumentException', 'Route definition must be an array or Traversable object');
+        $this->setExpectedException(
+            'Zend\Router\Exception\InvalidArgumentException',
+            'Route definition must be an array or Traversable object'
+        );
         $stack = new SimpleRouteStack();
         $stack->addRoute('foo', 'bar');
     }

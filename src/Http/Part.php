@@ -51,8 +51,13 @@ class Part extends TreeRouteStack implements RouteInterface
      * @param  ArrayObject|null   $prototypes
      * @throws Exception\InvalidArgumentException
      */
-    public function __construct($route, $mayTerminate, RoutePluginManager $routePlugins, array $childRoutes = null, ArrayObject $prototypes = null)
-    {
+    public function __construct(
+        $route,
+        $mayTerminate,
+        RoutePluginManager $routePlugins,
+        array $childRoutes = null,
+        ArrayObject $prototypes = null
+    ) {
         $this->routePluginManager = $routePlugins;
 
         if (!$route instanceof RouteInterface) {
@@ -83,7 +88,10 @@ class Part extends TreeRouteStack implements RouteInterface
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
         } elseif (!is_array($options)) {
-            throw new Exception\InvalidArgumentException(__METHOD__ . ' expects an array or Traversable set of options');
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s expects an array or Traversable set of options',
+                __METHOD__
+            ));
         }
 
         if (!isset($options['route'])) {
@@ -154,7 +162,10 @@ class Part extends TreeRouteStack implements RouteInterface
                 }
             }
 
-            if (isset($options['translator']) && !isset($options['locale']) && null !== ($locale = $match->getParam('locale', null))) {
+            if (isset($options['translator'])
+                && !isset($options['locale'])
+                && null !== ($locale = $match->getParam('locale', null))
+            ) {
                 $options['locale'] = $locale;
             }
 

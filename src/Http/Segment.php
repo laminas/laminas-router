@@ -126,7 +126,10 @@ class Segment implements RouteInterface
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
         } elseif (!is_array($options)) {
-            throw new Exception\InvalidArgumentException(__METHOD__ . ' expects an array or Traversable set of options');
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s expects an array or Traversable set of options',
+                __METHOD__
+            ));
         }
 
         if (!isset($options['route'])) {
@@ -169,11 +172,21 @@ class Segment implements RouteInterface
             }
 
             if ($matches['token'] === ':') {
-                if (!preg_match('(\G(?P<name>[^:/{\[\]]+)(?:{(?P<delimiters>[^}]+)})?:?)', $def, $matches, 0, $currentPos)) {
+                if (!preg_match(
+                    '(\G(?P<name>[^:/{\[\]]+)(?:{(?P<delimiters>[^}]+)})?:?)',
+                    $def,
+                    $matches,
+                    0,
+                    $currentPos
+                )) {
                     throw new Exception\RuntimeException('Found empty parameter name');
                 }
 
-                $levelParts[$level][] = ['parameter', $matches['name'], isset($matches['delimiters']) ? $matches['delimiters'] : null];
+                $levelParts[$level][] = [
+                    'parameter',
+                    $matches['name'],
+                    isset($matches['delimiters']) ? $matches['delimiters'] : null
+                ];
 
                 $currentPos += strlen($matches[0]);
             } elseif ($matches['token'] === '{') {
@@ -297,7 +310,11 @@ class Segment implements RouteInterface
                         }
 
                         return '';
-                    } elseif (!$isOptional || $hasChild || !isset($this->defaults[$part[1]]) || $this->defaults[$part[1]] !== $mergedParams[$part[1]]) {
+                    } elseif (!$isOptional
+                        || $hasChild
+                        || !isset($this->defaults[$part[1]])
+                        || $this->defaults[$part[1]] !== $mergedParams[$part[1]]
+                    ) {
                         $skip = false;
                     }
 

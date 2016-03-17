@@ -62,10 +62,10 @@ To run tests:
 
   If you don't have `curl` installed, you can also download `composer.phar` from https://getcomposer.org/
 
-- Run the tests via `phpunit` and the provided PHPUnit config, like in this example:
+- Run the tests:
 
   ```console
-  $ ./vendor/bin/phpunit
+  $ composer test
   ```
 
 You can turn on conditional tests with the phpunit.xml file.
@@ -77,24 +77,21 @@ To do so:
 
 ## Running Coding Standards Checks
 
-This component uses [php-cs-fixer](http://cs.sensiolabs.org/) for coding
-standards checks, and provides configuration for our selected checks.
-`php-cs-fixer` is installed by default via Composer.
+Coding standards check tools are installed by default via Composer.
 
 To run checks only:
 
 ```console
-$ ./vendor/bin/php-cs-fixer fix . -v --diff --dry-run --config-file=.php_cs
+$ composer cs-check
 ```
 
-To have `php-cs-fixer` attempt to fix problems for you, omit the `--dry-run`
-flag:
+To attempt to automatically fix problems:
 
 ```console
-$ ./vendor/bin/php-cs-fixer fix . -v --diff --config-file=.php_cs
+$ composer cs-fix
 ```
 
-If you allow php-cs-fixer to fix CS issues, please re-run the tests to ensure
+If you allow the tool to fix CS issues, please re-run the tests to ensure
 they pass, and make sure you add and commit the changes after verification.
 
 ## Recommended Workflow for Contributions

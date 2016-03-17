@@ -61,7 +61,10 @@ class TreeRouteStack extends SimpleRouteStack
         }
 
         if (! is_array($options)) {
-            throw new Exception\InvalidArgumentException(__METHOD__ . ' expects an array or Traversable set of options');
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s expects an array or Traversable set of options',
+                __METHOD__
+            ));
         }
 
         $instance = parent::factory($options);
@@ -353,7 +356,10 @@ class TreeRouteStack extends SimpleRouteStack
 
         if (isset($names[1])) {
             if (!$route instanceof TreeRouteStack) {
-                throw new Exception\RuntimeException(sprintf('Route with name "%s" does not have child routes', $names[0]));
+                throw new Exception\RuntimeException(sprintf(
+                    'Route with name "%s" does not have child routes',
+                    $names[0]
+                ));
             }
             $options['name'] = $names[1];
         } else {
@@ -392,7 +398,11 @@ class TreeRouteStack extends SimpleRouteStack
             $uri->setFragment($options['fragment']);
         }
 
-        if ((isset($options['force_canonical']) && $options['force_canonical']) || $uri->getHost() !== null || $uri->getScheme() !== null) {
+        if ((isset($options['force_canonical'])
+            && $options['force_canonical'])
+            || $uri->getHost() !== null
+            || $uri->getScheme() !== null
+        ) {
             if (($uri->getHost() === null || $uri->getScheme() === null) && $this->requestUri === null) {
                 throw new Exception\RuntimeException('Request URI has not been set');
             }

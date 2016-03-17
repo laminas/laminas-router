@@ -25,7 +25,7 @@ class DummyRoute implements RouteInterface
      */
     public function match(RequestInterface $request)
     {
-        return new RouteMatch(array());
+        return new RouteMatch([]);
     }
 
     /**
@@ -47,7 +47,7 @@ class DummyRoute implements RouteInterface
      * @param  array|\Traversable $options
      * @return DummyRoute
      */
-    public static function factory($options = array())
+    public static function factory($options = [])
     {
         return new static();
     }

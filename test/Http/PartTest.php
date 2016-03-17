@@ -341,7 +341,10 @@ class PartTest extends TestCase
 
     public function testBaseRouteMayNotBePartRoute()
     {
-        $this->setExpectedException('Zend\Router\Exception\InvalidArgumentException', 'Base route may not be a part route');
+        $this->setExpectedException(
+            'Zend\Router\Exception\InvalidArgumentException',
+            'Base route may not be a part route'
+        );
 
         $route = new Part(self::getRoute(), true, new RoutePluginManager(new ServiceManager()));
     }
