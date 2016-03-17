@@ -4,6 +4,6 @@ pages:
     - index.md
     - Routing: routing.md
 site_name: zend-router
-site_description: 'zend-router: Flexible routing system for HTTP and console applications'
+site_description: 'zend-router: Flexible routing system for HTTP applications'
 repo_url: 'https://github.com/zendframework/zend-router'
 copyright: 'Copyright (c) 2016 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a>'

@@ -1,19 +1,17 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @link      http://github.com/zendframework/zend-router for the canonical source repository
+ * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Zend\Mvc\Router\Http;
+namespace Zend\Router\Http;
 
 use ArrayObject;
 use Traversable;
-use Zend\Mvc\Router\Exception;
-use Zend\Mvc\Router\RouteInvokableFactory;
-use Zend\Mvc\Router\SimpleRouteStack;
+use Zend\Router\Exception;
+use Zend\Router\RouteInvokableFactory;
+use Zend\Router\SimpleRouteStack;
 use Zend\ServiceManager\Config;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Stdlib\RequestInterface as Request;
@@ -51,7 +49,7 @@ class TreeRouteStack extends SimpleRouteStack
     /**
      * factory(): defined by RouteInterface interface.
      *
-     * @see    \Zend\Mvc\Router\RouteInterface::factory()
+     * @see    \Zend\Router\RouteInterface::factory()
      * @param  array|Traversable $options
      * @return SimpleRouteStack
      * @throws Exception\InvalidArgumentException
@@ -98,8 +96,6 @@ class TreeRouteStack extends SimpleRouteStack
                 'Method'   => Method::class,
                 'part'     => Part::class,
                 'Part'     => Part::class,
-                'query'    => Query::class,
-                'Query'    => Query::class,
                 'regex'    => Regex::class,
                 'Regex'    => Regex::class,
                 'scheme'   => Scheme::class,
@@ -117,7 +113,6 @@ class TreeRouteStack extends SimpleRouteStack
                 Literal::class  => RouteInvokableFactory::class,
                 Method::class   => RouteInvokableFactory::class,
                 Part::class     => RouteInvokableFactory::class,
-                Query::class    => RouteInvokableFactory::class,
                 Regex::class    => RouteInvokableFactory::class,
                 Scheme::class   => RouteInvokableFactory::class,
                 Segment::class  => RouteInvokableFactory::class,
@@ -130,7 +125,6 @@ class TreeRouteStack extends SimpleRouteStack
                 'zendmvcrouterhttpliteral'  => RouteInvokableFactory::class,
                 'zendmvcrouterhttpmethod'   => RouteInvokableFactory::class,
                 'zendmvcrouterhttppart'     => RouteInvokableFactory::class,
-                'zendmvcrouterhttpquery'    => RouteInvokableFactory::class,
                 'zendmvcrouterhttpregex'    => RouteInvokableFactory::class,
                 'zendmvcrouterhttpscheme'   => RouteInvokableFactory::class,
                 'zendmvcrouterhttpsegment'  => RouteInvokableFactory::class,
@@ -280,9 +274,9 @@ class TreeRouteStack extends SimpleRouteStack
     }
 
     /**
-     * match(): defined by \Zend\Mvc\Router\RouteInterface
+     * match(): defined by \Zend\Router\RouteInterface
      *
-     * @see    \Zend\Mvc\Router\RouteInterface::match()
+     * @see    \Zend\Router\RouteInterface::match()
      * @param  Request      $request
      * @param  integer|null $pathOffset
      * @param  array        $options
@@ -335,9 +329,9 @@ class TreeRouteStack extends SimpleRouteStack
     }
 
     /**
-     * assemble(): defined by \Zend\Mvc\Router\RouteInterface interface.
+     * assemble(): defined by \Zend\Router\RouteInterface interface.
      *
-     * @see    \Zend\Mvc\Router\RouteInterface::assemble()
+     * @see    \Zend\Router\RouteInterface::assemble()
      * @param  array $params
      * @param  array $options
      * @return mixed

@@ -1,18 +1,16 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @link      http://github.com/zendframework/zend-router for the canonical source repository
+ * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace ZendTest\Mvc\Router\Http;
+namespace ZendTest\Router\Http;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\I18n\Translator\Translator;
 use Zend\Http\Request as Request;
-use Zend\Mvc\Router\Http\TranslatorAwareTreeRouteStack;
+use Zend\Router\Http\TranslatorAwareTreeRouteStack;
 use Zend\Uri\Http as HttpUri;
 
 class TranslatorAwareTreeRouteStackTest extends TestCase
@@ -100,7 +98,7 @@ class TranslatorAwareTreeRouteStackTest extends TestCase
         $translator = new Translator();
         $request    = new Request();
 
-        $route = $this->getMock('Zend\Mvc\Router\Http\RouteInterface');
+        $route = $this->getMock('Zend\Router\Http\RouteInterface');
         $route->expects($this->once())
               ->method('match')
               ->with(
@@ -120,7 +118,7 @@ class TranslatorAwareTreeRouteStackTest extends TestCase
         $translator = new Translator();
         $uri        = new HttpUri();
 
-        $route = $this->getMock('Zend\Mvc\Router\Http\RouteInterface');
+        $route = $this->getMock('Zend\Router\Http\RouteInterface');
         $route->expects($this->once())
               ->method('assemble')
               ->with(

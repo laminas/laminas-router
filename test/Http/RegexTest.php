@@ -1,19 +1,17 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @link      http://github.com/zendframework/zend-router for the canonical source repository
+ * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace ZendTest\Mvc\Router\Http;
+namespace ZendTest\Router\Http;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request as Request;
 use Zend\Stdlib\Request as BaseRequest;
-use Zend\Mvc\Router\Http\Regex;
-use ZendTest\Mvc\Router\FactoryTester;
+use Zend\Router\Http\Regex;
+use ZendTest\Router\FactoryTester;
 
 class RegexTest extends TestCase
 {
@@ -81,7 +79,7 @@ class RegexTest extends TestCase
         if ($params === null) {
             $this->assertNull($match);
         } else {
-            $this->assertInstanceOf('Zend\Mvc\Router\Http\RouteMatch', $match);
+            $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
 
             if ($offset === null) {
                 $this->assertEquals(strlen($path), $match->getLength());
@@ -136,7 +134,7 @@ class RegexTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Mvc\Router\Http\Regex',
+            'Zend\Router\Http\Regex',
             [
                 'regex' => 'Missing "regex" in options array',
                 'spec'  => 'Missing "spec" in options array'

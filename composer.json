@@ -4,12 +4,13 @@
     "license": "BSD-3-Clause",
     "keywords": [
         "zf2",
-        "mvc"
+        "mvc",
+        "routing"
     ],
     "homepage": "https://github.com/zendframework/zend-router",
     "autoload": {
         "psr-4": {
-            "Zend\\Mvc\\Router\\": "src/"
+            "Zend\\Router\\": "src/"
         }
     },
     "require": {
@@ -43,7 +44,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "ZendTest\\Mvc\\Router\\": "test/"
+            "ZendTest\\Router\\": "test/"
         }
     },
     "scripts": {
