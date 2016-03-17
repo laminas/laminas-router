@@ -27,10 +27,7 @@
         "sebastian/version": "^1.0.4"
     },
     "suggest": {
-        "zendframework/zend-console": "^2.6, if using console routing",
-        "zendframework/zend-filter": "^2.6.1, if using console routing",
-        "zendframework/zend-i18n": "^2.6, if defining translatable HTTP path segments",
-        "zendframework/zend-validator": "^2.6, if using console routing"
+        "zendframework/zend-i18n": "^2.6, if defining translatable HTTP path segments"
     },
     "extra": {
         "branch-alias": {
