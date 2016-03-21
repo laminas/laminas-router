@@ -3,11 +3,10 @@
 [![Build Status](https://secure.travis-ci.org/zendframework/zend-router.svg?branch=master)](https://secure.travis-ci.org/zendframework/zend-router)
 [![Coverage Status](https://coveralls.io/repos/zendframework/zend-router/badge.svg?branch=master)](https://coveralls.io/r/zendframework/zend-router?branch=master)
 
-zend-router provides flexible HTTP and console routing.
+zend-router provides flexible HTTP routing.
 
-HTTP-based routing currently works against the
-[zend-http](https://github.com/zendframework/zend-http) request and responses,
-and provides capabilities around:
+Routing currently works against the [zend-http](https://github.com/zendframework/zend-http)
+request and responses, and provides capabilities around:
 
 - Literal path matches
 - Path segment matches (at path boundaries, and optionally validated using regex)
@@ -18,10 +17,6 @@ and provides capabilities around:
 
 Additionally, it supports combinations of different route types in tree
 structures, allowing for fast, b-tree lookups.
-
-Console routing leverages [zend-console's routing capabilities](http://zendframework.github.io/zend-console/routes/),
-providing a unified mechanism for working with routes regardless of the
-enviornment.
 
 - File issues at https://github.com/zendframework/zend-router/issues
 - Documentation is at https://zendframework.github.io/zend-router/

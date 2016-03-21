@@ -1,20 +1,18 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @link      http://github.com/zendframework/zend-router for the canonical source repository
+ * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace ZendTest\Mvc\Router\Http;
+namespace ZendTest\Router\Http;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request as Request;
-use Zend\Mvc\Router\RoutePluginManager;
-use Zend\Mvc\Router\Http\Chain;
+use Zend\Router\RoutePluginManager;
+use Zend\Router\Http\Chain;
 use Zend\ServiceManager\ServiceManager;
-use ZendTest\Mvc\Router\FactoryTester;
+use ZendTest\Router\FactoryTester;
 
 class ChainTest extends TestCase
 {
@@ -25,7 +23,7 @@ class ChainTest extends TestCase
         return new Chain(
             [
                 [
-                    'type'    => 'Zend\Mvc\Router\Http\Segment',
+                    'type'    => 'Zend\Router\Http\Segment',
                     'options' => [
                         'route'    => '/:controller',
                         'defaults' => [
@@ -34,7 +32,7 @@ class ChainTest extends TestCase
                     ],
                 ],
                 [
-                    'type'    => 'Zend\Mvc\Router\Http\Segment',
+                    'type'    => 'Zend\Router\Http\Segment',
                     'options' => [
                         'route'    => '/:bar',
                         'defaults' => [
@@ -43,7 +41,7 @@ class ChainTest extends TestCase
                     ],
                 ],
                 [
-                    'type' => 'Zend\Mvc\Router\Http\Wildcard',
+                    'type' => 'Zend\Router\Http\Wildcard',
                 ],
             ],
             $routePlugins
@@ -57,7 +55,7 @@ class ChainTest extends TestCase
         return new Chain(
             [
                 [
-                    'type'    => 'Zend\Mvc\Router\Http\Segment',
+                    'type'    => 'Zend\Router\Http\Segment',
                     'options' => [
                         'route'    => '/:controller',
                         'defaults' => [
@@ -66,7 +64,7 @@ class ChainTest extends TestCase
                     ],
                 ],
                 [
-                    'type'    => 'Zend\Mvc\Router\Http\Segment',
+                    'type'    => 'Zend\Router\Http\Segment',
                     'options' => [
                         'route'    => '[/:bar]',
                         'defaults' => [
@@ -146,7 +144,7 @@ class ChainTest extends TestCase
         if ($params === null) {
             $this->assertNull($match);
         } else {
-            $this->assertInstanceOf('Zend\Mvc\Router\Http\RouteMatch', $match);
+            $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
 
             if ($offset === null) {
                 $this->assertEquals(strlen($path), $match->getLength());
@@ -186,7 +184,7 @@ class ChainTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Mvc\Router\Http\Chain',
+            'Zend\Router\Http\Chain',
             [
                 'routes'        => 'Missing "routes" in options array',
                 'route_plugins' => 'Missing "route_plugins" in options array',

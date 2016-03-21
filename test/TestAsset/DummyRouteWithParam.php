@@ -1,16 +1,14 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @link      http://github.com/zendframework/zend-router for the canonical source repository
+ * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace ZendTest\Mvc\Router\TestAsset;
+namespace ZendTest\Router\TestAsset;
 
-use Zend\Mvc\Router\RouteInterface;
-use Zend\Mvc\Router\RouteMatch;
+use Zend\Router\RouteInterface;
+use Zend\Router\RouteMatch;
 use Zend\Stdlib\RequestInterface;
 
 /**
@@ -27,7 +25,7 @@ class DummyRouteWithParam extends DummyRoute
      */
     public function match(RequestInterface $request)
     {
-        return new RouteMatch(array('foo' => 'bar'));
+        return new RouteMatch(['foo' => 'bar']);
     }
 
     /**

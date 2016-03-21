@@ -1,20 +1,18 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @link      http://github.com/zendframework/zend-router for the canonical source repository
+ * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace ZendTest\Mvc\Router\Http;
+namespace ZendTest\Router\Http;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request as Request;
 use Zend\Stdlib\Request as BaseRequest;
 use Zend\Uri\Http as HttpUri;
-use Zend\Mvc\Router\Http\Scheme;
-use ZendTest\Mvc\Router\FactoryTester;
+use Zend\Router\Http\Scheme;
+use ZendTest\Router\FactoryTester;
 
 class SchemeTest extends TestCase
 {
@@ -26,7 +24,7 @@ class SchemeTest extends TestCase
         $route = new Scheme('https');
         $match = $route->match($request);
 
-        $this->assertInstanceOf('Zend\Mvc\Router\Http\RouteMatch', $match);
+        $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
     }
 
     public function testNoMatchingOnDifferentScheme()
@@ -70,7 +68,7 @@ class SchemeTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Mvc\Router\Http\Scheme',
+            'Zend\Router\Http\Scheme',
             [
                 'scheme' => 'Missing "scheme" in options array',
             ],

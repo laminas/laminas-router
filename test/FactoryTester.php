@@ -1,13 +1,11 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @link      http://github.com/zendframework/zend-router for the canonical source repository
+ * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace ZendTest\Mvc\Router;
+namespace ZendTest\Router;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use ArrayIterator;
@@ -46,7 +44,7 @@ class FactoryTester
         try {
             $classname::factory(0);
             $this->testCase->fail('An expected exception was not thrown');
-        } catch (\Zend\Mvc\Router\Exception\InvalidArgumentException $e) {
+        } catch (\Zend\Router\Exception\InvalidArgumentException $e) {
             $this->testCase->assertContains('factory expects an array or Traversable set of options', $e->getMessage());
         }
 
@@ -59,7 +57,7 @@ class FactoryTester
             try {
                 $classname::factory($testOptions);
                 $this->testCase->fail('An expected exception was not thrown');
-            } catch (\Zend\Mvc\Router\Exception\InvalidArgumentException $e) {
+            } catch (\Zend\Router\Exception\InvalidArgumentException $e) {
                 $this->testCase->assertContains($exceptionMessage, $e->getMessage());
             }
         }

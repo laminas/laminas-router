@@ -1,19 +1,17 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @link      http://github.com/zendframework/zend-router for the canonical source repository
+ * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace ZendTest\Mvc\Router\Http;
+namespace ZendTest\Router\Http;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\Http\Request as Request;
 use Zend\Stdlib\Request as BaseRequest;
-use Zend\Mvc\Router\Http\Wildcard;
-use ZendTest\Mvc\Router\FactoryTester;
+use Zend\Router\Http\Wildcard;
+use ZendTest\Router\FactoryTester;
 
 class WildcardTest extends TestCase
 {
@@ -100,7 +98,7 @@ class WildcardTest extends TestCase
         if ($params === null) {
             $this->assertNull($match);
         } else {
-            $this->assertInstanceOf('Zend\Mvc\Router\Http\RouteMatch', $match);
+            $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
 
             if ($offset === null) {
                 $this->assertEquals(strlen($path), $match->getLength());
@@ -156,7 +154,7 @@ class WildcardTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Mvc\Router\Http\Wildcard',
+            'Zend\Router\Http\Wildcard',
             [],
             []
         );
@@ -177,9 +175,12 @@ class WildcardTest extends TestCase
 
     public function testEncodedDecode()
     {
+        // @codingStandardsIgnoreStart
         // every character
         $in  = '%61%62%63%64%65%66%67%68%69%6a%6b%6c%6d%6e%6f%70%71%72%73%74%75%76%77%78%79%7a%41%42%43%44%45%46%47%48%49%4a%4b%4c%4d%4e%4f%50%51%52%53%54%55%56%57%58%59%5a%30%31%32%33%34%35%36%37%38%39%60%2d%3d%5b%5d%5c%3b%27%2c%2e%2f%7e%21%40%23%24%25%5e%26%2a%28%29%5f%2b%7b%7d%7c%3a%22%3c%3e%3f';
         $out = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`-=[]\\;\',./~!@#$%^&*()_+{}|:"<>?';
+        // @codingStandardsIgnoreEnd
+
         $request = new Request();
         $request->setUri('http://example.com/foo/' . $in);
         $route   = new Wildcard();

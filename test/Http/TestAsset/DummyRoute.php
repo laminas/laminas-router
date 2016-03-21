@@ -1,21 +1,18 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @link      http://github.com/zendframework/zend-router for the canonical source repository
+ * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace ZendTest\Mvc\Router\Http\TestAsset;
+namespace ZendTest\Router\Http\TestAsset;
 
-use Zend\Mvc\Router\Http\RouteInterface;
-use Zend\Mvc\Router\Http\RouteMatch;
+use Zend\Router\Http\RouteInterface;
+use Zend\Router\Http\RouteMatch;
 use Zend\Stdlib\RequestInterface;
 
 /**
  * Dummy route.
- *
  */
 class DummyRoute implements RouteInterface
 {
@@ -29,7 +26,7 @@ class DummyRoute implements RouteInterface
      */
     public function match(RequestInterface $request, $pathOffset = null)
     {
-        return new RouteMatch(array('offset' => $pathOffset), -4);
+        return new RouteMatch(['offset' => $pathOffset], -4);
     }
 
     /**
@@ -51,7 +48,7 @@ class DummyRoute implements RouteInterface
      * @param  array|Traversable $options
      * @return DummyRoute
      */
-    public static function factory($options = array())
+    public static function factory($options = [])
     {
         return new static();
     }
@@ -64,6 +61,6 @@ class DummyRoute implements RouteInterface
      */
     public function getAssembledParams()
     {
-        return array();
+        return [];
     }
 }

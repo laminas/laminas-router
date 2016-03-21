@@ -1,19 +1,17 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @link      http://github.com/zendframework/zend-router for the canonical source repository
+ * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Zend\Mvc\Router\Http;
+namespace Zend\Router\Http;
 
 use ArrayObject;
 use Traversable;
-use Zend\Mvc\Router\Exception;
-use Zend\Mvc\Router\RouteInvokableFactory;
-use Zend\Mvc\Router\SimpleRouteStack;
+use Zend\Router\Exception;
+use Zend\Router\RouteInvokableFactory;
+use Zend\Router\SimpleRouteStack;
 use Zend\ServiceManager\Config;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Stdlib\RequestInterface as Request;
@@ -51,7 +49,7 @@ class TreeRouteStack extends SimpleRouteStack
     /**
      * factory(): defined by RouteInterface interface.
      *
-     * @see    \Zend\Mvc\Router\RouteInterface::factory()
+     * @see    \Zend\Router\RouteInterface::factory()
      * @param  array|Traversable $options
      * @return SimpleRouteStack
      * @throws Exception\InvalidArgumentException
@@ -63,7 +61,10 @@ class TreeRouteStack extends SimpleRouteStack
         }
 
         if (! is_array($options)) {
-            throw new Exception\InvalidArgumentException(__METHOD__ . ' expects an array or Traversable set of options');
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s expects an array or Traversable set of options',
+                __METHOD__
+            ));
         }
 
         $instance = parent::factory($options);
@@ -98,8 +99,6 @@ class TreeRouteStack extends SimpleRouteStack
                 'Method'   => Method::class,
                 'part'     => Part::class,
                 'Part'     => Part::class,
-                'query'    => Query::class,
-                'Query'    => Query::class,
                 'regex'    => Regex::class,
                 'Regex'    => Regex::class,
                 'scheme'   => Scheme::class,
@@ -117,7 +116,6 @@ class TreeRouteStack extends SimpleRouteStack
                 Literal::class  => RouteInvokableFactory::class,
                 Method::class   => RouteInvokableFactory::class,
                 Part::class     => RouteInvokableFactory::class,
-                Query::class    => RouteInvokableFactory::class,
                 Regex::class    => RouteInvokableFactory::class,
                 Scheme::class   => RouteInvokableFactory::class,
                 Segment::class  => RouteInvokableFactory::class,
@@ -130,7 +128,6 @@ class TreeRouteStack extends SimpleRouteStack
                 'zendmvcrouterhttpliteral'  => RouteInvokableFactory::class,
                 'zendmvcrouterhttpmethod'   => RouteInvokableFactory::class,
                 'zendmvcrouterhttppart'     => RouteInvokableFactory::class,
-                'zendmvcrouterhttpquery'    => RouteInvokableFactory::class,
                 'zendmvcrouterhttpregex'    => RouteInvokableFactory::class,
                 'zendmvcrouterhttpscheme'   => RouteInvokableFactory::class,
                 'zendmvcrouterhttpsegment'  => RouteInvokableFactory::class,
@@ -280,9 +277,9 @@ class TreeRouteStack extends SimpleRouteStack
     }
 
     /**
-     * match(): defined by \Zend\Mvc\Router\RouteInterface
+     * match(): defined by \Zend\Router\RouteInterface
      *
-     * @see    \Zend\Mvc\Router\RouteInterface::match()
+     * @see    \Zend\Router\RouteInterface::match()
      * @param  Request      $request
      * @param  integer|null $pathOffset
      * @param  array        $options
@@ -335,9 +332,9 @@ class TreeRouteStack extends SimpleRouteStack
     }
 
     /**
-     * assemble(): defined by \Zend\Mvc\Router\RouteInterface interface.
+     * assemble(): defined by \Zend\Router\RouteInterface interface.
      *
-     * @see    \Zend\Mvc\Router\RouteInterface::assemble()
+     * @see    \Zend\Router\RouteInterface::assemble()
      * @param  array $params
      * @param  array $options
      * @return mixed
@@ -359,7 +356,10 @@ class TreeRouteStack extends SimpleRouteStack
 
         if (isset($names[1])) {
             if (!$route instanceof TreeRouteStack) {
-                throw new Exception\RuntimeException(sprintf('Route with name "%s" does not have child routes', $names[0]));
+                throw new Exception\RuntimeException(sprintf(
+                    'Route with name "%s" does not have child routes',
+                    $names[0]
+                ));
             }
             $options['name'] = $names[1];
         } else {
@@ -398,7 +398,11 @@ class TreeRouteStack extends SimpleRouteStack
             $uri->setFragment($options['fragment']);
         }
 
-        if ((isset($options['force_canonical']) && $options['force_canonical']) || $uri->getHost() !== null || $uri->getScheme() !== null) {
+        if ((isset($options['force_canonical'])
+            && $options['force_canonical'])
+            || $uri->getHost() !== null
+            || $uri->getScheme() !== null
+        ) {
             if (($uri->getHost() === null || $uri->getScheme() === null) && $this->requestUri === null) {
                 throw new Exception\RuntimeException('Request URI has not been set');
             }
