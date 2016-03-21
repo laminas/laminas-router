@@ -1,16 +1,14 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
+ * @link      http://github.com/zendframework/zend-router for the canonical source repository
+ * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Zend\Mvc\Router\Http;
+namespace Zend\Router\Http;
 
 use Traversable;
-use Zend\Mvc\Router\Exception;
+use Zend\Router\Exception;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Stdlib\RequestInterface as Request;
 
@@ -48,7 +46,7 @@ class Method implements RouteInterface
     /**
      * factory(): defined by RouteInterface interface.
      *
-     * @see    \Zend\Mvc\Router\RouteInterface::factory()
+     * @see    \Zend\Router\RouteInterface::factory()
      * @param  array|Traversable $options
      * @return Method
      * @throws Exception\InvalidArgumentException
@@ -58,7 +56,10 @@ class Method implements RouteInterface
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
         } elseif (!is_array($options)) {
-            throw new Exception\InvalidArgumentException(__METHOD__ . ' expects an array or Traversable set of options');
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s expects an array or Traversable set of options',
+                __METHOD__
+            ));
         }
 
         if (!isset($options['verb'])) {
@@ -75,7 +76,7 @@ class Method implements RouteInterface
     /**
      * match(): defined by RouteInterface interface.
      *
-     * @see    \Zend\Mvc\Router\RouteInterface::match()
+     * @see    \Zend\Router\RouteInterface::match()
      * @param  Request $request
      * @return RouteMatch|null
      */
@@ -99,7 +100,7 @@ class Method implements RouteInterface
     /**
      * assemble(): Defined by RouteInterface interface.
      *
-     * @see    \Zend\Mvc\Router\RouteInterface::assemble()
+     * @see    \Zend\Router\RouteInterface::assemble()
      * @param  array $params
      * @param  array $options
      * @return mixed
