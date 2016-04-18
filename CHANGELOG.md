@@ -20,11 +20,13 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
-## 3.0.1 - TBD
+## 3.0.1 - 2016-04-18
 
 ### Added
 
-- Nothing.
+- [#3](https://github.com/zendframework/zend-router/pull/3) adds a
+  `config-provider` entry in `composer.json`, pointing to
+  `Zend\Router\ConfigProvider`.
 
 ### Deprecated
 
@@ -36,7 +38,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#3](https://github.com/zendframework/zend-router/pull/3) fixes the
+  `component` entry in `composer.json` to properly read `Zend\Router`.
 
 ## 3.0.0 - 2016-03-21
 
