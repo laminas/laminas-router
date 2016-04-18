@@ -35,7 +35,7 @@
             "dev-develop": "3.1-dev"
         },
         "zf": {
-            "component": "Zend\\Mvc\\Router"
+            "component": "Zend\\Router"
         }
     },
     "autoload-dev": {
