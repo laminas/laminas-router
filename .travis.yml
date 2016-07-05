@@ -75,6 +75,7 @@ notifications:
 before_install:
   - travis_retry composer self-update
   - if [[ $TRAVIS_PHP_VERSION != "hhvm" && $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini ; fi
+  - if [[ $DEPS == 'locked' ]]; then composer validate; fi
 
 install:
   - if [[ $DEPS == 'latest' ]]; then travis_retry composer update $COMPOSER_ARGS ; fi
