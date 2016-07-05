@@ -9,9 +9,6 @@ namespace ZendTest\Router;
 
 use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase as TestCase;
-use ReflectionProperty;
-use Zend\Console\Console;
-use Zend\Router\Console\ConsoleRouterFactory;
 use Zend\Router\Http\HttpRouterFactory;
 use Zend\Router\RoutePluginManager;
 use Zend\Router\RouterFactory;
