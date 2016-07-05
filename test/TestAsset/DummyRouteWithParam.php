@@ -7,7 +7,6 @@
 
 namespace ZendTest\Router\TestAsset;
 
-use Zend\Router\RouteInterface;
 use Zend\Router\RouteMatch;
 use Zend\Stdlib\RequestInterface;
 
