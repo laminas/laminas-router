@@ -12,7 +12,7 @@ more.
 The base unit of routing is a `Route`:
 
 ```php
-namespace Zend\Mvc\Router;
+namespace Zend\Router;
 
 use Zend\Stdlib\RequestInterface as Request;
 
@@ -28,7 +28,7 @@ A `Route` accepts a `Request`, and determines if it matches. If so, it returns a
 `RouteMatch` object:
 
 ```php
-namespace Zend\Mvc\Router;
+namespace Zend\Router;
 
 class RouteMatch
 {
@@ -58,7 +58,7 @@ facilitate this, you will use a route aggregate, usually implementing
 `RouteStack`:
 
 ```php
-namespace Zend\Mvc\Router;
+namespace Zend\Router;
 
 interface RouteStackInterface extends RouteInterface
 {
@@ -125,7 +125,7 @@ adding it to the route stack.
 
 ### TreeRouteStack
 
-`Zend\Mvc\Router\Http\TreeRouteStack` provides the ability to register trees of
+`Zend\Router\Http\TreeRouteStack` provides the ability to register trees of
 routes, and uses a B-tree algorithm to match routes. As such, you register a
 single route with many children.
 
@@ -133,7 +133,7 @@ A `TreeRouteStack` will consist of the following configuration:
 
 - A base "route", which describes the base match needed, the root of the tree.
 - An optional `route_plugins`, which is a configured
-  `Zend\Mvc\Router\RoutePluginManager` that can lazy-load routes.
+  `Zend\Router\RoutePluginManager` that can lazy-load routes.
 - The option `may_terminate`, which hints to the router that no other segments
   will follow it.
 - An optional `child_routes` array, which contains additional routes that stem
@@ -328,28 +328,28 @@ You may use any route type as a child route of a `Part` route.
 > ### Route plugins
 >
 > In the above example, the `$routePlugins` is an instance of
-> `Zend\Mvc\Router\RoutePluginManager`, containing essentially the following
+> `Zend\Router\RoutePluginManager`, containing essentially the following
 > configuration:
 >
 > ```php
-> $routePlugins = new Zend\Mvc\Router\RoutePluginManager();
+> $routePlugins = new Zend\Router\RoutePluginManager();
 > $plugins = [
->     'hostname' => 'Zend\Mvc\Router\Http\Hostname',
->     'literal'  => 'Zend\Mvc\Router\Http\Literal',
->     'part'     => 'Zend\Mvc\Router\Http\Part',
->     'regex'    => 'Zend\Mvc\Router\Http\Regex',
->     'scheme'   => 'Zend\Mvc\Router\Http\Scheme',
->     'segment'  => 'Zend\Mvc\Router\Http\Segment',
->     'wildcard' => 'Zend\Mvc\Router\Http\Wildcard',
->     'query'    => 'Zend\Mvc\Router\Http\Query',
->     'method'   => 'Zend\Mvc\Router\Http\Method',
+>     'hostname' => 'Zend\Router\Http\Hostname',
+>     'literal'  => 'Zend\Router\Http\Literal',
+>     'part'     => 'Zend\Router\Http\Part',
+>     'regex'    => 'Zend\Router\Http\Regex',
+>     'scheme'   => 'Zend\Router\Http\Scheme',
+>     'segment'  => 'Zend\Router\Http\Segment',
+>     'wildcard' => 'Zend\Router\Http\Wildcard',
+>     'query'    => 'Zend\Router\Http\Query',
+>     'method'   => 'Zend\Router\Http\Method',
 > ];
 > foreach ($plugins as $name => $class) {
 >     $routePlugins->setInvokableClass($name, $class);
 > }
 > ```
 >
-> When using `Zend\Mvc\Router\Http\TreeRouteStack`, the `RoutePluginManager` is
+> When using `Zend\Router\Http\TreeRouteStack`, the `RoutePluginManager` is
 > set up by default, and the developer does not need to worry about autoloading
 > of standard HTTP routes.
 
@@ -632,7 +632,7 @@ return [
     'router' => [
         'routes' => [
             'modules.zendframework.com' => [
-                'type' => 'Zend\Mvc\Router\Http\Hostname',
+                'type' => 'Zend\Router\Http\Hostname',
                 'options' => [
                     'route' => ':4th.[:3rd.]:2nd.:1st', // domain levels from right to left
                     'constraints' => [
@@ -647,7 +647,7 @@ return [
                 // child route controllers may span multiple modules as desired
                 'child_routes' => [
                     'index' => [
-                        'type' => 'Zend\Mvc\Router\Http\Literal',
+                        'type' => 'Zend\Router\Http\Literal',
                         'options' => [
                             'route' => '/',
                             'defaults' => [
@@ -660,7 +660,7 @@ return [
                 ],
             ],
             'packages.zendframework.com' => [
-                'type' => 'Zend\Mvc\Router\Http\Hostname',
+                'type' => 'Zend\Router\Http\Hostname',
                 'options' => [
                     'route' => ':4th.[:3rd.]:2nd.:1st', // domain levels from right to left
                     'constraints' => [
@@ -675,7 +675,7 @@ return [
                 // child route controllers may span multiple modules as desired
                 'child_routes' => [
                     'index' => [
-                        'type' => 'Zend\Mvc\Router\Http\Literal',
+                        'type' => 'Zend\Router\Http\Literal',
                         'options' => [
                             'route' => '/',
                             'defaults' => [
