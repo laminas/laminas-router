@@ -652,7 +652,7 @@ return [
                             'route' => '/',
                             'defaults' => [
                                 'controller' => 'Module\Controller\Index',
-                                'action' = > 'index',
+                                'action' => 'index',
                             ],
                         ],
                         'may_terminate' => true,
@@ -680,7 +680,7 @@ return [
                             'route' => '/',
                             'defaults' => [
                                 'controller' => 'Package\Controller\Index',
-                                'action' = > 'index',
+                                'action' => 'index',
                             ],
                         ],
                         'may_terminate' => true,
