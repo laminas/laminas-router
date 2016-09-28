@@ -70,7 +70,7 @@ interface RouteStackInterface extends RouteInterface
 ```
 
 Routes will be queried in a LIFO order, and hence the reason behind the name
-`RouteStack`. zend-mvc provides two implementations of this interface,
+`RouteStack`. zend-router provides two implementations of this interface,
 `SimpleRouteStack` and `TreeRouteStack`. In each, you register routes either one
 at a time using `addRoute()`, or in bulk using `addRoutes()`.
 
@@ -108,7 +108,7 @@ $router->addRoutes([
 
 Two routers are provided, the `SimpleRouteStack` and `TreeRouteStack`. Each
 works with the above interface, but utilize slightly different options and
-execution paths. By default, the zend-mvc uses the `TreeRouteStack` as the
+execution paths. By default, the zend-router uses the `TreeRouteStack` as the
 router.
 
 ### SimpleRouteStack
@@ -151,7 +151,7 @@ route.
 
 ## HTTP Route Types
 
-zend-mvc ships with the following HTTP route types.
+zend-router ships with the following HTTP route types.
 
 ### Zend\\Router\\Http\\Hostname
 
