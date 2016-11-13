@@ -55,18 +55,18 @@ class Scheme implements RouteInterface
     {
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
-        } elseif (!is_array($options)) {
+        } elseif (! is_array($options)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable set of options',
                 __METHOD__
             ));
         }
 
-        if (!isset($options['scheme'])) {
+        if (! isset($options['scheme'])) {
             throw new Exception\InvalidArgumentException('Missing "scheme" in options array');
         }
 
-        if (!isset($options['defaults'])) {
+        if (! isset($options['defaults'])) {
             $options['defaults'] = [];
         }
 
@@ -82,7 +82,7 @@ class Scheme implements RouteInterface
      */
     public function match(Request $request)
     {
-        if (!method_exists($request, 'getUri')) {
+        if (! method_exists($request, 'getUri')) {
             return;
         }
 

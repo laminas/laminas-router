@@ -64,7 +64,7 @@ class LiteralTest extends TestCase
         $request->setUri('http://example.com' . $path);
         $match = $route->match($request, $offset);
 
-        if (!$shouldMatch) {
+        if (! $shouldMatch) {
             $this->assertNull($match);
         } else {
             $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
@@ -84,7 +84,7 @@ class LiteralTest extends TestCase
      */
     public function testAssembling(Literal $route, $path, $offset, $shouldMatch)
     {
-        if (!$shouldMatch) {
+        if (! $shouldMatch) {
             // Data which will not match are not tested for assembling.
             return;
         }
