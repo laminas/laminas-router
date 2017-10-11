@@ -7,11 +7,12 @@
 
 namespace ZendTest\Router\Http;
 
-use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Http\Request as Request;
+use PHPUnit\Framework\TestCase;
+use Zend\Http\Request;
+use Zend\Router\Http\RouteMatch;
+use Zend\Router\Http\Scheme;
 use Zend\Stdlib\Request as BaseRequest;
 use Zend\Uri\Http as HttpUri;
-use Zend\Router\Http\Scheme;
 use ZendTest\Router\FactoryTester;
 
 class SchemeTest extends TestCase
@@ -24,7 +25,7 @@ class SchemeTest extends TestCase
         $route = new Scheme('https');
         $match = $route->match($request);
 
-        $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
+        $this->assertInstanceOf(RouteMatch::class, $match);
     }
 
     public function testNoMatchingOnDifferentScheme()
@@ -68,7 +69,7 @@ class SchemeTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Router\Http\Scheme',
+            Scheme::class,
             [
                 'scheme' => 'Missing "scheme" in options array',
             ],

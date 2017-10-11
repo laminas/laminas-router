@@ -14,25 +14,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Nothing.
-
-### Fixed
-
-- Nothing.
-
-## 3.0.3 - TBD
-
-### Added
-
-- Nothing.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
+- [#34](https://github.com/zendframework/zend-router/pull/34) dropped php 5.5 support
 
 ### Fixed
 

@@ -7,11 +7,14 @@
 
 namespace ZendTest\Router\Http;
 
-use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Http\Request as Request;
+use PHPUnit\Framework\TestCase;
+use Zend\Http\Request;
+use Zend\Router\Exception\InvalidArgumentException;
+use Zend\Router\Exception\RuntimeException;
+use Zend\Router\Http\Hostname;
+use Zend\Router\Http\RouteMatch;
 use Zend\Stdlib\Request as BaseRequest;
 use Zend\Uri\Http as HttpUri;
-use Zend\Router\Http\Hostname;
 use ZendTest\Router\FactoryTester;
 
 class HostnameTest extends TestCase
@@ -171,7 +174,7 @@ class HostnameTest extends TestCase
         if ($params === null) {
             $this->assertNull($match);
         } else {
-            $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
+            $this->assertInstanceOf(RouteMatch::class, $match);
 
             foreach ($params as $key => $value) {
                 $this->assertEquals($value, $match->getParam($key));
@@ -209,10 +212,11 @@ class HostnameTest extends TestCase
 
     public function testAssemblingWithMissingParameter()
     {
-        $this->setExpectedException('Zend\Router\Exception\InvalidArgumentException', 'Missing parameter "foo"');
-
         $route = new Hostname(':foo.example.com');
         $uri   = new HttpUri();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Missing parameter "foo"');
         $route->assemble([], ['uri' => $uri]);
     }
 
@@ -229,7 +233,7 @@ class HostnameTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Router\Http\Hostname',
+            Hostname::class,
             [
                 'route' => 'Missing "route" in options array'
             ],
@@ -244,7 +248,7 @@ class HostnameTest extends TestCase
      */
     public function testFailedHostnameSegmentMatchDoesNotEmitErrors()
     {
-        $this->setExpectedException('Zend\Router\Exception\RuntimeException');
-        $route = new Hostname(':subdomain.with_underscore.com');
+        $this->expectException(RuntimeException::class);
+        new Hostname(':subdomain.with_underscore.com');
     }
 }
