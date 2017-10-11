@@ -9,12 +9,12 @@ namespace ZendTest\Router;
 
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
-use Zend\Stdlib\Request;
+use Zend\Router\Exception\InvalidArgumentException;
+use Zend\Router\Exception\RuntimeException;
 use Zend\Router\RoutePluginManager;
 use Zend\Router\SimpleRouteStack;
 use Zend\ServiceManager\ServiceManager;
-use Zend\Router\Exception\InvalidArgumentException;
-use Zend\Router\Exception\RuntimeException;
+use Zend\Stdlib\Request;
 
 class SimpleRouteStackTest extends TestCase
 {

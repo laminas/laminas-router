@@ -7,8 +7,8 @@
 
 namespace ZendTest\Router;
 
-use Zend\Router\PriorityList;
 use PHPUnit\Framework\TestCase;
+use Zend\Router\PriorityList;
 
 class PriorityListTest extends TestCase
 {

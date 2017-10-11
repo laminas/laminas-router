@@ -9,8 +9,8 @@ namespace ZendTest\Router\Http;
 
 use PHPUnit\Framework\TestCase;
 use Zend\Http\Request;
-use Zend\Router\RoutePluginManager;
 use Zend\Router\Http\Chain;
+use Zend\Router\RoutePluginManager;
 use Zend\ServiceManager\ServiceManager;
 use ZendTest\Router\FactoryTester;
 

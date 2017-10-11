@@ -10,6 +10,8 @@ namespace ZendTest\Router\Http;
 use ArrayObject;
 use PHPUnit\Framework\TestCase;
 use Zend\Http\Request as Request;
+use Zend\Router\Exception\InvalidArgumentException;
+use Zend\Router\Exception\RuntimeException;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Part;
 use Zend\Router\Http\Segment;
@@ -20,8 +22,6 @@ use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Parameters;
 use Zend\Stdlib\Request as BaseRequest;
 use ZendTest\Router\FactoryTester;
-use Zend\Router\Exception\RuntimeException;
-use Zend\Router\Exception\InvalidArgumentException;
 
 class PartTest extends TestCase
 {

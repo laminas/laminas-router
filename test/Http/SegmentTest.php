@@ -11,11 +11,11 @@ use PHPUnit\Framework\TestCase;
 use Zend\Http\Request;
 use Zend\I18n\Translator\TextDomain;
 use Zend\I18n\Translator\Translator;
-use Zend\Stdlib\Request as BaseRequest;
-use Zend\Router\Http\Segment;
-use ZendTest\Router\FactoryTester;
 use Zend\Router\Exception\InvalidArgumentException;
 use Zend\Router\Exception\RuntimeException;
+use Zend\Router\Http\Segment;
+use Zend\Stdlib\Request as BaseRequest;
+use ZendTest\Router\FactoryTester;
 
 class SegmentTest extends TestCase
 {

@@ -9,12 +9,12 @@ namespace ZendTest\Router\Http;
 
 use PHPUnit\Framework\TestCase;
 use Zend\Http\Request as Request;
-use Zend\Stdlib\Request as BaseRequest;
-use Zend\Uri\Http as HttpUri;
-use Zend\Router\Http\Hostname;
-use ZendTest\Router\FactoryTester;
 use Zend\Router\Exception\InvalidArgumentException;
 use Zend\Router\Exception\RuntimeException;
+use Zend\Router\Http\Hostname;
+use Zend\Stdlib\Request as BaseRequest;
+use Zend\Uri\Http as HttpUri;
+use ZendTest\Router\FactoryTester;
 
 class HostnameTest extends TestCase
 {

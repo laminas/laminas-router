@@ -7,17 +7,17 @@
 
 namespace ZendTest\Router\Http;
 
-use PHPUnit\Framework\TestCase;
 use ArrayIterator;
-use Zend\Http\Request as Request;
+use PHPUnit\Framework\TestCase;
 use Zend\Http\PhpEnvironment\Request as PhpRequest;
+use Zend\Http\Request as Request;
+use Zend\Router\Exception\InvalidArgumentException;
+use Zend\Router\Exception\RuntimeException;
+use Zend\Router\Http\Hostname;
+use Zend\Router\Http\TreeRouteStack;
 use Zend\Stdlib\Request as BaseRequest;
 use Zend\Uri\Http as HttpUri;
-use Zend\Router\Http\TreeRouteStack;
-use Zend\Router\Http\Hostname;
 use ZendTest\Router\FactoryTester;
-use Zend\Router\Exception\RuntimeException;
-use Zend\Router\Exception\InvalidArgumentException;
 
 class TreeRouteStackTest extends TestCase
 {

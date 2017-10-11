@@ -9,8 +9,8 @@ namespace ZendTest\Router\Http;
 
 use PHPUnit\Framework\TestCase;
 use Zend\Http\Request as Request;
-use Zend\Stdlib\Request as BaseRequest;
 use Zend\Router\Http\Wildcard;
+use Zend\Stdlib\Request as BaseRequest;
 use ZendTest\Router\FactoryTester;
 
 class WildcardTest extends TestCase
