@@ -55,18 +55,18 @@ class Method implements RouteInterface
     {
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
-        } elseif (!is_array($options)) {
+        } elseif (! is_array($options)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable set of options',
                 __METHOD__
             ));
         }
 
-        if (!isset($options['verb'])) {
+        if (! isset($options['verb'])) {
             throw new Exception\InvalidArgumentException('Missing "verb" in options array');
         }
 
-        if (!isset($options['defaults'])) {
+        if (! isset($options['defaults'])) {
             $options['defaults'] = [];
         }
 
@@ -82,7 +82,7 @@ class Method implements RouteInterface
      */
     public function match(Request $request)
     {
-        if (!method_exists($request, 'getMethod')) {
+        if (! method_exists($request, 'getMethod')) {
             return;
         }
 

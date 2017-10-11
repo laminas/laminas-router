@@ -55,18 +55,18 @@ class Literal implements RouteInterface
     {
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
-        } elseif (!is_array($options)) {
+        } elseif (! is_array($options)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable set of options',
                 __METHOD__
             ));
         }
 
-        if (!isset($options['route'])) {
+        if (! isset($options['route'])) {
             throw new Exception\InvalidArgumentException('Missing "route" in options array');
         }
 
-        if (!isset($options['defaults'])) {
+        if (! isset($options['defaults'])) {
             $options['defaults'] = [];
         }
 
@@ -83,7 +83,7 @@ class Literal implements RouteInterface
      */
     public function match(Request $request, $pathOffset = null)
     {
-        if (!method_exists($request, 'getUri')) {
+        if (! method_exists($request, 'getUri')) {
             return;
         }
 
@@ -91,7 +91,7 @@ class Literal implements RouteInterface
         $path = $uri->getPath();
 
         if ($pathOffset !== null) {
-            if ($pathOffset >= 0 && strlen($path) >= $pathOffset && !empty($this->route)) {
+            if ($pathOffset >= 0 && strlen($path) >= $pathOffset && ! empty($this->route)) {
                 if (strpos($path, $this->route, $pathOffset) === $pathOffset) {
                     return new RouteMatch($this->defaults, strlen($this->route));
                 }

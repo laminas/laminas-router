@@ -147,7 +147,7 @@ class TreeRouteStack extends SimpleRouteStack
      */
     public function addRoute($name, $route, $priority = null)
     {
-        if (!$route instanceof RouteInterface) {
+        if (! $route instanceof RouteInterface) {
             $route = $this->routeFromArray($route);
         }
 
@@ -174,12 +174,12 @@ class TreeRouteStack extends SimpleRouteStack
             return $route;
         } elseif ($specs instanceof Traversable) {
             $specs = ArrayUtils::iteratorToArray($specs);
-        } elseif (!is_array($specs)) {
+        } elseif (! is_array($specs)) {
             throw new Exception\InvalidArgumentException('Route definition must be an array or Traversable object');
         }
 
         if (isset($specs['chain_routes'])) {
-            if (!is_array($specs['chain_routes'])) {
+            if (! is_array($specs['chain_routes'])) {
                 throw new Exception\InvalidArgumentException('Chain routes must be an array or Traversable object');
             }
 
@@ -201,7 +201,7 @@ class TreeRouteStack extends SimpleRouteStack
             $route = parent::routeFromArray($specs);
         }
 
-        if (!$route instanceof RouteInterface) {
+        if (! $route instanceof RouteInterface) {
             throw new Exception\RuntimeException('Given route does not implement HTTP route interface');
         }
 
@@ -232,7 +232,7 @@ class TreeRouteStack extends SimpleRouteStack
      */
     public function addPrototypes($routes)
     {
-        if (!is_array($routes) && !$routes instanceof Traversable) {
+        if (! is_array($routes) && ! $routes instanceof Traversable) {
             throw new Exception\InvalidArgumentException('addPrototypes expects an array or Traversable set of routes');
         }
 
@@ -252,7 +252,7 @@ class TreeRouteStack extends SimpleRouteStack
      */
     public function addPrototype($name, $route)
     {
-        if (!$route instanceof RouteInterface) {
+        if (! $route instanceof RouteInterface) {
             $route = $this->routeFromArray($route);
         }
 
@@ -287,7 +287,7 @@ class TreeRouteStack extends SimpleRouteStack
      */
     public function match(Request $request, $pathOffset = null, array $options = [])
     {
-        if (!method_exists($request, 'getUri')) {
+        if (! method_exists($request, 'getUri')) {
             return;
         }
 
@@ -343,19 +343,19 @@ class TreeRouteStack extends SimpleRouteStack
      */
     public function assemble(array $params = [], array $options = [])
     {
-        if (!isset($options['name'])) {
+        if (! isset($options['name'])) {
             throw new Exception\InvalidArgumentException('Missing "name" option');
         }
 
         $names = explode('/', $options['name'], 2);
         $route = $this->routes->get($names[0]);
 
-        if (!$route) {
+        if (! $route) {
             throw new Exception\RuntimeException(sprintf('Route with name "%s" not found', $names[0]));
         }
 
         if (isset($names[1])) {
-            if (!$route instanceof TreeRouteStack) {
+            if (! $route instanceof TreeRouteStack) {
                 throw new Exception\RuntimeException(sprintf(
                     'Route with name "%s" does not have child routes',
                     $names[0]
@@ -370,7 +370,7 @@ class TreeRouteStack extends SimpleRouteStack
             return $this->baseUrl . $route->assemble(array_merge($this->defaultParams, $params), $options);
         }
 
-        if (!isset($options['uri'])) {
+        if (! isset($options['uri'])) {
             $uri = new HttpUri();
 
             if (isset($options['force_canonical']) && $options['force_canonical']) {
@@ -417,15 +417,15 @@ class TreeRouteStack extends SimpleRouteStack
 
             $uri->setPath($path);
 
-            if (!isset($options['normalize_path']) || $options['normalize_path']) {
+            if (! isset($options['normalize_path']) || $options['normalize_path']) {
                 $uri->normalize();
             }
 
             return $uri->toString();
-        } elseif (!$uri->isAbsolute() && $uri->isValidRelative()) {
+        } elseif (! $uri->isAbsolute() && $uri->isValidRelative()) {
             $uri->setPath($path);
 
-            if (!isset($options['normalize_path']) || $options['normalize_path']) {
+            if (! isset($options['normalize_path']) || $options['normalize_path']) {
                 $uri->normalize();
             }
 
