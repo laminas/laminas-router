@@ -125,22 +125,22 @@ class Segment implements RouteInterface
     {
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
-        } elseif (!is_array($options)) {
+        } elseif (! is_array($options)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable set of options',
                 __METHOD__
             ));
         }
 
-        if (!isset($options['route'])) {
+        if (! isset($options['route'])) {
             throw new Exception\InvalidArgumentException('Missing "route" in options array');
         }
 
-        if (!isset($options['constraints'])) {
+        if (! isset($options['constraints'])) {
             $options['constraints'] = [];
         }
 
-        if (!isset($options['defaults'])) {
+        if (! isset($options['defaults'])) {
             $options['defaults'] = [];
         }
 
@@ -167,12 +167,12 @@ class Segment implements RouteInterface
 
             $currentPos += strlen($matches[0]);
 
-            if (!empty($matches['literal'])) {
+            if (! empty($matches['literal'])) {
                 $levelParts[$level][] = ['literal', $matches['literal']];
             }
 
             if ($matches['token'] === ':') {
-                if (!preg_match(
+                if (! preg_match(
                     '(\G(?P<name>[^:/{\[\]]+)(?:{(?P<delimiters>[^}]+)})?:?)',
                     $def,
                     $matches,
@@ -190,7 +190,7 @@ class Segment implements RouteInterface
 
                 $currentPos += strlen($matches[0]);
             } elseif ($matches['token'] === '{') {
-                if (!preg_match('(\G(?P<literal>[^}]+)\})', $def, $matches, 0, $currentPos)) {
+                if (! preg_match('(\G(?P<literal>[^}]+)\})', $def, $matches, 0, $currentPos)) {
                     throw new Exception\RuntimeException('Translated literal missing closing bracket');
                 }
 
@@ -282,7 +282,7 @@ class Segment implements RouteInterface
     protected function buildPath(array $parts, array $mergedParams, $isOptional, $hasChild, array $options)
     {
         if ($this->translationKeys) {
-            if (!isset($options['translator']) || !$options['translator'] instanceof Translator) {
+            if (! isset($options['translator']) || ! $options['translator'] instanceof Translator) {
                 throw new Exception\RuntimeException('No translator provided');
             }
 
@@ -304,15 +304,15 @@ class Segment implements RouteInterface
                 case 'parameter':
                     $skippable = true;
 
-                    if (!isset($mergedParams[$part[1]])) {
-                        if (!$isOptional || $hasChild) {
+                    if (! isset($mergedParams[$part[1]])) {
+                        if (! $isOptional || $hasChild) {
                             throw new Exception\InvalidArgumentException(sprintf('Missing parameter "%s"', $part[1]));
                         }
 
                         return '';
-                    } elseif (!$isOptional
+                    } elseif (! $isOptional
                         || $hasChild
-                        || !isset($this->defaults[$part[1]])
+                        || ! isset($this->defaults[$part[1]])
                         || $this->defaults[$part[1]] !== $mergedParams[$part[1]]
                     ) {
                         $skip = false;
@@ -358,7 +358,7 @@ class Segment implements RouteInterface
      */
     public function match(Request $request, $pathOffset = null, array $options = [])
     {
-        if (!method_exists($request, 'getUri')) {
+        if (! method_exists($request, 'getUri')) {
             return;
         }
 
@@ -368,7 +368,7 @@ class Segment implements RouteInterface
         $regex = $this->regex;
 
         if ($this->translationKeys) {
-            if (!isset($options['translator']) || !$options['translator'] instanceof Translator) {
+            if (! isset($options['translator']) || ! $options['translator'] instanceof Translator) {
                 throw new Exception\RuntimeException('No translator provided');
             }
 
@@ -387,7 +387,7 @@ class Segment implements RouteInterface
             $result = preg_match('(^' . $regex . '$)', $path, $matches);
         }
 
-        if (!$result) {
+        if (! $result) {
             return;
         }
 
@@ -444,7 +444,7 @@ class Segment implements RouteInterface
     protected function encode($value)
     {
         $key = (string) $value;
-        if (!isset(static::$cacheEncode[$key])) {
+        if (! isset(static::$cacheEncode[$key])) {
             static::$cacheEncode[$key] = rawurlencode($value);
             static::$cacheEncode[$key] = strtr(static::$cacheEncode[$key], static::$urlencodeCorrectionMap);
         }

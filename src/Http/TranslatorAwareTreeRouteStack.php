@@ -49,11 +49,11 @@ class TranslatorAwareTreeRouteStack extends TreeRouteStack implements Translator
      */
     public function match(Request $request, $pathOffset = null, array $options = [])
     {
-        if ($this->hasTranslator() && $this->isTranslatorEnabled() && !isset($options['translator'])) {
+        if ($this->hasTranslator() && $this->isTranslatorEnabled() && ! isset($options['translator'])) {
             $options['translator'] = $this->getTranslator();
         }
 
-        if (!isset($options['text_domain'])) {
+        if (! isset($options['text_domain'])) {
             $options['text_domain'] = $this->getTranslatorTextDomain();
         }
 
@@ -72,11 +72,11 @@ class TranslatorAwareTreeRouteStack extends TreeRouteStack implements Translator
      */
     public function assemble(array $params = [], array $options = [])
     {
-        if ($this->hasTranslator() && $this->isTranslatorEnabled() && !isset($options['translator'])) {
+        if ($this->hasTranslator() && $this->isTranslatorEnabled() && ! isset($options['translator'])) {
             $options['translator'] = $this->getTranslator();
         }
 
-        if (!isset($options['text_domain'])) {
+        if (! isset($options['text_domain'])) {
             $options['text_domain'] = $this->getTranslatorTextDomain();
         }
 

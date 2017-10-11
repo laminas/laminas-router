@@ -73,22 +73,22 @@ class Regex implements RouteInterface
     {
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
-        } elseif (!is_array($options)) {
+        } elseif (! is_array($options)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable set of options',
                 __METHOD__
             ));
         }
 
-        if (!isset($options['regex'])) {
+        if (! isset($options['regex'])) {
             throw new Exception\InvalidArgumentException('Missing "regex" in options array');
         }
 
-        if (!isset($options['spec'])) {
+        if (! isset($options['spec'])) {
             throw new Exception\InvalidArgumentException('Missing "spec" in options array');
         }
 
-        if (!isset($options['defaults'])) {
+        if (! isset($options['defaults'])) {
             $options['defaults'] = [];
         }
 
@@ -104,7 +104,7 @@ class Regex implements RouteInterface
      */
     public function match(Request $request, $pathOffset = null)
     {
-        if (!method_exists($request, 'getUri')) {
+        if (! method_exists($request, 'getUri')) {
             return;
         }
 
@@ -117,7 +117,7 @@ class Regex implements RouteInterface
             $result = preg_match('(^' . $this->regex . '$)', $path, $matches);
         }
 
-        if (!$result) {
+        if (! $result) {
             return;
         }
 

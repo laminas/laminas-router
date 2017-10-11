@@ -78,22 +78,22 @@ class Hostname implements RouteInterface
     {
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
-        } elseif (!is_array($options)) {
+        } elseif (! is_array($options)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable set of options',
                 __METHOD__
             ));
         }
 
-        if (!isset($options['route'])) {
+        if (! isset($options['route'])) {
             throw new Exception\InvalidArgumentException('Missing "route" in options array');
         }
 
-        if (!isset($options['constraints'])) {
+        if (! isset($options['constraints'])) {
             $options['constraints'] = [];
         }
 
-        if (!isset($options['defaults'])) {
+        if (! isset($options['defaults'])) {
             $options['defaults'] = [];
         }
 
@@ -116,13 +116,13 @@ class Hostname implements RouteInterface
         $level      = 0;
 
         while ($currentPos < $length) {
-            if (!preg_match('(\G(?P<literal>[a-z0-9-.]*)(?P<token>[:{\[\]]|$))', $def, $matches, 0, $currentPos)) {
+            if (! preg_match('(\G(?P<literal>[a-z0-9-.]*)(?P<token>[:{\[\]]|$))', $def, $matches, 0, $currentPos)) {
                 throw new Exception\RuntimeException('Matched hostname literal contains a disallowed character');
             }
 
             $currentPos += strlen($matches[0]);
 
-            if (!empty($matches['literal'])) {
+            if (! empty($matches['literal'])) {
                 $levelParts[$level][] = ['literal', $matches['literal']];
             }
 
@@ -235,14 +235,14 @@ class Hostname implements RouteInterface
                 case 'parameter':
                     $skippable = true;
 
-                    if (!isset($mergedParams[$part[1]])) {
-                        if (!$isOptional) {
+                    if (! isset($mergedParams[$part[1]])) {
+                        if (! $isOptional) {
                             throw new Exception\InvalidArgumentException(sprintf('Missing parameter "%s"', $part[1]));
                         }
 
                         return '';
-                    } elseif (!$isOptional
-                        || !isset($this->defaults[$part[1]])
+                    } elseif (! $isOptional
+                        || ! isset($this->defaults[$part[1]])
                         || $this->defaults[$part[1]] !== $mergedParams[$part[1]]
                     ) {
                         $skip = false;
@@ -281,7 +281,7 @@ class Hostname implements RouteInterface
      */
     public function match(Request $request)
     {
-        if (!method_exists($request, 'getUri')) {
+        if (! method_exists($request, 'getUri')) {
             return;
         }
 
@@ -290,7 +290,7 @@ class Hostname implements RouteInterface
 
         $result = preg_match('(^' . $this->regex . '$)', $host, $matches);
 
-        if (!$result) {
+        if (! $result) {
             return;
         }
 

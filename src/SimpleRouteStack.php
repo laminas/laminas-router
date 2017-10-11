@@ -68,7 +68,7 @@ class SimpleRouteStack implements RouteStackInterface
     {
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
-        } elseif (!is_array($options)) {
+        } elseif (! is_array($options)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable set of options',
                 __METHOD__
@@ -134,7 +134,7 @@ class SimpleRouteStack implements RouteStackInterface
      */
     public function addRoutes($routes)
     {
-        if (!is_array($routes) && !$routes instanceof Traversable) {
+        if (! is_array($routes) && ! $routes instanceof Traversable) {
             throw new Exception\InvalidArgumentException('addRoutes expects an array or Traversable set of routes');
         }
 
@@ -156,7 +156,7 @@ class SimpleRouteStack implements RouteStackInterface
      */
     public function addRoute($name, $route, $priority = null)
     {
-        if (!$route instanceof RouteInterface) {
+        if (! $route instanceof RouteInterface) {
             $route = $this->routeFromArray($route);
         }
 
@@ -324,13 +324,13 @@ class SimpleRouteStack implements RouteStackInterface
      */
     public function assemble(array $params = [], array $options = [])
     {
-        if (!isset($options['name'])) {
+        if (! isset($options['name'])) {
             throw new Exception\InvalidArgumentException('Missing "name" option');
         }
 
         $route = $this->routes->get($options['name']);
 
-        if (!$route) {
+        if (! $route) {
             throw new Exception\RuntimeException(sprintf('Route with name "%s" not found', $options['name']));
         }
 

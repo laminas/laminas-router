@@ -61,18 +61,18 @@ class Chain extends TreeRouteStack implements RouteInterface
     {
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
-        } elseif (!is_array($options)) {
+        } elseif (! is_array($options)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable set of options',
                 __METHOD__
             ));
         }
 
-        if (!isset($options['routes'])) {
+        if (! isset($options['routes'])) {
             throw new Exception\InvalidArgumentException('Missing "routes" in options array');
         }
 
-        if (!isset($options['prototypes'])) {
+        if (! isset($options['prototypes'])) {
             $options['prototypes'] = null;
         }
 
@@ -80,7 +80,7 @@ class Chain extends TreeRouteStack implements RouteInterface
             $options['routes'] = ArrayUtils::iteratorToArray($options['child_routes']);
         }
 
-        if (!isset($options['route_plugins'])) {
+        if (! isset($options['route_plugins'])) {
             throw new Exception\InvalidArgumentException('Missing "route_plugins" in options array');
         }
 
@@ -102,7 +102,7 @@ class Chain extends TreeRouteStack implements RouteInterface
      */
     public function match(Request $request, $pathOffset = null, array $options = [])
     {
-        if (!method_exists($request, 'getUri')) {
+        if (! method_exists($request, 'getUri')) {
             return;
         }
 
