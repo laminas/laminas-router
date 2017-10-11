@@ -13,6 +13,8 @@ use Zend\Stdlib\Request;
 use Zend\Router\RoutePluginManager;
 use Zend\Router\SimpleRouteStack;
 use Zend\ServiceManager\ServiceManager;
+use Zend\Router\Exception\InvalidArgumentException;
+use Zend\Router\Exception\RuntimeException;
 
 class SimpleRouteStackTest extends TestCase
 {
@@ -27,11 +29,10 @@ class SimpleRouteStackTest extends TestCase
 
     public function testAddRoutesWithInvalidArgument()
     {
-        $this->setExpectedException(
-            'Zend\Router\Exception\InvalidArgumentException',
-            'addRoutes expects an array or Traversable set of routes'
-        );
         $stack = new SimpleRouteStack();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('addRoutes expects an array or Traversable set of routes');
         $stack->addRoutes('foo');
     }
 
@@ -57,11 +58,10 @@ class SimpleRouteStackTest extends TestCase
 
     public function testSetRoutesWithInvalidArgument()
     {
-        $this->setExpectedException(
-            'Zend\Router\Exception\InvalidArgumentException',
-            'addRoutes expects an array or Traversable set of routes'
-        );
         $stack = new SimpleRouteStack();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('addRoutes expects an array or Traversable set of routes');
         $stack->setRoutes('foo');
     }
 
@@ -106,11 +106,10 @@ class SimpleRouteStackTest extends TestCase
 
     public function testAddRouteWithInvalidArgument()
     {
-        $this->setExpectedException(
-            'Zend\Router\Exception\InvalidArgumentException',
-            'Route definition must be an array or Traversable object'
-        );
         $stack = new SimpleRouteStack();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Route definition must be an array or Traversable object');
         $stack->addRoute('foo', 'bar');
     }
 
@@ -137,8 +136,10 @@ class SimpleRouteStackTest extends TestCase
 
     public function testAddRouteAsArrayWithoutType()
     {
-        $this->setExpectedException('Zend\Router\Exception\InvalidArgumentException', 'Missing "type" option');
         $stack = new SimpleRouteStack();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Missing "type" option');
         $stack->addRoute('foo', []);
     }
 
@@ -192,15 +193,19 @@ class SimpleRouteStackTest extends TestCase
 
     public function testAssembleWithoutNameOption()
     {
-        $this->setExpectedException('Zend\Router\Exception\InvalidArgumentException', 'Missing "name" option');
         $stack = new SimpleRouteStack();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Missing "name" option');
         $stack->assemble();
     }
 
     public function testAssembleNonExistentRoute()
     {
-        $this->setExpectedException('Zend\Router\Exception\RuntimeException', 'Route with name "foo" not found');
         $stack = new SimpleRouteStack();
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Route with name "foo" not found');
         $stack->assemble([], ['name' => 'foo']);
     }
 

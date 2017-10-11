@@ -13,6 +13,8 @@ use Zend\Stdlib\Request as BaseRequest;
 use Zend\Uri\Http as HttpUri;
 use Zend\Router\Http\Hostname;
 use ZendTest\Router\FactoryTester;
+use Zend\Router\Exception\InvalidArgumentException;
+use Zend\Router\Exception\RuntimeException;
 
 class HostnameTest extends TestCase
 {
@@ -209,10 +211,11 @@ class HostnameTest extends TestCase
 
     public function testAssemblingWithMissingParameter()
     {
-        $this->setExpectedException('Zend\Router\Exception\InvalidArgumentException', 'Missing parameter "foo"');
-
         $route = new Hostname(':foo.example.com');
         $uri   = new HttpUri();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Missing parameter "foo"');
         $route->assemble([], ['uri' => $uri]);
     }
 
@@ -244,7 +247,7 @@ class HostnameTest extends TestCase
      */
     public function testFailedHostnameSegmentMatchDoesNotEmitErrors()
     {
-        $this->setExpectedException('Zend\Router\Exception\RuntimeException');
-        $route = new Hostname(':subdomain.with_underscore.com');
+        $this->expectException(RuntimeException::class);
+        new Hostname(':subdomain.with_underscore.com');
     }
 }

@@ -20,6 +20,8 @@ use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Parameters;
 use Zend\Stdlib\Request as BaseRequest;
 use ZendTest\Router\FactoryTester;
+use Zend\Router\Exception\RuntimeException;
+use Zend\Router\Exception\InvalidArgumentException;
 
 class PartTest extends TestCase
 {
@@ -326,18 +328,17 @@ class PartTest extends TestCase
 
     public function testAssembleNonTerminatedRoute()
     {
-        $this->setExpectedException('Zend\Router\Exception\RuntimeException', 'Part route may not terminate');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Part route may not terminate');
         self::getRoute()->assemble([], ['name' => 'baz']);
     }
 
     public function testBaseRouteMayNotBePartRoute()
     {
-        $this->setExpectedException(
-            'Zend\Router\Exception\InvalidArgumentException',
-            'Base route may not be a part route'
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Base route may not be a part route');
 
-        $route = new Part(self::getRoute(), true, new RoutePluginManager(new ServiceManager()));
+        new Part(self::getRoute(), true, new RoutePluginManager(new ServiceManager()));
     }
 
     public function testNoMatchWithoutUriMethod()

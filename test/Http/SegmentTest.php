@@ -14,6 +14,8 @@ use Zend\I18n\Translator\Translator;
 use Zend\Stdlib\Request as BaseRequest;
 use Zend\Router\Http\Segment;
 use ZendTest\Router\FactoryTester;
+use Zend\Router\Exception\InvalidArgumentException;
+use Zend\Router\Exception\RuntimeException;
 
 class SegmentTest extends TestCase
 {
@@ -362,28 +364,35 @@ class SegmentTest extends TestCase
      */
     public function testParseExceptions($route, $exceptionName, $exceptionMessage)
     {
-        $this->setExpectedException($exceptionName, $exceptionMessage);
+        $this->expectException($exceptionName);
+        $this->expectExceptionMessage($exceptionMessage);
         new Segment($route);
     }
 
     public function testAssemblingWithMissingParameterInRoot()
     {
-        $this->setExpectedException('Zend\Router\Exception\InvalidArgumentException', 'Missing parameter "foo"');
         $route = new Segment('/:foo');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Missing parameter "foo"');
         $route->assemble();
     }
 
     public function testTranslatedAssemblingThrowsExceptionWithoutTranslator()
     {
-        $this->setExpectedException('Zend\Router\Exception\RuntimeException', 'No translator provided');
         $route = new Segment('/{foo}');
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('No translator provided');
         $route->assemble();
     }
 
     public function testTranslatedMatchingThrowsExceptionWithoutTranslator()
     {
-        $this->setExpectedException('Zend\Router\Exception\RuntimeException', 'No translator provided');
         $route = new Segment('/{foo}');
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('No translator provided');
         $route->match(new Request());
     }
 
