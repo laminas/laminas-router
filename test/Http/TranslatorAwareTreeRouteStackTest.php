@@ -10,6 +10,8 @@ namespace ZendTest\Router\Http;
 use PHPUnit\Framework\TestCase;
 use Zend\Http\Request;
 use Zend\I18n\Translator\Translator;
+use Zend\I18n\Translator\TranslatorAwareInterface;
+use Zend\Router\Http\RouteInterface;
 use Zend\Router\Http\TranslatorAwareTreeRouteStack;
 use Zend\Uri\Http as HttpUri;
 
@@ -59,7 +61,7 @@ class TranslatorAwareTreeRouteStackTest extends TestCase
     public function testTranslatorAwareInterfaceImplementation()
     {
         $stack = new TranslatorAwareTreeRouteStack();
-        $this->assertInstanceOf('Zend\I18n\Translator\TranslatorAwareInterface', $stack);
+        $this->assertInstanceOf(TranslatorAwareInterface::class, $stack);
 
         // Defaults
         $this->assertNull($stack->getTranslator());
@@ -98,7 +100,7 @@ class TranslatorAwareTreeRouteStackTest extends TestCase
         $translator = new Translator();
         $request    = new Request();
 
-        $route = $this->getMock('Zend\Router\Http\RouteInterface');
+        $route = $this->getMock(RouteInterface::class);
         $route->expects($this->once())
               ->method('match')
               ->with(
@@ -118,7 +120,7 @@ class TranslatorAwareTreeRouteStackTest extends TestCase
         $translator = new Translator();
         $uri        = new HttpUri();
 
-        $route = $this->getMock('Zend\Router\Http\RouteInterface');
+        $route = $this->getMock(RouteInterface::class);
         $route->expects($this->once())
               ->method('assemble')
               ->with(

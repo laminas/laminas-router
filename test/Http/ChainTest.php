@@ -10,6 +10,9 @@ namespace ZendTest\Router\Http;
 use PHPUnit\Framework\TestCase;
 use Zend\Http\Request;
 use Zend\Router\Http\Chain;
+use Zend\Router\Http\RouteMatch;
+use Zend\Router\Http\Segment;
+use Zend\Router\Http\Wildcard;
 use Zend\Router\RoutePluginManager;
 use Zend\ServiceManager\ServiceManager;
 use ZendTest\Router\FactoryTester;
@@ -23,7 +26,7 @@ class ChainTest extends TestCase
         return new Chain(
             [
                 [
-                    'type'    => 'Zend\Router\Http\Segment',
+                    'type'    => Segment::class,
                     'options' => [
                         'route'    => '/:controller',
                         'defaults' => [
@@ -32,7 +35,7 @@ class ChainTest extends TestCase
                     ],
                 ],
                 [
-                    'type'    => 'Zend\Router\Http\Segment',
+                    'type'    => Segment::class,
                     'options' => [
                         'route'    => '/:bar',
                         'defaults' => [
@@ -41,7 +44,7 @@ class ChainTest extends TestCase
                     ],
                 ],
                 [
-                    'type' => 'Zend\Router\Http\Wildcard',
+                    'type' => Wildcard::class,
                 ],
             ],
             $routePlugins
@@ -55,7 +58,7 @@ class ChainTest extends TestCase
         return new Chain(
             [
                 [
-                    'type'    => 'Zend\Router\Http\Segment',
+                    'type'    => Segment::class,
                     'options' => [
                         'route'    => '/:controller',
                         'defaults' => [
@@ -64,7 +67,7 @@ class ChainTest extends TestCase
                     ],
                 ],
                 [
-                    'type'    => 'Zend\Router\Http\Segment',
+                    'type'    => Segment::class,
                     'options' => [
                         'route'    => '[/:bar]',
                         'defaults' => [
@@ -144,7 +147,7 @@ class ChainTest extends TestCase
         if ($params === null) {
             $this->assertNull($match);
         } else {
-            $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
+            $this->assertInstanceOf(RouteMatch::class, $match);
 
             if ($offset === null) {
                 $this->assertEquals(strlen($path), $match->getLength());
@@ -184,7 +187,7 @@ class ChainTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Router\Http\Chain',
+            Chain::class,
             [
                 'routes'        => 'Missing "routes" in options array',
                 'route_plugins' => 'Missing "route_plugins" in options array',

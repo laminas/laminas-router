@@ -12,6 +12,7 @@ use Zend\Http\Request;
 use Zend\Router\Exception\InvalidArgumentException;
 use Zend\Router\Exception\RuntimeException;
 use Zend\Router\Http\Hostname;
+use Zend\Router\Http\RouteMatch;
 use Zend\Stdlib\Request as BaseRequest;
 use Zend\Uri\Http as HttpUri;
 use ZendTest\Router\FactoryTester;
@@ -173,7 +174,7 @@ class HostnameTest extends TestCase
         if ($params === null) {
             $this->assertNull($match);
         } else {
-            $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
+            $this->assertInstanceOf(RouteMatch::class, $match);
 
             foreach ($params as $key => $value) {
                 $this->assertEquals($value, $match->getParam($key));
@@ -232,7 +233,7 @@ class HostnameTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Router\Http\Hostname',
+            Hostname::class,
             [
                 'route' => 'Missing "route" in options array'
             ],

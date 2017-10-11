@@ -24,10 +24,10 @@ class RoutePluginManagerTest extends TestCase
     public function testCanLoadAnyRoute()
     {
         $routes = new RoutePluginManager(new ServiceManager(), ['invokables' => [
-            'DummyRoute' => 'ZendTest\Router\TestAsset\DummyRoute',
+            'DummyRoute' => TestAsset\DummyRoute::class,
         ]]);
         $route = $routes->get('DummyRoute');
 
-        $this->assertInstanceOf('ZendTest\Router\TestAsset\DummyRoute', $route);
+        $this->assertInstanceOf(TestAsset\DummyRoute::class, $route);
     }
 }

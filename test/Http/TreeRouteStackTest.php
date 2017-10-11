@@ -37,7 +37,7 @@ class TreeRouteStackTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Given route does not implement HTTP route interface');
         $stack->addRoute('foo', [
-            'type' => '\ZendTest\Router\TestAsset\DummyRoute'
+            'type' => \ZendTest\Router\TestAsset\DummyRoute::class
         ]);
     }
 
@@ -45,7 +45,7 @@ class TreeRouteStackTest extends TestCase
     {
         $stack = new TreeRouteStack();
         $stack->addRoute('foo', new ArrayIterator([
-            'type' => '\ZendTest\Router\Http\TestAsset\DummyRoute'
+            'type' => TestAsset\DummyRoute::class
         ]));
     }
 
@@ -77,7 +77,7 @@ class TreeRouteStackTest extends TestCase
         $stack = new TreeRouteStack();
         $stack->setBaseUrl('/foo');
         $stack->addRoute('foo', [
-            'type' => '\ZendTest\Router\Http\TestAsset\DummyRoute'
+            'type' => TestAsset\DummyRoute::class
         ]);
 
         $this->assertEquals(4, $stack->match(new Request())->getParam('offset'));
@@ -87,7 +87,7 @@ class TreeRouteStackTest extends TestCase
     {
         $stack = new TreeRouteStack();
         $stack->addRoute('foo', [
-            'type' => '\ZendTest\Router\Http\TestAsset\DummyRoute'
+            'type' => TestAsset\DummyRoute::class
         ]);
 
         $this->assertEquals(null, $stack->match(new Request())->getParam('offset'));
@@ -457,7 +457,7 @@ class TreeRouteStackTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Router\Http\TreeRouteStack',
+            TreeRouteStack::class,
             [],
             []
         );

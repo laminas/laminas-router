@@ -11,6 +11,7 @@ use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use Zend\Router\Exception\InvalidArgumentException;
 use Zend\Router\Exception\RuntimeException;
+use Zend\Router\RouteMatch;
 use Zend\Router\RoutePluginManager;
 use Zend\Router\SimpleRouteStack;
 use Zend\ServiceManager\ServiceManager;
@@ -43,7 +44,7 @@ class SimpleRouteStackTest extends TestCase
             'foo' => new TestAsset\DummyRoute()
         ]);
 
-        $this->assertInstanceOf('Zend\Router\RouteMatch', $stack->match(new Request()));
+        $this->assertInstanceOf(RouteMatch::class, $stack->match(new Request()));
     }
 
     public function testAddRoutesAsTraversable()
@@ -53,7 +54,7 @@ class SimpleRouteStackTest extends TestCase
             'foo' => new TestAsset\DummyRoute()
         ]));
 
-        $this->assertInstanceOf('Zend\Router\RouteMatch', $stack->match(new Request()));
+        $this->assertInstanceOf(RouteMatch::class, $stack->match(new Request()));
     }
 
     public function testSetRoutesWithInvalidArgument()
@@ -72,7 +73,7 @@ class SimpleRouteStackTest extends TestCase
             'foo' => new TestAsset\DummyRoute()
         ]);
 
-        $this->assertInstanceOf('Zend\Router\RouteMatch', $stack->match(new Request()));
+        $this->assertInstanceOf(RouteMatch::class, $stack->match(new Request()));
 
         $stack->setRoutes([]);
 
@@ -86,7 +87,7 @@ class SimpleRouteStackTest extends TestCase
             'foo' => new TestAsset\DummyRoute()
         ]));
 
-        $this->assertInstanceOf('Zend\Router\RouteMatch', $stack->match(new Request()));
+        $this->assertInstanceOf(RouteMatch::class, $stack->match(new Request()));
 
         $stack->setRoutes(new ArrayIterator([]));
 
@@ -117,21 +118,21 @@ class SimpleRouteStackTest extends TestCase
     {
         $stack = new SimpleRouteStack();
         $stack->addRoute('foo', [
-            'type' => '\ZendTest\Router\TestAsset\DummyRoute'
+            'type' => TestAsset\DummyRoute::class
         ]);
 
-        $this->assertInstanceOf('Zend\Router\RouteMatch', $stack->match(new Request()));
+        $this->assertInstanceOf(RouteMatch::class, $stack->match(new Request()));
     }
 
     public function testAddRouteAsArrayWithOptions()
     {
         $stack = new SimpleRouteStack();
         $stack->addRoute('foo', [
-            'type'    => '\ZendTest\Router\TestAsset\DummyRoute',
+            'type'    => TestAsset\DummyRoute::class,
             'options' => []
         ]);
 
-        $this->assertInstanceOf('Zend\Router\RouteMatch', $stack->match(new Request()));
+        $this->assertInstanceOf(RouteMatch::class, $stack->match(new Request()));
     }
 
     public function testAddRouteAsArrayWithoutType()
@@ -148,10 +149,10 @@ class SimpleRouteStackTest extends TestCase
         $stack = new SimpleRouteStack();
 
         $stack->addRoute('foo', [
-            'type'     => '\ZendTest\Router\TestAsset\DummyRouteWithParam',
+            'type'     => TestAsset\DummyRouteWithParam::class,
             'priority' => 2
         ])->addRoute('bar', [
-            'type'     => '\ZendTest\Router\TestAsset\DummyRoute',
+            'type'     => TestAsset\DummyRoute::class,
             'priority' => 1
         ]);
 
@@ -167,7 +168,7 @@ class SimpleRouteStackTest extends TestCase
         $stack->addRoute('baz', $route);
 
         $stack->addRoute('foo', [
-            'type'     => '\ZendTest\Router\TestAsset\DummyRoute',
+            'type'     => TestAsset\DummyRoute::class,
             'priority' => 1
         ]);
 
@@ -178,10 +179,10 @@ class SimpleRouteStackTest extends TestCase
     {
         $stack = new SimpleRouteStack();
         $stack->addRoute('foo', new ArrayIterator([
-            'type' => '\ZendTest\Router\TestAsset\DummyRoute'
+            'type' => TestAsset\DummyRoute::class
         ]));
 
-        $this->assertInstanceOf('Zend\Router\RouteMatch', $stack->match(new Request()));
+        $this->assertInstanceOf(RouteMatch::class, $stack->match(new Request()));
     }
 
     public function testAssemble()
@@ -249,7 +250,7 @@ class SimpleRouteStackTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Router\SimpleRouteStack',
+            SimpleRouteStack::class,
             [],
             [
                 'route_plugins'  => new RoutePluginManager(new ServiceManager()),
