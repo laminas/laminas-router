@@ -63,7 +63,7 @@ All notable changes to this project will be documented in this file, in reverse 
 ## 3.0.0 - 2016-03-21
 
 First release as standalone package in its own namespace. This is the first
-version that will be used with zend-mvc v3; see its [migration document](https://zendframework.github.io/zend-router/migration/v2-to-v3/)
+version that will be used with zend-mvc v3; see its [migration document](https://docs.zendframework.com/zend-router/migration/v2-to-v3/)
 for details on how to update existing routing to this version.
 
 In particular, the `Zend\Mvc\Router` namespace was renamed to `Zend\Router`.
