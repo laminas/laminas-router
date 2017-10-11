@@ -341,7 +341,6 @@ You may use any route type as a child route of a `Part` route.
 >     'scheme'   => 'Zend\Router\Http\Scheme',
 >     'segment'  => 'Zend\Router\Http\Segment',
 >     'wildcard' => 'Zend\Router\Http\Wildcard',
->     'query'    => 'Zend\Router\Http\Query',
 >     'method'   => 'Zend\Router\Http\Method',
 > ];
 > foreach ($plugins as $name => $class) {
@@ -439,73 +438,6 @@ $route = Segment::factory([
     ],
 ]);
 ```
-
-### Zend\\Router\\Http\\Query (Deprecated)
-
-> #### Potential security issue
->
-> Misuse of this route can lead to potential security issues.
-
-> #### Deprecated
->
-> This route part is deprecated since you can now add query parameters without a
-> query route.
-
-The `Query` route part allows you to specify and capture query string parameters
-for a given route.
-
-The intention of the `Query` part is that you do not instantiate it in its own
-right, but use it as a child of another route part.
-
-An example of its usage would be:
-
-```php
-$route = Part::factory([
-    'route' => [
-        'type'    => 'literal',
-        'options' => [
-            'route'    => 'page',
-            'defaults' => [],
-        ],
-    ],
-    'may_terminate' => true,
-    'route_plugins' => $routePlugins,
-    'child_routes'  => [
-        'query' => [
-            'type' => 'Query',
-            'options' => [
-                'defaults' => [
-                    'foo' => 'bar',
-                ],
-            ],
-        ],
-    ],
-]);
-```
-
-This then allows you to create query strings using the url view helper.
-
-```php
-$this->url(
-    'page/query',
-    [
-        'name'   => 'my-test-page',
-        'format' => 'rss',
-        'limit'  => 10,
-    ]
-);
-```
-
-Per the above example, you must add `/query` (the name we gave to our query
-route segment) to your route name in order to append a query string. If you do
-not specify `/query` in the route name, then no query string will be appended.
-
-Our example "page" route has only one defined parameter of "name"
-(`/page[/:name]`), meaning that the remaining parameters of "format" and "limit"
-will then be appended as a query string.
-
-The output from our example should then be
-`/page/my-test-page?format=rss&limit=10`
 
 ### Zend\\Router\\Http\\Wildcard (Deprecated)
 
