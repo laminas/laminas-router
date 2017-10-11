@@ -8,7 +8,7 @@
 namespace ZendTest\Router\Http;
 
 use ArrayObject;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\Http\Request as Request;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Part;

@@ -7,8 +7,8 @@
 
 namespace ZendTest\Router\Http;
 
-use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Http\Request as Request;
+use PHPUnit\Framework\TestCase;
+use Zend\Http\Request;
 use Zend\Router\RoutePluginManager;
 use Zend\Router\Http\Chain;
 use Zend\ServiceManager\ServiceManager;

@@ -7,7 +7,7 @@
 
 namespace ZendTest\Router;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\Router\RoutePluginManager;
 use Zend\ServiceManager\ServiceManager;
 

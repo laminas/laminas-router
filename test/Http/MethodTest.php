@@ -7,7 +7,7 @@
 
 namespace ZendTest\Router\Http;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\Http\Request as Request;
 use Zend\Stdlib\Request as BaseRequest;
 use Zend\Router\Http\Method as HttpMethod;

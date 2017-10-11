@@ -7,7 +7,7 @@
 
 namespace ZendTest\Router\Http;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use ArrayIterator;
 use Zend\Http\Request as Request;
 use Zend\Http\PhpEnvironment\Request as PhpRequest;

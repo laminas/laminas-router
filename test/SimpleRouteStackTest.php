@@ -7,8 +7,8 @@
 
 namespace ZendTest\Router;
 
-use PHPUnit_Framework_TestCase as TestCase;
 use ArrayIterator;
+use PHPUnit\Framework\TestCase;
 use Zend\Stdlib\Request;
 use Zend\Router\RoutePluginManager;
 use Zend\Router\SimpleRouteStack;

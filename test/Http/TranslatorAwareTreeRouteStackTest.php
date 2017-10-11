@@ -7,7 +7,7 @@
 
 namespace ZendTest\Router\Http;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\I18n\Translator\Translator;
 use Zend\Http\Request as Request;
 use Zend\Router\Http\TranslatorAwareTreeRouteStack;
