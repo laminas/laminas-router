@@ -87,7 +87,7 @@ class WildcardTest extends TestCase
      * @dataProvider routeProvider
      * @param        Wildcard $route
      * @param        string   $path
-     * @param        integer  $offset
+     * @param        int      $offset
      * @param        array    $params
      */
     public function testMatching(Wildcard $route, $path, $offset, array $params = null)
@@ -115,7 +115,7 @@ class WildcardTest extends TestCase
      * @dataProvider routeProvider
      * @param        Wildcard $route
      * @param        string   $path
-     * @param        integer  $offset
+     * @param        int      $offset
      * @param        array    $params
      * @param        boolean  $skipAssembling
      */

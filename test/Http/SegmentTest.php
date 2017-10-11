@@ -256,7 +256,7 @@ class SegmentTest extends TestCase
      * @dataProvider routeProvider
      * @param        Segment $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        array   $params
      * @param        array   $options
      */
@@ -285,7 +285,7 @@ class SegmentTest extends TestCase
      * @dataProvider routeProvider
      * @param        Segment $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        array   $params
      * @param        array   $options
      */
@@ -309,7 +309,7 @@ class SegmentTest extends TestCase
      * @dataProvider l10nRouteProvider
      * @param        Segment $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        array   $params
      * @param        array   $options
      */
@@ -338,7 +338,7 @@ class SegmentTest extends TestCase
      * @dataProvider l10nRouteProvider
      * @param        Segment $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        array   $params
      * @param        array   $options
      */

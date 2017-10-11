@@ -68,7 +68,7 @@ class RegexTest extends TestCase
      * @dataProvider routeProvider
      * @param        Regex   $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        array   $params
      */
     public function testMatching(Regex $route, $path, $offset, array $params = null)
@@ -96,7 +96,7 @@ class RegexTest extends TestCase
      * @dataProvider routeProvider
      * @param        Regex   $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        array   $params
      */
     public function testAssembling(Regex $route, $path, $offset, array $params = null)

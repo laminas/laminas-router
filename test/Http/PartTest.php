@@ -276,7 +276,7 @@ class PartTest extends TestCase
      * @dataProvider routeProvider
      * @param        Part    $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        string  $routeName
      * @param        array   $params
      */
@@ -307,7 +307,7 @@ class PartTest extends TestCase
      * @dataProvider routeProvider
      * @param        Part    $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        string  $routeName
      * @param        array   $params
      */

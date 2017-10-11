@@ -135,7 +135,7 @@ class ChainTest extends TestCase
      * @dataProvider routeProvider
      * @param        Chain   $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        array   $params
      */
     public function testMatching(Chain $route, $path, $offset, array $params = null)
@@ -163,8 +163,7 @@ class ChainTest extends TestCase
      * @dataProvider routeProvider
      * @param        Chain   $route
      * @param        string  $path
-     * @param        integer $offset
-     * @param        string  $routeName
+     * @param        int     $offset
      * @param        array   $params
      */
     public function testAssembling(Chain $route, $path, $offset, array $params = null)

@@ -56,8 +56,8 @@ class LiteralTest extends TestCase
      * @dataProvider routeProvider
      * @param        Literal $route
      * @param        string  $path
-     * @param        integer $offset
-     * @param        bool $shouldMatch
+     * @param        int     $offset
+     * @param        bool    $shouldMatch
      */
     public function testMatching(Literal $route, $path, $offset, $shouldMatch)
     {
@@ -80,8 +80,8 @@ class LiteralTest extends TestCase
      * @dataProvider routeProvider
      * @param        Literal $route
      * @param        string  $path
-     * @param        integer $offset
-     * @param        bool $shouldMatch
+     * @param        int     $offset
+     * @param        bool    $shouldMatch
      */
     public function testAssembling(Literal $route, $path, $offset, $shouldMatch)
     {
