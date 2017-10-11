@@ -19,4 +19,4 @@ Additionally, it supports combinations of different route types in tree
 structures, allowing for fast, b-tree lookups.
 
 - File issues at https://github.com/zendframework/zend-router/issues
-- Documentation is at https://zendframework.github.io/zend-router/
+- Documentation is at https://docs.zendframework.com/zend-router
