@@ -149,15 +149,6 @@ class PartTest extends TestCase
                         'param_delimiter' => '/'
                     ]
                 ],
-                /*
-                'query' => array(
-                    'type' => 'Zend\Router\Http\Query',
-                    'options' => array(
-                        'key_value_delimiter' => '=',
-                        'param_delimiter' => '&'
-                    )
-                )
-                */
             ]
         );
     }
@@ -479,18 +470,6 @@ class PartTest extends TestCase
             ],
             'route_plugins' => self::getRoutePlugins(),
             'may_terminate' => true,
-            /*
-            'child_routes'  => array(
-                'query' => array(
-                    'type' => 'Zend\Router\Http\Query',
-                    'options' => array(
-                        'defaults' => array(
-                            'query' => 'string',
-                        ),
-                    ),
-                ),
-            ),
-            */
         ];
 
         $route = Part::factory($options);

@@ -168,67 +168,6 @@ class TreeRouteStackTest extends TestCase
         $this->assertEquals('http://example.com/', $stack->assemble([], ['name' => 'foo']));
     }
 
-    public function testAssembleCanonicalUriWithHostnameRouteAndQueryRoute()
-    {
-        $this->markTestSkipped('Query route part has been deprecated in ZF as of 2.1.4');
-        $uri   = new HttpUri();
-        $uri->setScheme('http');
-        $stack = new TreeRouteStack();
-        $stack->setRequestUri($uri);
-        $stack->addRoute(
-            'foo',
-            [
-                'type' => 'Hostname',
-                'options' => [
-                    'route' => 'example.com',
-                ],
-                'child_routes' => [
-                    'index' => [
-                        'type' => 'Literal',
-                        'options' => [
-                            'route' => '/',
-                        ],
-                        'child_routes' => [
-                            'query' => [
-                                'type' => 'Query',
-                            ],
-                        ],
-                    ],
-                ],
-            ]
-        );
-
-        $this->assertEquals(
-            'http://example.com/?bar=baz',
-            $stack->assemble(['bar' => 'baz'], ['name' => 'foo/index/query'])
-        );
-    }
-
-    public function testAssembleWithQueryRoute()
-    {
-        $this->markTestSkipped('Query route part has been deprecated in ZF as of 2.1.4');
-        $uri   = new HttpUri();
-        $uri->setScheme('http');
-        $stack = new TreeRouteStack();
-        $stack->setRequestUri($uri);
-        $stack->addRoute(
-            'index',
-            [
-                'type' => 'Literal',
-                'options' => [
-                    'route' => '/',
-                ],
-                'child_routes' => [
-                    'query' => [
-                        'type' => 'Query',
-                    ],
-                ],
-            ]
-        );
-
-        $this->assertEquals('/?bar=baz', $stack->assemble(['bar' => 'baz'], ['name' => 'index/query']));
-    }
-
     public function testAssembleWithQueryParams()
     {
         $stack = new TreeRouteStack();
