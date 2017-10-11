@@ -10,7 +10,7 @@ namespace ZendTest\Router\Http;
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use Zend\Http\PhpEnvironment\Request as PhpRequest;
-use Zend\Http\Request as Request;
+use Zend\Http\Request;
 use Zend\Router\Exception\InvalidArgumentException;
 use Zend\Router\Exception\RuntimeException;
 use Zend\Router\Http\Hostname;
