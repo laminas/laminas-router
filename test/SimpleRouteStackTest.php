@@ -77,7 +77,7 @@ class SimpleRouteStackTest extends TestCase
 
         $stack->setRoutes([]);
 
-        $this->assertSame(null, $stack->match(new Request()));
+        $this->assertNull($stack->match(new Request()));
     }
 
     public function testSetRoutesAsTraversable()
@@ -91,7 +91,7 @@ class SimpleRouteStackTest extends TestCase
 
         $stack->setRoutes(new ArrayIterator([]));
 
-        $this->assertSame(null, $stack->match(new Request()));
+        $this->assertNull($stack->match(new Request()));
     }
 
     public function testremoveRouteAsArray()
