@@ -14,6 +14,10 @@ use Zend\Stdlib\RequestInterface as Request;
 
 /**
  * Wildcard route.
+ *
+ * @deprecated since version 2.3.
+ * Misuse of this route type can lead to potential security issues.
+ * Use the `Segment` route type instead.
  */
 class Wildcard implements RouteInterface
 {
