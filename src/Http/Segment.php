@@ -320,7 +320,7 @@ class Segment implements RouteInterface
                         $skip = false;
                     }
 
-                    $path .= $this->encode($mergedParams[$part[1]]);
+                    $path .= $this->encode((string) $mergedParams[$part[1]]);
 
                     $this->assembledParams[] = $part[1];
                     break;
@@ -384,7 +384,7 @@ class Segment implements RouteInterface
         }
 
         if ($pathOffset !== null) {
-            $result = preg_match('(\G' . $regex . ')', $path, $matches, null, $pathOffset);
+            $result = preg_match('(\G' . $regex . ')', $path, $matches, 0, $pathOffset);
         } else {
             $result = preg_match('(^' . $regex . '$)', $path, $matches);
         }
@@ -443,7 +443,7 @@ class Segment implements RouteInterface
      * @param  string $value
      * @return string
      */
-    protected function encode($value)
+    protected function encode(string $value)
     {
         $key = (string) $value;
         if (! isset(static::$cacheEncode[$key])) {

@@ -298,7 +298,7 @@ class TreeRouteStack extends SimpleRouteStack
         }
 
         $uri           = $request->getUri();
-        $baseUrlLength = strlen($this->baseUrl) ?: null;
+        $baseUrlLength = strlen((string) $this->baseUrl) ?: null;
 
         if ($pathOffset !== null) {
             $baseUrlLength += $pathOffset;
@@ -309,7 +309,7 @@ class TreeRouteStack extends SimpleRouteStack
         }
 
         if ($baseUrlLength !== null) {
-            $pathLength = strlen($uri->getPath()) - $baseUrlLength;
+            $pathLength = strlen((string) $uri->getPath()) - $baseUrlLength;
         } else {
             $pathLength = null;
         }
