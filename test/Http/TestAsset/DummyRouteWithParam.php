@@ -20,6 +20,7 @@ class DummyRouteWithParam extends DummyRoute
      *
      * @see    Route::match()
      * @param  RequestInterface $request
+     * @param  int $pathOffset
      * @return RouteMatch
      */
     public function match(RequestInterface $request, $pathOffset = null)

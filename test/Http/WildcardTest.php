@@ -7,10 +7,11 @@
 
 namespace ZendTest\Router\Http;
 
-use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Http\Request as Request;
-use Zend\Stdlib\Request as BaseRequest;
+use PHPUnit\Framework\TestCase;
+use Zend\Http\Request;
+use Zend\Router\Http\RouteMatch;
 use Zend\Router\Http\Wildcard;
+use Zend\Stdlib\Request as BaseRequest;
 use ZendTest\Router\FactoryTester;
 
 class WildcardTest extends TestCase
@@ -86,7 +87,7 @@ class WildcardTest extends TestCase
      * @dataProvider routeProvider
      * @param        Wildcard $route
      * @param        string   $path
-     * @param        integer  $offset
+     * @param        int      $offset
      * @param        array    $params
      */
     public function testMatching(Wildcard $route, $path, $offset, array $params = null)
@@ -98,7 +99,7 @@ class WildcardTest extends TestCase
         if ($params === null) {
             $this->assertNull($match);
         } else {
-            $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
+            $this->assertInstanceOf(RouteMatch::class, $match);
 
             if ($offset === null) {
                 $this->assertEquals(strlen($path), $match->getLength());
@@ -114,7 +115,7 @@ class WildcardTest extends TestCase
      * @dataProvider routeProvider
      * @param        Wildcard $route
      * @param        string   $path
-     * @param        integer  $offset
+     * @param        int      $offset
      * @param        array    $params
      * @param        boolean  $skipAssembling
      */
@@ -154,7 +155,7 @@ class WildcardTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Router\Http\Wildcard',
+            Wildcard::class,
             [],
             []
         );

@@ -7,12 +7,16 @@
 
 namespace ZendTest\Router\Http;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\Http\Request;
+use Zend\I18n\Translator\Loader\FileLoaderInterface;
 use Zend\I18n\Translator\TextDomain;
 use Zend\I18n\Translator\Translator;
-use Zend\Stdlib\Request as BaseRequest;
+use Zend\Router\Exception\InvalidArgumentException;
+use Zend\Router\Exception\RuntimeException;
+use Zend\Router\Http\RouteMatch;
 use Zend\Router\Http\Segment;
+use Zend\Stdlib\Request as BaseRequest;
 use ZendTest\Router\FactoryTester;
 
 class SegmentTest extends TestCase
@@ -176,9 +180,9 @@ class SegmentTest extends TestCase
         // @codingStandardsIgnoreStart
         $translator = new Translator();
         $translator->setLocale('en-US');
-        $enLoader     = $this->getMock('Zend\I18n\Translator\Loader\FileLoaderInterface');
-        $deLoader     = $this->getMock('Zend\I18n\Translator\Loader\FileLoaderInterface');
-        $domainLoader = $this->getMock('Zend\I18n\Translator\Loader\FileLoaderInterface');
+        $enLoader     = $this->getMock(FileLoaderInterface::class);
+        $deLoader     = $this->getMock(FileLoaderInterface::class);
+        $domainLoader = $this->getMock(FileLoaderInterface::class);
         $enLoader->expects($this->any())->method('load')->willReturn(new TextDomain(['fw' => 'framework']));
         $deLoader->expects($this->any())->method('load')->willReturn(new TextDomain(['fw' => 'baukasten']));
         $domainLoader->expects($this->any())->method('load')->willReturn(new TextDomain(['fw' => 'fw-alternative']));
@@ -227,22 +231,22 @@ class SegmentTest extends TestCase
         return [
             'unbalanced-brackets' => [
                 '[',
-                'Zend\Router\Exception\RuntimeException',
+                RuntimeException::class,
                 'Found unbalanced brackets'
             ],
             'closing-bracket-without-opening-bracket' => [
                 ']',
-                'Zend\Router\Exception\RuntimeException',
+                RuntimeException::class,
                 'Found closing bracket without matching opening bracket'
             ],
             'empty-parameter-name' => [
                 ':',
-                'Zend\Router\Exception\RuntimeException',
+                RuntimeException::class,
                 'Found empty parameter name'
             ],
             'translated-literal-without-closing-backet' => [
                 '{test',
-                'Zend\Router\Exception\RuntimeException',
+                RuntimeException::class,
                 'Translated literal missing closing bracket'
             ],
         ];
@@ -252,7 +256,7 @@ class SegmentTest extends TestCase
      * @dataProvider routeProvider
      * @param        Segment $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        array   $params
      * @param        array   $options
      */
@@ -265,7 +269,7 @@ class SegmentTest extends TestCase
         if ($params === null) {
             $this->assertNull($match);
         } else {
-            $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
+            $this->assertInstanceOf(RouteMatch::class, $match);
 
             if ($offset === null) {
                 $this->assertEquals(strlen($path), $match->getLength());
@@ -281,7 +285,7 @@ class SegmentTest extends TestCase
      * @dataProvider routeProvider
      * @param        Segment $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        array   $params
      * @param        array   $options
      */
@@ -305,7 +309,7 @@ class SegmentTest extends TestCase
      * @dataProvider l10nRouteProvider
      * @param        Segment $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        array   $params
      * @param        array   $options
      */
@@ -318,7 +322,7 @@ class SegmentTest extends TestCase
         if ($params === null) {
             $this->assertNull($match);
         } else {
-            $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
+            $this->assertInstanceOf(RouteMatch::class, $match);
 
             if ($offset === null) {
                 $this->assertEquals(strlen($path), $match->getLength());
@@ -334,7 +338,7 @@ class SegmentTest extends TestCase
      * @dataProvider l10nRouteProvider
      * @param        Segment $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        array   $params
      * @param        array   $options
      */
@@ -362,28 +366,35 @@ class SegmentTest extends TestCase
      */
     public function testParseExceptions($route, $exceptionName, $exceptionMessage)
     {
-        $this->setExpectedException($exceptionName, $exceptionMessage);
+        $this->expectException($exceptionName);
+        $this->expectExceptionMessage($exceptionMessage);
         new Segment($route);
     }
 
     public function testAssemblingWithMissingParameterInRoot()
     {
-        $this->setExpectedException('Zend\Router\Exception\InvalidArgumentException', 'Missing parameter "foo"');
         $route = new Segment('/:foo');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Missing parameter "foo"');
         $route->assemble();
     }
 
     public function testTranslatedAssemblingThrowsExceptionWithoutTranslator()
     {
-        $this->setExpectedException('Zend\Router\Exception\RuntimeException', 'No translator provided');
         $route = new Segment('/{foo}');
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('No translator provided');
         $route->assemble();
     }
 
     public function testTranslatedMatchingThrowsExceptionWithoutTranslator()
     {
-        $this->setExpectedException('Zend\Router\Exception\RuntimeException', 'No translator provided');
         $route = new Segment('/{foo}');
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('No translator provided');
         $route->match(new Request());
     }
 
@@ -407,7 +418,7 @@ class SegmentTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Router\Http\Segment',
+            Segment::class,
             [
                 'route' => 'Missing "route" in options array'
             ],

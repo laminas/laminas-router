@@ -8,10 +8,13 @@
 namespace ZendTest\Router\Http;
 
 use ArrayObject;
-use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Http\Request as Request;
+use PHPUnit\Framework\TestCase;
+use Zend\Http\Request;
+use Zend\Router\Exception\InvalidArgumentException;
+use Zend\Router\Exception\RuntimeException;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Part;
+use Zend\Router\Http\RouteMatch;
 use Zend\Router\Http\Segment;
 use Zend\Router\Http\Wildcard;
 use Zend\Router\RouteInvokableFactory;
@@ -58,7 +61,7 @@ class PartTest extends TestCase
     {
         return new Part(
             [
-                'type'    => 'Zend\Router\Http\Literal',
+                'type'    => Literal::class,
                 'options' => [
                     'route'    => '/foo',
                     'defaults' => [
@@ -70,7 +73,7 @@ class PartTest extends TestCase
             self::getRoutePlugins(),
             [
                 'bar' => [
-                    'type'    => 'Zend\Router\Http\Literal',
+                    'type'    => Literal::class,
                     'options' => [
                         'route'    => '/bar',
                         'defaults' => [
@@ -79,27 +82,27 @@ class PartTest extends TestCase
                     ]
                 ],
                 'baz' => [
-                    'type'    => 'Zend\Router\Http\Literal',
+                    'type'    => Literal::class,
                     'options' => [
                         'route' => '/baz'
                     ],
                     'child_routes' => [
                         'bat' => [
-                            'type'    => 'Zend\Router\Http\Segment',
+                            'type'    => Segment::class,
                             'options' => [
                                 'route' => '/:controller'
                             ],
                             'may_terminate' => true,
                             'child_routes'  => [
                                 'wildcard' => [
-                                    'type' => 'Zend\Router\Http\Wildcard'
+                                    'type' => Wildcard::class
                                 ]
                             ]
                         ]
                     ]
                 ],
                 'bat' => [
-                    'type'    => 'Zend\Router\Http\Segment',
+                    'type'    => Segment::class,
                     'options' => [
                         'route'    => '/bat[/:foo]',
                         'defaults' => [
@@ -109,13 +112,13 @@ class PartTest extends TestCase
                     'may_terminate' => true,
                     'child_routes'  => [
                         'literal' => [
-                            'type'   => 'Zend\Router\Http\Literal',
+                            'type'   => Literal::class,
                             'options' => [
                                 'route' => '/bar'
                             ]
                         ],
                         'optional' => [
-                            'type'   => 'Zend\Router\Http\Segment',
+                            'type'   => Segment::class,
                             'options' => [
                                 'route' => '/bat[/:bar]'
                             ]
@@ -130,7 +133,7 @@ class PartTest extends TestCase
     {
         return new Part(
             [
-                'type' => 'Zend\Router\Http\Segment',
+                'type' => Segment::class,
                 'options' => [
                     'route' => '/[:controller[/:action]]',
                     'defaults' => [
@@ -143,7 +146,7 @@ class PartTest extends TestCase
             self::getRoutePlugins(),
             [
                 'wildcard' => [
-                    'type' => 'Zend\Router\Http\Wildcard',
+                    'type' => Wildcard::class,
                     'options' => [
                         'key_value_delimiter' => '/',
                         'param_delimiter' => '/'
@@ -273,7 +276,7 @@ class PartTest extends TestCase
      * @dataProvider routeProvider
      * @param        Part    $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        string  $routeName
      * @param        array   $params
      */
@@ -286,7 +289,7 @@ class PartTest extends TestCase
         if ($params === null) {
             $this->assertNull($match);
         } else {
-            $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
+            $this->assertInstanceOf(RouteMatch::class, $match);
 
             if ($offset === null) {
                 $this->assertEquals(strlen($path), $match->getLength());
@@ -304,7 +307,7 @@ class PartTest extends TestCase
      * @dataProvider routeProvider
      * @param        Part    $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        string  $routeName
      * @param        array   $params
      */
@@ -326,18 +329,17 @@ class PartTest extends TestCase
 
     public function testAssembleNonTerminatedRoute()
     {
-        $this->setExpectedException('Zend\Router\Exception\RuntimeException', 'Part route may not terminate');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Part route may not terminate');
         self::getRoute()->assemble([], ['name' => 'baz']);
     }
 
     public function testBaseRouteMayNotBePartRoute()
     {
-        $this->setExpectedException(
-            'Zend\Router\Exception\InvalidArgumentException',
-            'Base route may not be a part route'
-        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Base route may not be a part route');
 
-        $route = new Part(self::getRoute(), true, new RoutePluginManager(new ServiceManager()));
+        new Part(self::getRoute(), true, new RoutePluginManager(new ServiceManager()));
     }
 
     public function testNoMatchWithoutUriMethod()
@@ -360,7 +362,7 @@ class PartTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Router\Http\Part',
+            Part::class,
             [
                 'route'         => 'Missing "route" in options array',
                 'route_plugins' => 'Missing "route_plugins" in options array'
@@ -391,7 +393,7 @@ class PartTest extends TestCase
         ]);
         $options = [
             'route'        => [
-                'type' => 'Zend\Router\Http\Literal',
+                'type' => Literal::class,
                 'options' => [
                     'route' => '/admin/users',
                     'defaults' => [
@@ -406,7 +408,7 @@ class PartTest extends TestCase
         ];
 
         $route = Part::factory($options);
-        $this->assertInstanceOf('Zend\Router\Http\Part', $route);
+        $this->assertInstanceOf(Part::class, $route);
     }
 
     /**
@@ -416,7 +418,7 @@ class PartTest extends TestCase
     {
         $options = [
             'route' => [
-                'type' => 'Zend\Router\Http\Literal',
+                'type' => Literal::class,
                 'options' => [
                     'route' => '/resource',
                     'defaults' => [
@@ -429,7 +431,7 @@ class PartTest extends TestCase
             'may_terminate' => true,
             'child_routes'  => [
                 'child' => [
-                    'type' => 'Zend\Router\Http\Literal',
+                    'type' => Literal::class,
                     'options' => [
                         'route' => '/child',
                         'defaults' => [
@@ -448,7 +450,7 @@ class PartTest extends TestCase
         $query = $request->getQuery();
 
         $match = $route->match($request);
-        $this->assertInstanceOf('Zend\Router\RouteMatch', $match);
+        $this->assertInstanceOf(\Zend\Router\RouteMatch::class, $match);
         $this->assertEquals('resource', $match->getParam('action'));
     }
 
@@ -459,7 +461,7 @@ class PartTest extends TestCase
     {
         $options = [
             'route' => [
-                'type' => 'Zend\Router\Http\Literal',
+                'type' => Literal::class,
                 'options' => [
                     'route' => '/resource',
                     'defaults' => [
@@ -481,7 +483,7 @@ class PartTest extends TestCase
 
         /*
         $match = $route->match($request);
-        $this->assertInstanceOf('Zend\Router\RouteMatch', $match);
+        $this->assertInstanceOf(\Zend\Router\RouteMatch::class, $match);
         $this->assertEquals('string', $match->getParam('query'));
         */
     }

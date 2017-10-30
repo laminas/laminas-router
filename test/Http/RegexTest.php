@@ -7,10 +7,11 @@
 
 namespace ZendTest\Router\Http;
 
-use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Http\Request as Request;
-use Zend\Stdlib\Request as BaseRequest;
+use PHPUnit\Framework\TestCase;
+use Zend\Http\Request;
 use Zend\Router\Http\Regex;
+use Zend\Router\Http\RouteMatch;
+use Zend\Stdlib\Request as BaseRequest;
 use ZendTest\Router\FactoryTester;
 
 class RegexTest extends TestCase
@@ -67,7 +68,7 @@ class RegexTest extends TestCase
      * @dataProvider routeProvider
      * @param        Regex   $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        array   $params
      */
     public function testMatching(Regex $route, $path, $offset, array $params = null)
@@ -79,7 +80,7 @@ class RegexTest extends TestCase
         if ($params === null) {
             $this->assertNull($match);
         } else {
-            $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
+            $this->assertInstanceOf(RouteMatch::class, $match);
 
             if ($offset === null) {
                 $this->assertEquals(strlen($path), $match->getLength());
@@ -95,7 +96,7 @@ class RegexTest extends TestCase
      * @dataProvider routeProvider
      * @param        Regex   $route
      * @param        string  $path
-     * @param        integer $offset
+     * @param        int     $offset
      * @param        array   $params
      */
     public function testAssembling(Regex $route, $path, $offset, array $params = null)
@@ -134,7 +135,7 @@ class RegexTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Router\Http\Regex',
+            Regex::class,
             [
                 'regex' => 'Missing "regex" in options array',
                 'spec'  => 'Missing "spec" in options array'

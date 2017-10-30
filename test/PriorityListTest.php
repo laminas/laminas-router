@@ -7,8 +7,8 @@
 
 namespace ZendTest\Router;
 
+use PHPUnit\Framework\TestCase;
 use Zend\Router\PriorityList;
-use PHPUnit_Framework_TestCase as TestCase;
 
 class PriorityListTest extends TestCase
 {
@@ -26,7 +26,7 @@ class PriorityListTest extends TestCase
     {
         $this->list->insert('foo', new TestAsset\DummyRoute(), 0);
 
-        $this->assertEquals(1, count($this->list));
+        $this->assertCount(1, $this->list);
 
         foreach ($this->list as $key => $value) {
             $this->assertEquals('foo', $key);
@@ -38,11 +38,11 @@ class PriorityListTest extends TestCase
         $this->list->insert('foo', new TestAsset\DummyRoute(), 0);
         $this->list->insert('bar', new TestAsset\DummyRoute(), 0);
 
-        $this->assertEquals(2, count($this->list));
+        $this->assertCount(2, $this->list);
 
         $this->list->remove('foo');
 
-        $this->assertEquals(1, count($this->list));
+        $this->assertCount(1, $this->list);
     }
 
     public function testRemovingNonExistentRouteDoesNotYieldError()
@@ -55,12 +55,12 @@ class PriorityListTest extends TestCase
         $this->list->insert('foo', new TestAsset\DummyRoute(), 0);
         $this->list->insert('bar', new TestAsset\DummyRoute(), 0);
 
-        $this->assertEquals(2, count($this->list));
+        $this->assertCount(2, $this->list);
 
         $this->list->clear();
 
-        $this->assertEquals(0, count($this->list));
-        $this->assertSame(false, $this->list->current());
+        $this->assertCount(0, $this->list);
+        $this->assertFalse($this->list->current());
     }
 
     public function testGet()

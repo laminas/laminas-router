@@ -7,8 +7,8 @@
 
 namespace ZendTest\Router;
 
-use PHPUnit_Framework_TestCase as TestCase;
 use ArrayIterator;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Helper to test route factories.

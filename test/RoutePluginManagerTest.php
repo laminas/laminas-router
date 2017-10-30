@@ -7,8 +7,9 @@
 
 namespace ZendTest\Router;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\Router\RoutePluginManager;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\ServiceManager;
 
 class RoutePluginManagerTest extends TestCase
@@ -16,17 +17,17 @@ class RoutePluginManagerTest extends TestCase
     public function testLoadNonExistentRoute()
     {
         $routes = new RoutePluginManager(new ServiceManager());
-        $this->setExpectedException('Zend\ServiceManager\Exception\ServiceNotFoundException');
+        $this->expectException(ServiceNotFoundException::class);
         $routes->get('foo');
     }
 
     public function testCanLoadAnyRoute()
     {
         $routes = new RoutePluginManager(new ServiceManager(), ['invokables' => [
-            'DummyRoute' => 'ZendTest\Router\TestAsset\DummyRoute',
+            'DummyRoute' => TestAsset\DummyRoute::class,
         ]]);
         $route = $routes->get('DummyRoute');
 
-        $this->assertInstanceOf('ZendTest\Router\TestAsset\DummyRoute', $route);
+        $this->assertInstanceOf(TestAsset\DummyRoute::class, $route);
     }
 }

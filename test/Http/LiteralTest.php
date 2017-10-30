@@ -7,10 +7,11 @@
 
 namespace ZendTest\Router\Http;
 
-use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Http\Request as Request;
-use Zend\Stdlib\Request as BaseRequest;
+use PHPUnit\Framework\TestCase;
+use Zend\Http\Request;
 use Zend\Router\Http\Literal;
+use Zend\Router\Http\RouteMatch;
+use Zend\Stdlib\Request as BaseRequest;
 use ZendTest\Router\FactoryTester;
 
 class LiteralTest extends TestCase
@@ -55,8 +56,8 @@ class LiteralTest extends TestCase
      * @dataProvider routeProvider
      * @param        Literal $route
      * @param        string  $path
-     * @param        integer $offset
-     * @param        bool $shouldMatch
+     * @param        int     $offset
+     * @param        bool    $shouldMatch
      */
     public function testMatching(Literal $route, $path, $offset, $shouldMatch)
     {
@@ -67,7 +68,7 @@ class LiteralTest extends TestCase
         if (! $shouldMatch) {
             $this->assertNull($match);
         } else {
-            $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
+            $this->assertInstanceOf(RouteMatch::class, $match);
 
             if ($offset === null) {
                 $this->assertEquals(strlen($path), $match->getLength());
@@ -79,8 +80,8 @@ class LiteralTest extends TestCase
      * @dataProvider routeProvider
      * @param        Literal $route
      * @param        string  $path
-     * @param        integer $offset
-     * @param        bool $shouldMatch
+     * @param        int     $offset
+     * @param        bool    $shouldMatch
      */
     public function testAssembling(Literal $route, $path, $offset, $shouldMatch)
     {
@@ -118,7 +119,7 @@ class LiteralTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Router\Http\Literal',
+            Literal::class,
             [
                 'route' => 'Missing "route" in options array'
             ],

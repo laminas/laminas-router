@@ -7,10 +7,11 @@
 
 namespace ZendTest\Router\Http;
 
-use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Http\Request as Request;
-use Zend\Stdlib\Request as BaseRequest;
+use PHPUnit\Framework\TestCase;
+use Zend\Http\Request;
 use Zend\Router\Http\Method as HttpMethod;
+use Zend\Router\Http\RouteMatch;
+use Zend\Stdlib\Request as BaseRequest;
 use ZendTest\Router\FactoryTester;
 
 class MethodTest extends TestCase
@@ -52,7 +53,7 @@ class MethodTest extends TestCase
         $request->setMethod($verb);
 
         $match = $route->match($request);
-        $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
+        $this->assertInstanceOf(RouteMatch::class, $match);
     }
 
     public function testNoMatchWithoutVerb()
@@ -67,7 +68,7 @@ class MethodTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Router\Http\Method',
+            HttpMethod::class,
             [
                 'verb' => 'Missing "verb" in options array'
             ],
