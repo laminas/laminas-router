@@ -1,5 +1,5 @@
-docs_dir: doc/book
-site_dir: doc/html
+docs_dir: docs/book
+site_dir: docs/html
 pages:
     - index.md
     - Routing: routing.md
@@ -8,4 +8,4 @@ pages:
 site_name: zend-router
 site_description: 'zend-router: Flexible routing system for HTTP applications'
 repo_url: 'https://github.com/zendframework/zend-router'
-copyright: 'Copyright (c) 2016 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a>'
+copyright: 'Copyright (c) 2016-2017 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a>'
