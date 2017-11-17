@@ -1,7 +1,6 @@
 {
     "name": "zendframework/zend-router",
-    "description": "Standalone routing implementation for HTTP and console requests",
-    "homepage": "https://docs.zendframework.com/zend-router",
+    "description": "Flexible routing system for HTTP and console applications",
     "license": "BSD-3-Clause",
     "keywords": [
         "zf",
@@ -11,7 +10,7 @@
         "routing"
     ],
     "support": {
-        "docs": "https://docs.zendframework.com/zend-router",
+        "docs": "https://docs.zendframework.com/zend-router/",
         "issues": "https://github.com/zendframework/zend-router/issues",
         "source": "https://github.com/zendframework/zend-router",
         "rss": "https://github.com/zendframework/zend-router/releases.atom",
@@ -30,11 +29,11 @@
         "zendframework/zend-coding-standard": "~1.0.0",
         "zendframework/zend-i18n": "^2.7.4"
     },
-    "suggest": {
-        "zendframework/zend-i18n": "^2.7.4, if defining translatable HTTP path segments"
-    },
     "conflict": {
         "zendframework/zend-mvc": "<3.0.0"
+    },
+    "suggest": {
+        "zendframework/zend-i18n": "^2.7.4, if defining translatable HTTP path segments"
     },
     "autoload": {
         "psr-4": {
