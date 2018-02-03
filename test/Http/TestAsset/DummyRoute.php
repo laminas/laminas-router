@@ -5,6 +5,8 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
+declare(strict_types=1);
+
 namespace ZendTest\Router\Http\TestAsset;
 
 use Zend\Router\Http\RouteInterface;
