@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
+### Changed
+
+- Nothing.
+
 ### Deprecated
 
 - Nothing.
@@ -18,7 +22,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#47](https://github.com/zendframework/zend-router/pull/47) fixes how the `Wildcard` URL assembly works. Previously, it would
+  attempt to `rawurlencode()` all values provided to the method as merged with any default values.
+  It now properly skips any non-scalar values when assembling the URL path. This fixes an issue
+  discovered when providing an array of middleware as a `middleware` default route parameter.
 
 ## 3.0.2 - 2016-05-31
 
