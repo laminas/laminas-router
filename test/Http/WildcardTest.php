@@ -189,4 +189,19 @@ class WildcardTest extends TestCase
 
         $this->assertSame($out, $match->getParam('foo'));
     }
+
+    public function testPathAssemblyShouldSkipAnyNonScalarValues()
+    {
+        $route = new Wildcard('/', '/', [
+            'action' => 'index',
+            'controller' => 'index',
+            'middleware' => [
+                \Some\ConnectMiddleware::class,
+                \Some\Handler::class,
+            ],
+        ]);
+
+        $path = $route->assemble();
+        $this->assertEquals('/action/index/controller/index', $path);
+    }
 }
