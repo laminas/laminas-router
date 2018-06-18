@@ -168,8 +168,11 @@ class Wildcard implements RouteInterface
 
         if ($mergedParams) {
             foreach ($mergedParams as $key => $value) {
-                $elements[] = rawurlencode($key) . $this->keyValueDelimiter . rawurlencode($value);
+                if (! is_scalar($value)) {
+                    continue;
+                }
 
+                $elements[] = rawurlencode($key) . $this->keyValueDelimiter . rawurlencode($value);
                 $this->assembledParams[] = $key;
             }
 
