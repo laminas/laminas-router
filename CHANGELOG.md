@@ -2,15 +2,18 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 3.1.1 - TBD
+## 3.2.0 - 2018-08-01
 
 ### Added
 
-- Nothing.
+- [#50](https://github.com/zendframework/zend-router/pull/50) adds `Zend\Router\Http\Placeholder`, which can be used within reusable
+  modules to indicate a route with child routes where the root route may be
+  overridden. By default, the `Placeholder` route always matches, passing on
+  further matching to the defined child routes.
 
 ### Changed
 
-- Nothing.
+- [#38](https://github.com/zendframework/zend-router/pull/38) bumps the minimum supported zend-http version to 2.8.1.
 
 ### Deprecated
 
