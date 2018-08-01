@@ -352,6 +352,76 @@ You may use any route type as a child route of a `Part` route.
 > set up by default, and the developer does not need to worry about autoloading
 > of standard HTTP routes.
 
+### Zend\\Router\\Http\\Placeholder
+
+- **Since 3.2.0**
+
+A `Placeholder` route is provided for use by reusable modules. The idea is that a 
+module can provide a set of routes anchored by a placeholder route type. The end
+consumer can replace this placeholder route with a different route type of their
+choosing to customise how the module's routes act within the application as a
+whole, without needing to alter either the route configuration of the module or
+the URL building contained within the module.
+
+As an example, consider a reusable user module which provides routing configuration
+for login and registration pages. A consumer of this module may want the auth module
+to live either:
+
+1) At the root of their domain.
+2) Under a path, e.g. `/auth/`.
+3) On a separate subdomain, e.g. `auth.mydomain.com`.
+
+The module can provide configuration such as the following:
+
+```php
+return [
+    'auth' => [
+        'type' => \Zend\Mvc\Router\Http\Placeholder::class,
+        'child_routes' => [
+            'login' => [
+                'type' => \Zend\Mvc\Router\Http\Literal::class,
+                'options' => [
+                    'route' => '/login',
+                    'defaults' => [
+                        'controller' => AuthController::class,
+                        'action' => 'login'
+                    ],
+                ],
+            ],
+            'register' => [
+                'type' => \Zend\Mvc\Router\Http\Literal::class,
+                'options' => [
+                    'route' => '/register',
+                    'defaults' => [
+                        'controller' => RegistrationController::class,
+                        'action' => 'register'
+                    ],
+                ],
+            ],
+        ],
+    ],
+];
+```
+
+The consuming application can then leave this configuration as is to have the
+auth module sit at the route of their domain. If they wish to change the
+resource location, they can provide an alternative route type to replace the
+`Placeholder` route as part of their own router configuration. As an example:
+
+```php 
+return [
+    'auth' => [
+        'type' => \Zend\Mvc\Router\Http\Literal::class,
+        'options' => [
+            'route' => '/auth',
+        ],
+    ],
+];
+```
+
+In the above, the top-level route type changes from `Placeholder` to `Literal`,
+and the routes will now match against `/auth/login` and `/auth/register`.
+
 ### Zend\\Router\\Http\\Regex
 
 A `Regex` route utilizes a regular expression to match against the URI path. Any

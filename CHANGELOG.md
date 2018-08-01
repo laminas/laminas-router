@@ -6,7 +6,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#50](https://github.com/zendframework/zend-router/pull/50) adds `Zend\Router\Http\Placeholder`, which can be used within reusable
+  modules to indicate a route with child routes where the root route may be
+  overridden. By default, the `Placeholder` route always matches, passing on
+  further matching to the defined child routes.
 
 ### Changed
 
