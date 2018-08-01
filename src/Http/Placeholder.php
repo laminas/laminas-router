@@ -1,8 +1,8 @@
 <?php
 /**
- * @link      http://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @link      https://github.com/zendframework/zend-router for the canonical source repository
+ * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (https://www.zend.com)
+ * @license   https://framework.zend.com/license/new-bsd New BSD License
  */
 
 namespace Zend\Router\Http;
@@ -36,7 +36,9 @@ class Placeholder implements RouteInterface
     {
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
-        } elseif (! is_array($options)) {
+        }
+
+        if (! is_array($options)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects an array or Traversable set of options',
                 __METHOD__
