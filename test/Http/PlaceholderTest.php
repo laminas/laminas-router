@@ -143,20 +143,18 @@ class PlaceholderTest extends TestCase
             ]
         ];
 
+        // @codingStandardsIgnoreStart
         return [
-            [$home, 'http://example.com/',  'auth/login'],
-            [$home, 'http://example.com',  'auth/login'],
-            [$home, 'http://example.com/register',  'auth/register'],
-            [$home, 'http://example.com/home',  'home'],
-            [$homeAtRootAuthMoved, 'http://example.com/auth/',  'auth/login'],
-            [$homeAtRootAuthMoved, 'http://example.com/auth/register',  'auth/register'],
-            [$homeAtRootAuthMoved, 'http://example.com/',  'home'],
-            [$homeAtRootAuthMoved, 'http://example.com',  'home'],
-            [$homeAtRootAuthOnSubDomain, 'http://auth.example.com/',  'auth/login'],
-            [$homeAtRootAuthOnSubDomain, 'http://auth.example.com',  'auth/login'],
-            [$homeAtRootAuthOnSubDomain, 'http://auth.example.com/register',  'auth/register'],
-            [$homeAtRootAuthOnSubDomain, 'http://example.com/',  'home'],
-            [$homeAtRootAuthOnSubDomain, 'http://example.com',  'home'],
+            'no-override-login'           => [$home,                      'http://example.com/',              'auth/login'],
+            'no-override-register'        => [$home,                      'http://example.com/register',      'auth/register'],
+            'no-override-home'            => [$home,                      'http://example.com/home',          'home'],
+            'path-override-login'         => [$homeAtRootAuthMoved,       'http://example.com/auth/',         'auth/login'],
+            'path-override-register'      => [$homeAtRootAuthMoved,       'http://example.com/auth/register', 'auth/register'],
+            'path-override-home'          => [$homeAtRootAuthMoved,       'http://example.com',               'home'],
+            'subdomain-override-login'    => [$homeAtRootAuthOnSubDomain, 'http://auth.example.com/',         'auth/login'],
+            'subdomain-override-register' => [$homeAtRootAuthOnSubDomain, 'http://auth.example.com/register', 'auth/register'],
+            'subdomina-override-home'     => [$homeAtRootAuthOnSubDomain, 'http://example.com/',              'home'],
         ];
+        // @codingStandardsIgnoreEnd
     }
 }
