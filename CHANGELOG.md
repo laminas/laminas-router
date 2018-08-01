@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#50](https://github.com/zendframework/zend-router/pull/50) Placeholder route type 
 
 ### Changed
 
