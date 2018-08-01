@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Changed
 
-- Nothing.
+- [#38](https://github.com/zendframework/zend-router/pull/38) bumps the minimum supported zend-http version to 2.8.1.
 
 ### Deprecated
 
