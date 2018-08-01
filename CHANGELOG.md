@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 3.2.0 - TBD
+## 3.2.0 - 2018-08-01
 
 ### Added
 
@@ -14,28 +14,6 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Changed
 
 - [#38](https://github.com/zendframework/zend-router/pull/38) bumps the minimum supported zend-http version to 2.8.1.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
-
-## 3.1.1 - TBD
-
-### Added
-
-- Nothing.
-
-### Changed
-
-- Nothing.
 
 ### Deprecated
 
