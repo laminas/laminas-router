@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 3.2.1 - TBD
+## 3.2.2 - TBD
 
 ### Added
 
@@ -23,6 +23,29 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Fixed
 
 - Nothing.
+
+## 3.2.1 - 2019-01-09
+
+### Added
+
+- Nothing.
+
+### Changed
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#50](https://github.com/zendframework/zend-router/pull/54) Corrected PHPDoc
+  for `RouterInterface#factory()` return type 
 
 ## 3.2.0 - 2018-08-01
 
