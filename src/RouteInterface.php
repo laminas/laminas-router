@@ -25,7 +25,7 @@ interface RouteInterface
      * Create a new route with given options.
      *
      * @param  array|\Traversable $options
-     * @return void
+     * @return RouteInterface
      */
     public static function factory($options = []);
 
