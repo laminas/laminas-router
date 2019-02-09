@@ -18,5 +18,20 @@ request and responses, and provides capabilities around:
 Additionally, it supports combinations of different route types in tree
 structures, allowing for fast, b-tree lookups.
 
-- File issues at https://github.com/zendframework/zend-router/issues
-- Documentation is at https://docs.zendframework.com/zend-router
+## Installation
+
+Run the following to install this library:
+
+```bash
+$ composer require zendframework/zend-router
+```
+
+## Documentation
+
+Browse the documentation online at https://docs.zendframework.com/zend-router/
+
+## Support
+
+* [Issues](https://github.com/zendframework/zend-router/issues/)
+* [Chat](https://zendframework-slack.herokuapp.com/)
+* [Forum](https://discourse.zendframework.com/)

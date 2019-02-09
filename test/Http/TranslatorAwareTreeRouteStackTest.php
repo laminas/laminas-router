@@ -5,6 +5,8 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
+declare(strict_types=1);
+
 namespace ZendTest\Router\Http;
 
 use PHPUnit\Framework\TestCase;
@@ -103,11 +105,11 @@ class TranslatorAwareTreeRouteStackTest extends TestCase
         $route = $this->getMock(RouteInterface::class);
         $route->expects($this->once())
               ->method('match')
-              ->with(
-                  $this->equalTo($request),
-                  $this->isNull(),
-                  $this->equalTo(['translator' => $translator, 'text_domain' => 'default'])
-              );
+            ->with(
+                $this->equalTo($request),
+                $this->isNull(),
+                $this->equalTo(['translator' => $translator, 'text_domain' => 'default'])
+            );
 
         $stack = new TranslatorAwareTreeRouteStack();
         $stack->addRoute('test', $route);
@@ -123,10 +125,10 @@ class TranslatorAwareTreeRouteStackTest extends TestCase
         $route = $this->getMock(RouteInterface::class);
         $route->expects($this->once())
               ->method('assemble')
-              ->with(
-                  $this->equalTo([]),
-                  $this->equalTo(['translator' => $translator, 'text_domain' => 'default', 'uri' => $uri])
-              );
+            ->with(
+                $this->equalTo([]),
+                $this->equalTo(['translator' => $translator, 'text_domain' => 'default', 'uri' => $uri])
+            );
 
         $stack = new TranslatorAwareTreeRouteStack();
         $stack->addRoute('test', $route);
