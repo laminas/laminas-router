@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 3.2.2 - TBD
+## 3.3.0 - 2019-02-26
 
 ### Added
 
@@ -17,8 +17,6 @@ All notable changes to this project will be documented in this file, in reverse 
 - Nothing.
 
 ### Removed
-
-- Nothing.
 
 - [#53](https://github.com/zendframework/zend-router/pull/53) removes support for zend-stdlib v2 releases.
 
