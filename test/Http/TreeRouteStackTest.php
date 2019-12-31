@@ -1,25 +1,26 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-router for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace ZendTest\Router\Http;
+namespace LaminasTest\Router\Http;
 
 use ArrayIterator;
+use Laminas\Http\PhpEnvironment\Request as PhpRequest;
+use Laminas\Http\Request;
+use Laminas\Router\Exception\InvalidArgumentException;
+use Laminas\Router\Exception\RuntimeException;
+use Laminas\Router\Http\Hostname;
+use Laminas\Router\Http\TreeRouteStack;
+use Laminas\Stdlib\Request as BaseRequest;
+use Laminas\Uri\Http as HttpUri;
+use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\TestCase;
-use Zend\Http\PhpEnvironment\Request as PhpRequest;
-use Zend\Http\Request;
-use Zend\Router\Exception\InvalidArgumentException;
-use Zend\Router\Exception\RuntimeException;
-use Zend\Router\Http\Hostname;
-use Zend\Router\Http\TreeRouteStack;
-use Zend\Stdlib\Request as BaseRequest;
-use Zend\Uri\Http as HttpUri;
-use ZendTest\Router\FactoryTester;
 
 class TreeRouteStackTest extends TestCase
 {
@@ -29,7 +30,7 @@ class TreeRouteStackTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Route definition must be an array or Traversable object');
-        $stack->addRoute('foo', new \ZendTest\Router\TestAsset\DummyRoute());
+        $stack->addRoute('foo', new \LaminasTest\Router\TestAsset\DummyRoute());
     }
 
     public function testAddRouteViaStringRequiresHttpSpecificRoute()
@@ -39,7 +40,7 @@ class TreeRouteStackTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Given route does not implement HTTP route interface');
         $stack->addRoute('foo', [
-            'type' => \ZendTest\Router\TestAsset\DummyRoute::class
+            'type' => \LaminasTest\Router\TestAsset\DummyRoute::class
         ]);
     }
 
@@ -428,7 +429,7 @@ class TreeRouteStackTest extends TestCase
     {
         $stack = new TreeRouteStack();
 
-        $uri = new \Zend\Uri\Http();
+        $uri = new \Laminas\Uri\Http();
         $uri->setHost('localhost');
 
         $stack->setRequestUri($uri);

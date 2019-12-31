@@ -1,19 +1,20 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-router for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace Zend\Router;
+namespace Laminas\Router;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\Exception\ServiceNotCreatedException;
-use Zend\ServiceManager\AbstractFactoryInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\AbstractFactoryInterface;
+use Laminas\ServiceManager\Exception\ServiceNotCreatedException;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Specialized invokable/abstract factory for use with RoutePluginManager.
@@ -26,7 +27,7 @@ class RouteInvokableFactory implements
     FactoryInterface
 {
     /**
-     * Options used to create instance (used with zend-servicemanager v2)
+     * Options used to create instance (used with laminas-servicemanager v2)
      *
      * @var array
      */
@@ -125,7 +126,7 @@ class RouteInvokableFactory implements
     /**
      * Create and return RouteInterface instance
      *
-     * For use with zend-servicemanager v2; proxies to __invoke().
+     * For use with laminas-servicemanager v2; proxies to __invoke().
      *
      * @param ServiceLocatorInterface $container
      * @return RouteInterface

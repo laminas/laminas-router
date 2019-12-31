@@ -1,25 +1,26 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-router for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace ZendTest\Router\Http;
+namespace LaminasTest\Router\Http;
 
+use Laminas\Http\Request;
+use Laminas\I18n\Translator\Loader\FileLoaderInterface;
+use Laminas\I18n\Translator\TextDomain;
+use Laminas\I18n\Translator\Translator;
+use Laminas\Router\Exception\InvalidArgumentException;
+use Laminas\Router\Exception\RuntimeException;
+use Laminas\Router\Http\RouteMatch;
+use Laminas\Router\Http\Segment;
+use Laminas\Stdlib\Request as BaseRequest;
+use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\TestCase;
-use Zend\Http\Request;
-use Zend\I18n\Translator\Loader\FileLoaderInterface;
-use Zend\I18n\Translator\TextDomain;
-use Zend\I18n\Translator\Translator;
-use Zend\Router\Exception\InvalidArgumentException;
-use Zend\Router\Exception\RuntimeException;
-use Zend\Router\Http\RouteMatch;
-use Zend\Router\Http\Segment;
-use Zend\Stdlib\Request as BaseRequest;
-use ZendTest\Router\FactoryTester;
 
 class SegmentTest extends TestCase
 {
@@ -176,7 +177,7 @@ class SegmentTest extends TestCase
     public function l10nRouteProvider()
     {
         $this->markTestIncomplete(
-            'Translation tests need to be updated once zend-i18n is updated for zend-servicemanager v3'
+            'Translation tests need to be updated once laminas-i18n is updated for laminas-servicemanager v3'
         );
 
         // @codingStandardsIgnoreStart

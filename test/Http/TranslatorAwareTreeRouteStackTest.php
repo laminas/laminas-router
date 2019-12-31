@@ -1,21 +1,22 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-router for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace ZendTest\Router\Http;
+namespace LaminasTest\Router\Http;
 
+use Laminas\Http\Request;
+use Laminas\I18n\Translator\Translator;
+use Laminas\I18n\Translator\TranslatorAwareInterface;
+use Laminas\Router\Http\RouteInterface;
+use Laminas\Router\Http\TranslatorAwareTreeRouteStack;
+use Laminas\Uri\Http as HttpUri;
 use PHPUnit\Framework\TestCase;
-use Zend\Http\Request;
-use Zend\I18n\Translator\Translator;
-use Zend\I18n\Translator\TranslatorAwareInterface;
-use Zend\Router\Http\RouteInterface;
-use Zend\Router\Http\TranslatorAwareTreeRouteStack;
-use Zend\Uri\Http as HttpUri;
 
 class TranslatorAwareTreeRouteStackTest extends TestCase
 {
@@ -36,7 +37,7 @@ class TranslatorAwareTreeRouteStackTest extends TestCase
 
     public function setUp()
     {
-        $this->markTestIncomplete('Re-enable once zend-i18n is updated to zend-servicemanager v3');
+        $this->markTestIncomplete('Re-enable once laminas-i18n is updated to laminas-servicemanager v3');
 
         $this->testFilesDir = __DIR__ . '/_files';
 

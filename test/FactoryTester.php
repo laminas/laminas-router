@@ -1,13 +1,14 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-router for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace ZendTest\Router;
+namespace LaminasTest\Router;
 
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
@@ -46,7 +47,7 @@ class FactoryTester
         try {
             $classname::factory(0);
             $this->testCase->fail('An expected exception was not thrown');
-        } catch (\Zend\Router\Exception\InvalidArgumentException $e) {
+        } catch (\Laminas\Router\Exception\InvalidArgumentException $e) {
             $this->testCase->assertContains('factory expects an array or Traversable set of options', $e->getMessage());
         }
 
@@ -59,7 +60,7 @@ class FactoryTester
             try {
                 $classname::factory($testOptions);
                 $this->testCase->fail('An expected exception was not thrown');
-            } catch (\Zend\Router\Exception\InvalidArgumentException $e) {
+            } catch (\Laminas\Router\Exception\InvalidArgumentException $e) {
                 $this->testCase->assertContains($exceptionMessage, $e->getMessage());
             }
         }

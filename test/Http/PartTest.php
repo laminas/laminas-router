@@ -1,30 +1,31 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-router for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
  */
 
 declare(strict_types=1);
 
-namespace ZendTest\Router\Http;
+namespace LaminasTest\Router\Http;
 
 use ArrayObject;
+use Laminas\Http\Request;
+use Laminas\Router\Exception\InvalidArgumentException;
+use Laminas\Router\Exception\RuntimeException;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Part;
+use Laminas\Router\Http\RouteMatch;
+use Laminas\Router\Http\Segment;
+use Laminas\Router\Http\Wildcard;
+use Laminas\Router\RouteInvokableFactory;
+use Laminas\Router\RoutePluginManager;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\Stdlib\Parameters;
+use Laminas\Stdlib\Request as BaseRequest;
+use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\TestCase;
-use Zend\Http\Request;
-use Zend\Router\Exception\InvalidArgumentException;
-use Zend\Router\Exception\RuntimeException;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Part;
-use Zend\Router\Http\RouteMatch;
-use Zend\Router\Http\Segment;
-use Zend\Router\Http\Wildcard;
-use Zend\Router\RouteInvokableFactory;
-use Zend\Router\RoutePluginManager;
-use Zend\ServiceManager\ServiceManager;
-use Zend\Stdlib\Parameters;
-use Zend\Stdlib\Request as BaseRequest;
-use ZendTest\Router\FactoryTester;
 
 class PartTest extends TestCase
 {
@@ -51,10 +52,10 @@ class PartTest extends TestCase
 
                 // v2 normalized names
 
-                'zendmvcrouterhttpliteral'  => RouteInvokableFactory::class,
-                'zendmvcrouterhttppart'     => RouteInvokableFactory::class,
-                'zendmvcrouterhttpsegment'  => RouteInvokableFactory::class,
-                'zendmvcrouterhttpwildcard' => RouteInvokableFactory::class,
+                'laminasmvcrouterhttpliteral'  => RouteInvokableFactory::class,
+                'laminasmvcrouterhttppart'     => RouteInvokableFactory::class,
+                'laminasmvcrouterhttpsegment'  => RouteInvokableFactory::class,
+                'laminasmvcrouterhttpwildcard' => RouteInvokableFactory::class,
             ],
         ]);
     }
@@ -370,14 +371,14 @@ class PartTest extends TestCase
                 'route_plugins' => 'Missing "route_plugins" in options array'
             ],
             [
-                'route'         => new \Zend\Router\Http\Literal('/foo'),
+                'route'         => new \Laminas\Router\Http\Literal('/foo'),
                 'route_plugins' => self::getRoutePlugins(),
             ]
         );
     }
 
     /**
-     * @group ZF2-105
+     * @group Laminas-105
      */
     public function testFactoryShouldAcceptTraversableChildRoutes()
     {
@@ -452,7 +453,7 @@ class PartTest extends TestCase
         $query = $request->getQuery();
 
         $match = $route->match($request);
-        $this->assertInstanceOf(\Zend\Router\RouteMatch::class, $match);
+        $this->assertInstanceOf(\Laminas\Router\RouteMatch::class, $match);
         $this->assertEquals('resource', $match->getParam('action'));
     }
 
@@ -485,7 +486,7 @@ class PartTest extends TestCase
 
         /*
         $match = $route->match($request);
-        $this->assertInstanceOf(\Zend\Router\RouteMatch::class, $match);
+        $this->assertInstanceOf(\Laminas\Router\RouteMatch::class, $match);
         $this->assertEquals('string', $match->getParam('query'));
         */
     }

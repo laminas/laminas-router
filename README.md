@@ -1,11 +1,11 @@
-# zend-router
+# laminas-router
 
-[![Build Status](https://secure.travis-ci.org/zendframework/zend-router.svg?branch=master)](https://secure.travis-ci.org/zendframework/zend-router)
-[![Coverage Status](https://coveralls.io/repos/github/zendframework/zend-router/badge.svg?branch=master)](https://coveralls.io/github/zendframework/zend-router?branch=master)
+[![Build Status](https://travis-ci.org/laminas/laminas-router.svg?branch=master)](https://travis-ci.org/laminas/laminas-router)
+[![Coverage Status](https://coveralls.io/repos/github/laminas/laminas-router/badge.svg?branch=master)](https://coveralls.io/github/laminas/laminas-router?branch=master)
 
-zend-router provides flexible HTTP routing.
+laminas-router provides flexible HTTP routing.
 
-Routing currently works against the [zend-http](https://github.com/zendframework/zend-http)
+Routing currently works against the [laminas-http](https://github.com/laminas/laminas-http)
 request and responses, and provides capabilities around:
 
 - Literal path matches
@@ -23,15 +23,15 @@ structures, allowing for fast, b-tree lookups.
 Run the following to install this library:
 
 ```bash
-$ composer require zendframework/zend-router
+$ composer require laminas/laminas-router
 ```
 
 ## Documentation
 
-Browse the documentation online at https://docs.zendframework.com/zend-router/
+Browse the documentation online at https://docs.laminas.dev/laminas-router/
 
 ## Support
 
-* [Issues](https://github.com/zendframework/zend-router/issues/)
-* [Chat](https://zendframework-slack.herokuapp.com/)
-* [Forum](https://discourse.zendframework.com/)
+* [Issues](https://github.com/laminas/laminas-router/issues/)
+* [Chat](https://laminas.dev/chat/)
+* [Forum](https://discourse.laminas.dev/)
