@@ -1,19 +1,20 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-router for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Router\Http;
+namespace LaminasTest\Router\Http;
 
+use Laminas\Http\Request;
+use Laminas\Router\Http\RouteMatch;
+use Laminas\Router\Http\Scheme;
+use Laminas\Stdlib\Request as BaseRequest;
+use Laminas\Uri\Http as HttpUri;
+use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\TestCase;
-use Zend\Http\Request;
-use Zend\Router\Http\RouteMatch;
-use Zend\Router\Http\Scheme;
-use Zend\Stdlib\Request as BaseRequest;
-use Zend\Uri\Http as HttpUri;
-use ZendTest\Router\FactoryTester;
 
 class SchemeTest extends TestCase
 {

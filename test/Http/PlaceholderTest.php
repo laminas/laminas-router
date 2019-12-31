@@ -1,21 +1,22 @@
 <?php
+
 /**
- * @link      https://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2018 Zend Technologies USA Inc. (https://www.zend.com)
- * @license   https://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-router for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Router\Http;
+namespace LaminasTest\Router\Http;
 
+use Laminas\Http\Request;
+use Laminas\Router\Http\Hostname;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Placeholder;
+use Laminas\Router\Http\RouteMatch;
+use Laminas\Router\Http\TreeRouteStack;
+use Laminas\Stdlib\ArrayUtils;
+use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\TestCase;
-use Zend\Http\Request;
-use Zend\Router\Http\Hostname;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Placeholder;
-use Zend\Router\Http\RouteMatch;
-use Zend\Router\Http\TreeRouteStack;
-use Zend\Stdlib\ArrayUtils;
-use ZendTest\Router\FactoryTester;
 
 class PlaceholderTest extends TestCase
 {
