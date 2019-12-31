@@ -1,5 +1,3 @@
-sudo: false
-
 language: php
 
 branches:
@@ -11,7 +9,7 @@ cache:
   directories:
     - $HOME/.composer/cache
     - $HOME/.local
-    - zf-mkdoc-theme
+    - laminas-mkdoc-theme
 
 matrix:
   fast_finish: true
@@ -21,37 +19,23 @@ matrix:
         - DEPS=lowest
     - php: 5.5
       env:
-        - DEPS=locked
+        - DEPS=latest
         - DEPLOY_DOCS="$(if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then echo -n 'true' ; else echo -n 'false' ; fi)"
         - PATH="$HOME/.local/bin:$PATH"
-        - SITE_URL: https://zendframework.github.io/zend-router
-        - GH_USER_NAME: "Matthew Weier O'Phinney"
-        - GH_USER_EMAIL: matthew@weierophinney.net
-        - GH_REF: github.com/zendframework/zend-router.git
-        - secure: "QfhiZVZvQD1Z7aiepuUyWhVaXG+Z/fcLXjJgleWl9Kh2h805oVP2AyJaUi88eFzOYSuKn6/Zm8sRge+RRHO0d76fZSpA5vSDflWak01qIpw9iNREEIikoDGLgWPCyBQE5ngiypUv7B0MaM2jSiuIid/lMB7UO/1paUVHSMxVtUbNZbwVf1wmMSICEIm0ZoPl0J+mkg48pWluqntc+KOUuOwtG84N9CbG9jNnVmz40gzq/rodJpOZ03wjM9AoEn/iVj6+UMtA6kpF+6BZAPP9pRQEWzb52RzLf1tIFR7ZyC6GdQfMTjWu5FCllnZAUiH+G2L/bq52YxGJjWw5nf8qnb7sWubPYjd6lMAxvqZMbj85Lgv8lernHxa1uJReDY7Nu9OuF6CvrA1EYIxLAH44rQhMd6D1fE3WtbG7xLi/jU3bKFwKWKpRjb2lQIK2vmPHiuVlZ5ggJhh2M9hftMmLHedFYSr+ZzDhAvyMMv5vaWWq/1sWu6OSUocm+aqbx9vnYR8VDNupdmYP4x6m8u75WAgAbb7TIIyOB/piM3H3pGr/gffp3ZA2Wa4+TY2hepStO3iPrEJ7d/rtT76sIdBjO0q8X3eQFAlwCLavsdzEsurrANBMkOyGDOdJEwzDaRyTRntJ6F3/0vHm0QJzCWi7Xe8wYp8/3jRd0BJeg/eer5o="
-    - php: 5.5
-      env:
-        - DEPS=latest
     - php: 5.6
       env:
         - DEPS=lowest
     - php: 5.6
       env:
-        - DEPS=locked
+        - DEPS=latest
         - TEST_COVERAGE=true
-    - php: 5.6
-      env:
-        - DEPS=latest
     - php: 7
       env:
         - DEPS=lowest
     - php: 7
       env:
-        - DEPS=locked
-        - CHECK_CS=true
-    - php: 7
-      env:
         - DEPS=latest
+        - CS_CHECK=true
     - php: hhvm
       env:
         - DEPS=lowest
@@ -69,7 +53,6 @@ env:
     - COMPOSER_ARGS="--no-interaction --ignore-platform-reqs"
 
 notifications:
-  irc: "irc.freenode.org#zftalk.dev"
   email: false
 
 before_install:
@@ -85,11 +68,11 @@ install:
 
 script:
   - if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage ; else composer test ; fi
-  - if [[ $CHECK_CS == 'true' ]]; then composer cs-check ; fi
-  - if [[ $DEPLOY_DOCS == "true" && "$TRAVIS_TEST_RESULT" == "0" ]]; then travis_retry curl -sSL https://raw.githubusercontent.com/zendframework/zf-mkdoc-theme/master/theme-installer.sh | bash ; fi
+  - if [[ $CS_CHECK == 'true' ]]; then composer cs-check ; fi
+  - if [[ $DEPLOY_DOCS == "true" && "$TRAVIS_TEST_RESULT" == "0" ]]; then travis_retry curl -sSL https://raw.githubusercontent.com/laminas/laminas-mkdoc-theme/master/theme-installer.sh | bash ; fi
 
 after_script:
   - if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry composer upload-coverage ; fi
 
 after_success:
-  - if [[ $DEPLOY_DOCS == "true" ]]; then ./zf-mkdoc-theme/deploy.sh ; fi
+  - if [[ $DEPLOY_DOCS == "true" ]]; then ./laminas-mkdoc-theme/deploy.sh ; fi
