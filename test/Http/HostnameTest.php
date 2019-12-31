@@ -1,21 +1,22 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-router for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Router\Http;
+namespace LaminasTest\Router\Http;
 
+use Laminas\Http\Request;
+use Laminas\Router\Exception\InvalidArgumentException;
+use Laminas\Router\Exception\RuntimeException;
+use Laminas\Router\Http\Hostname;
+use Laminas\Router\Http\RouteMatch;
+use Laminas\Stdlib\Request as BaseRequest;
+use Laminas\Uri\Http as HttpUri;
+use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\TestCase;
-use Zend\Http\Request;
-use Zend\Router\Exception\InvalidArgumentException;
-use Zend\Router\Exception\RuntimeException;
-use Zend\Router\Http\Hostname;
-use Zend\Router\Http\RouteMatch;
-use Zend\Stdlib\Request as BaseRequest;
-use Zend\Uri\Http as HttpUri;
-use ZendTest\Router\FactoryTester;
 
 class HostnameTest extends TestCase
 {
@@ -244,7 +245,7 @@ class HostnameTest extends TestCase
     }
 
     /**
-     * @group zf5656
+     * @group laminas5656
      */
     public function testFailedHostnameSegmentMatchDoesNotEmitErrors()
     {

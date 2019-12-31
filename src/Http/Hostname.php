@@ -1,16 +1,17 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-router for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Router\Http;
+namespace Laminas\Router\Http;
 
+use Laminas\Router\Exception;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\Stdlib\RequestInterface as Request;
 use Traversable;
-use Zend\Router\Exception;
-use Zend\Stdlib\ArrayUtils;
-use Zend\Stdlib\RequestInterface as Request;
 
 /**
  * Hostname route.
@@ -69,7 +70,7 @@ class Hostname implements RouteInterface
     /**
      * factory(): defined by RouteInterface interface.
      *
-     * @see    \Zend\Router\RouteInterface::factory()
+     * @see    \Laminas\Router\RouteInterface::factory()
      * @param  array|Traversable $options
      * @return Hostname
      * @throws Exception\InvalidArgumentException
@@ -275,7 +276,7 @@ class Hostname implements RouteInterface
     /**
      * match(): defined by RouteInterface interface.
      *
-     * @see    \Zend\Router\RouteInterface::match()
+     * @see    \Laminas\Router\RouteInterface::match()
      * @param  Request $request
      * @return RouteMatch|null
      */
@@ -308,7 +309,7 @@ class Hostname implements RouteInterface
     /**
      * assemble(): Defined by RouteInterface interface.
      *
-     * @see    \Zend\Router\RouteInterface::assemble()
+     * @see    \Laminas\Router\RouteInterface::assemble()
      * @param  array $params
      * @param  array $options
      * @return mixed
