@@ -1,9 +1,8 @@
 docs_dir: doc/book
 site_dir: doc/html
-pages:
+nav:
     - index.md
     - Routing: routing.md
-site_name: zend-router
-site_description: 'zend-router: Flexible routing system for HTTP and console applications'
-repo_url: 'https://github.com/zendframework/zend-router'
-copyright: 'Copyright (c) 2016 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a>'
+site_name: laminas-router
+site_description: 'laminas-router: Flexible routing system for HTTP and console applications'
+repo_url: 'https://github.com/laminas/laminas-router'
