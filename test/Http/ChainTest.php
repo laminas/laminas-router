@@ -1,21 +1,22 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-router for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Router\Http;
+namespace LaminasTest\Router\Http;
 
+use Laminas\Http\Request;
+use Laminas\Router\Http\Chain;
+use Laminas\Router\Http\RouteMatch;
+use Laminas\Router\Http\Segment;
+use Laminas\Router\Http\Wildcard;
+use Laminas\Router\RoutePluginManager;
+use Laminas\ServiceManager\ServiceManager;
+use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\TestCase;
-use Zend\Http\Request;
-use Zend\Router\Http\Chain;
-use Zend\Router\Http\RouteMatch;
-use Zend\Router\Http\Segment;
-use Zend\Router\Http\Wildcard;
-use Zend\Router\RoutePluginManager;
-use Zend\ServiceManager\ServiceManager;
-use ZendTest\Router\FactoryTester;
 
 class ChainTest extends TestCase
 {
