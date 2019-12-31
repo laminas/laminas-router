@@ -1,25 +1,26 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-router for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Router\Http;
+namespace LaminasTest\Router\Http;
 
 use ArrayObject;
+use Laminas\Http\Request as Request;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Part;
+use Laminas\Router\Http\Segment;
+use Laminas\Router\Http\Wildcard;
+use Laminas\Router\RouteInvokableFactory;
+use Laminas\Router\RoutePluginManager;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\Stdlib\Parameters;
+use Laminas\Stdlib\Request as BaseRequest;
+use LaminasTest\Router\FactoryTester;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Http\Request as Request;
-use Zend\Router\Http\Literal;
-use Zend\Router\Http\Part;
-use Zend\Router\Http\Segment;
-use Zend\Router\Http\Wildcard;
-use Zend\Router\RouteInvokableFactory;
-use Zend\Router\RoutePluginManager;
-use Zend\ServiceManager\ServiceManager;
-use Zend\Stdlib\Parameters;
-use Zend\Stdlib\Request as BaseRequest;
-use ZendTest\Router\FactoryTester;
 
 class PartTest extends TestCase
 {
@@ -46,10 +47,10 @@ class PartTest extends TestCase
 
                 // v2 normalized names
 
-                'zendmvcrouterhttpliteral'  => RouteInvokableFactory::class,
-                'zendmvcrouterhttppart'     => RouteInvokableFactory::class,
-                'zendmvcrouterhttpsegment'  => RouteInvokableFactory::class,
-                'zendmvcrouterhttpwildcard' => RouteInvokableFactory::class,
+                'laminasmvcrouterhttpliteral'  => RouteInvokableFactory::class,
+                'laminasmvcrouterhttppart'     => RouteInvokableFactory::class,
+                'laminasmvcrouterhttpsegment'  => RouteInvokableFactory::class,
+                'laminasmvcrouterhttpwildcard' => RouteInvokableFactory::class,
             ],
         ]);
     }
@@ -58,7 +59,7 @@ class PartTest extends TestCase
     {
         return new Part(
             [
-                'type'    => 'Zend\Router\Http\Literal',
+                'type'    => 'Laminas\Router\Http\Literal',
                 'options' => [
                     'route'    => '/foo',
                     'defaults' => [
@@ -70,7 +71,7 @@ class PartTest extends TestCase
             self::getRoutePlugins(),
             [
                 'bar' => [
-                    'type'    => 'Zend\Router\Http\Literal',
+                    'type'    => 'Laminas\Router\Http\Literal',
                     'options' => [
                         'route'    => '/bar',
                         'defaults' => [
@@ -79,27 +80,27 @@ class PartTest extends TestCase
                     ]
                 ],
                 'baz' => [
-                    'type'    => 'Zend\Router\Http\Literal',
+                    'type'    => 'Laminas\Router\Http\Literal',
                     'options' => [
                         'route' => '/baz'
                     ],
                     'child_routes' => [
                         'bat' => [
-                            'type'    => 'Zend\Router\Http\Segment',
+                            'type'    => 'Laminas\Router\Http\Segment',
                             'options' => [
                                 'route' => '/:controller'
                             ],
                             'may_terminate' => true,
                             'child_routes'  => [
                                 'wildcard' => [
-                                    'type' => 'Zend\Router\Http\Wildcard'
+                                    'type' => 'Laminas\Router\Http\Wildcard'
                                 ]
                             ]
                         ]
                     ]
                 ],
                 'bat' => [
-                    'type'    => 'Zend\Router\Http\Segment',
+                    'type'    => 'Laminas\Router\Http\Segment',
                     'options' => [
                         'route'    => '/bat[/:foo]',
                         'defaults' => [
@@ -109,13 +110,13 @@ class PartTest extends TestCase
                     'may_terminate' => true,
                     'child_routes'  => [
                         'literal' => [
-                            'type'   => 'Zend\Router\Http\Literal',
+                            'type'   => 'Laminas\Router\Http\Literal',
                             'options' => [
                                 'route' => '/bar'
                             ]
                         ],
                         'optional' => [
-                            'type'   => 'Zend\Router\Http\Segment',
+                            'type'   => 'Laminas\Router\Http\Segment',
                             'options' => [
                                 'route' => '/bat[/:bar]'
                             ]
@@ -130,7 +131,7 @@ class PartTest extends TestCase
     {
         return new Part(
             [
-                'type' => 'Zend\Router\Http\Segment',
+                'type' => 'Laminas\Router\Http\Segment',
                 'options' => [
                     'route' => '/[:controller[/:action]]',
                     'defaults' => [
@@ -143,7 +144,7 @@ class PartTest extends TestCase
             self::getRoutePlugins(),
             [
                 'wildcard' => [
-                    'type' => 'Zend\Router\Http\Wildcard',
+                    'type' => 'Laminas\Router\Http\Wildcard',
                     'options' => [
                         'key_value_delimiter' => '/',
                         'param_delimiter' => '/'
@@ -151,7 +152,7 @@ class PartTest extends TestCase
                 ],
                 /*
                 'query' => array(
-                    'type' => 'Zend\Router\Http\Query',
+                    'type' => 'Laminas\Router\Http\Query',
                     'options' => array(
                         'key_value_delimiter' => '=',
                         'param_delimiter' => '&'
@@ -295,7 +296,7 @@ class PartTest extends TestCase
         if ($params === null) {
             $this->assertNull($match);
         } else {
-            $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
+            $this->assertInstanceOf('Laminas\Router\Http\RouteMatch', $match);
 
             if ($offset === null) {
                 $this->assertEquals(strlen($path), $match->getLength());
@@ -335,14 +336,14 @@ class PartTest extends TestCase
 
     public function testAssembleNonTerminatedRoute()
     {
-        $this->setExpectedException('Zend\Router\Exception\RuntimeException', 'Part route may not terminate');
+        $this->setExpectedException('Laminas\Router\Exception\RuntimeException', 'Part route may not terminate');
         self::getRoute()->assemble([], ['name' => 'baz']);
     }
 
     public function testBaseRouteMayNotBePartRoute()
     {
         $this->setExpectedException(
-            'Zend\Router\Exception\InvalidArgumentException',
+            'Laminas\Router\Exception\InvalidArgumentException',
             'Base route may not be a part route'
         );
 
@@ -369,20 +370,20 @@ class PartTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Router\Http\Part',
+            'Laminas\Router\Http\Part',
             [
                 'route'         => 'Missing "route" in options array',
                 'route_plugins' => 'Missing "route_plugins" in options array'
             ],
             [
-                'route'         => new \Zend\Router\Http\Literal('/foo'),
+                'route'         => new \Laminas\Router\Http\Literal('/foo'),
                 'route_plugins' => self::getRoutePlugins(),
             ]
         );
     }
 
     /**
-     * @group ZF2-105
+     * @group Laminas-105
      */
     public function testFactoryShouldAcceptTraversableChildRoutes()
     {
@@ -400,7 +401,7 @@ class PartTest extends TestCase
         ]);
         $options = [
             'route'        => [
-                'type' => 'Zend\Router\Http\Literal',
+                'type' => 'Laminas\Router\Http\Literal',
                 'options' => [
                     'route' => '/admin/users',
                     'defaults' => [
@@ -415,7 +416,7 @@ class PartTest extends TestCase
         ];
 
         $route = Part::factory($options);
-        $this->assertInstanceOf('Zend\Router\Http\Part', $route);
+        $this->assertInstanceOf('Laminas\Router\Http\Part', $route);
     }
 
     /**
@@ -425,7 +426,7 @@ class PartTest extends TestCase
     {
         $options = [
             'route' => [
-                'type' => 'Zend\Router\Http\Literal',
+                'type' => 'Laminas\Router\Http\Literal',
                 'options' => [
                     'route' => '/resource',
                     'defaults' => [
@@ -438,7 +439,7 @@ class PartTest extends TestCase
             'may_terminate' => true,
             'child_routes'  => [
                 'child' => [
-                    'type' => 'Zend\Router\Http\Literal',
+                    'type' => 'Laminas\Router\Http\Literal',
                     'options' => [
                         'route' => '/child',
                         'defaults' => [
@@ -457,7 +458,7 @@ class PartTest extends TestCase
         $query = $request->getQuery();
 
         $match = $route->match($request);
-        $this->assertInstanceOf('Zend\Router\RouteMatch', $match);
+        $this->assertInstanceOf('Laminas\Router\RouteMatch', $match);
         $this->assertEquals('resource', $match->getParam('action'));
     }
 
@@ -468,7 +469,7 @@ class PartTest extends TestCase
     {
         $options = [
             'route' => [
-                'type' => 'Zend\Router\Http\Literal',
+                'type' => 'Laminas\Router\Http\Literal',
                 'options' => [
                     'route' => '/resource',
                     'defaults' => [
@@ -482,7 +483,7 @@ class PartTest extends TestCase
             /*
             'child_routes'  => array(
                 'query' => array(
-                    'type' => 'Zend\Router\Http\Query',
+                    'type' => 'Laminas\Router\Http\Query',
                     'options' => array(
                         'defaults' => array(
                             'query' => 'string',
@@ -502,7 +503,7 @@ class PartTest extends TestCase
 
         /*
         $match = $route->match($request);
-        $this->assertInstanceOf('Zend\Router\RouteMatch', $match);
+        $this->assertInstanceOf('Laminas\Router\RouteMatch', $match);
         $this->assertEquals('string', $match->getParam('query'));
         */
     }

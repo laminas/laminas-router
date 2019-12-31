@@ -6,9 +6,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#3](https://github.com/zendframework/zend-router/pull/3) adds a
+- [zendframework/zend-router#3](https://github.com/zendframework/zend-router/pull/3) adds a
   `config-provider` entry in `composer.json`, pointing to
-  `Zend\Router\ConfigProvider`.
+  `Laminas\Router\ConfigProvider`.
 
 ### Deprecated
 
@@ -20,40 +20,40 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#3](https://github.com/zendframework/zend-router/pull/3) fixes the
-  `component` entry in `composer.json` to properly read `Zend\Router`.
+- [zendframework/zend-router#3](https://github.com/zendframework/zend-router/pull/3) fixes the
+  `component` entry in `composer.json` to properly read `Laminas\Router`.
 
 ## 3.0.0 - 2016-03-21
 
 First release as standalone package in its own namespace. This is the first
-version that will be used with zend-mvc v3; see its [migration document](https://zendframework.github.io/zend-router/migration/v2-to-v3/)
+version that will be used with laminas-mvc v3; see its [migration document](https://docs.laminas.dev/laminas-router/migration/v2-to-v3/)
 for details on how to update existing routing to this version.
 
-In particular, the `Zend\Mvc\Router` namespace was renamed to `Zend\Router`.
+In particular, the `Laminas\Mvc\Router` namespace was renamed to `Laminas\Router`.
 
 ### Added
 
-- [#2](https://github.com/zendframework/zend-router/pull/2) adds
+- [zendframework/zend-router#2](https://github.com/zendframework/zend-router/pull/2) adds
   `ConfigProvider`, which is an invokable class that returns dependency
   configuration for the component; in particular, this will be useful for
-  zend-expressive-zendrouter.
-- [#2](https://github.com/zendframework/zend-router/pull/2) adds the `Module`
-  class, for use with zend-mvc + zend-modulemanager. It provides dependency
+  mezzio-laminasrouter.
+- [zendframework/zend-router#2](https://github.com/zendframework/zend-router/pull/2) adds the `Module`
+  class, for use with laminas-mvc + laminas-modulemanager. It provides dependency
   configuration for the component when used in that context.
-- [#2](https://github.com/zendframework/zend-router/pull/2) adds
-  zend-component-installer configuration for the above `ConfigProvider` and
+- [zendframework/zend-router#2](https://github.com/zendframework/zend-router/pull/2) adds
+  laminas-component-installer configuration for the above `ConfigProvider` and
   `Module`, to allow auto-registration with the application.
-- [#2](https://github.com/zendframework/zend-router/pull/2) adds the following
+- [zendframework/zend-router#2](https://github.com/zendframework/zend-router/pull/2) adds the following
   factories:
-  - `Zend\Router\RouteInvokableFactory`, which provides a custom "invokable"
+  - `Laminas\Router\RouteInvokableFactory`, which provides a custom "invokable"
     factory for routes that uses the route class' `factory()` method for
     instantiation.
-  - `Zend\Router\RoutePluginManagerFactory`, for creating a `RoutePluginManager`
+  - `Laminas\Router\RoutePluginManagerFactory`, for creating a `RoutePluginManager`
     instance.
-  - `Zend\Router\Http\HttpRouterFactory`, for returning a `TreeRouteStack`
+  - `Laminas\Router\Http\HttpRouterFactory`, for returning a `TreeRouteStack`
     instance.
-  - `Zend\Router\RouterFactory`, which essentially proxies to
-    `Zend\Router\Http\HttpRouterFactory`.
+  - `Laminas\Router\RouterFactory`, which essentially proxies to
+    `Laminas\Router\Http\HttpRouterFactory`.
 
 
 ### Deprecated
@@ -62,10 +62,10 @@ In particular, the `Zend\Mvc\Router` namespace was renamed to `Zend\Router`.
 
 ### Removed
 
-- [#2](https://github.com/zendframework/zend-router/pull/2) removes all
+- [zendframework/zend-router#2](https://github.com/zendframework/zend-router/pull/2) removes all
   console-related routing. These will be part of a new component,
-  zend-mvc-console.
-- [#2](https://github.com/zendframework/zend-router/pull/2) removes the `Query`
+  laminas-mvc-console.
+- [zendframework/zend-router#2](https://github.com/zendframework/zend-router/pull/2) removes the `Query`
   route, as it had been deprecated starting with version 2.3.
 
 ### Fixed

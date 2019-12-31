@@ -1,32 +1,33 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-router for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Router;
+namespace LaminasTest\Router;
 
+use Laminas\Router\RoutePluginManager;
+use Laminas\ServiceManager\ServiceManager;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Router\RoutePluginManager;
-use Zend\ServiceManager\ServiceManager;
 
 class RoutePluginManagerTest extends TestCase
 {
     public function testLoadNonExistentRoute()
     {
         $routes = new RoutePluginManager(new ServiceManager());
-        $this->setExpectedException('Zend\ServiceManager\Exception\ServiceNotFoundException');
+        $this->setExpectedException('Laminas\ServiceManager\Exception\ServiceNotFoundException');
         $routes->get('foo');
     }
 
     public function testCanLoadAnyRoute()
     {
         $routes = new RoutePluginManager(new ServiceManager(), ['invokables' => [
-            'DummyRoute' => 'ZendTest\Router\TestAsset\DummyRoute',
+            'DummyRoute' => 'LaminasTest\Router\TestAsset\DummyRoute',
         ]]);
         $route = $routes->get('DummyRoute');
 
-        $this->assertInstanceOf('ZendTest\Router\TestAsset\DummyRoute', $route);
+        $this->assertInstanceOf('LaminasTest\Router\TestAsset\DummyRoute', $route);
     }
 }
