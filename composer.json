@@ -1,49 +1,20 @@
 {
-    "name": "zendframework/zend-router",
+    "name": "laminas/laminas-router",
     "description": "Flexible routing system for HTTP and console applications",
     "license": "BSD-3-Clause",
     "keywords": [
-        "zf",
-        "zend",
-        "zendframework",
+        "laminas",
         "mvc",
         "routing"
     ],
+    "homepage": "https://laminas.dev",
     "support": {
-        "docs": "https://docs.zendframework.com/zend-router/",
-        "issues": "https://github.com/zendframework/zend-router/issues",
-        "source": "https://github.com/zendframework/zend-router",
-        "rss": "https://github.com/zendframework/zend-router/releases.atom",
-        "slack": "https://zendframework-slack.herokuapp.com",
-        "forum": "https://discourse.zendframework.com/c/questions/components"
-    },
-    "require": {
-        "php": "^5.6 || ^7.0",
-        "container-interop/container-interop": "^1.2",
-        "zendframework/zend-http": "^2.8.1",
-        "zendframework/zend-servicemanager": "^2.7.8 || ^3.3",
-        "zendframework/zend-stdlib": "^3.2.1"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5.7.22 || ^6.4.1",
-        "zendframework/zend-coding-standard": "~1.0.0",
-        "zendframework/zend-i18n": "^2.7.4"
-    },
-    "conflict": {
-        "zendframework/zend-mvc": "<3.0.0"
-    },
-    "suggest": {
-        "zendframework/zend-i18n": "^2.7.4, if defining translatable HTTP path segments"
-    },
-    "autoload": {
-        "psr-4": {
-            "Zend\\Router\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "ZendTest\\Router\\": "test/"
-        }
+        "docs": "https://docs.laminas.dev/laminas-router/",
+        "issues": "https://github.com/laminas/laminas-router/issues",
+        "source": "https://github.com/laminas/laminas-router",
+        "rss": "https://github.com/laminas/laminas-router/releases.atom",
+        "chat": "https://laminas.dev/chat",
+        "forum": "https://discourse.laminas.dev"
     },
     "config": {
         "sort-packages": true
@@ -53,9 +24,38 @@
             "dev-master": "3.3.x-dev",
             "dev-develop": "4.0.x-dev"
         },
-        "zf": {
-            "component": "Zend\\Router",
-            "config-provider": "Zend\\Router\\ConfigProvider"
+        "laminas": {
+            "component": "Laminas\\Router",
+            "config-provider": "Laminas\\Router\\ConfigProvider"
+        }
+    },
+    "require": {
+        "php": "^5.6 || ^7.0",
+        "container-interop/container-interop": "^1.2",
+        "laminas/laminas-http": "^2.8.1",
+        "laminas/laminas-servicemanager": "^2.7.8 || ^3.3",
+        "laminas/laminas-stdlib": "^3.2.1",
+        "laminas/laminas-zendframework-bridge": "^1.0"
+    },
+    "require-dev": {
+        "laminas/laminas-coding-standard": "~1.0.0",
+        "laminas/laminas-i18n": "^2.7.4",
+        "phpunit/phpunit": "^5.7.22 || ^6.4.1"
+    },
+    "conflict": {
+        "laminas/laminas-mvc": "<3.0.0"
+    },
+    "suggest": {
+        "laminas/laminas-i18n": "^2.7.4, if defining translatable HTTP path segments"
+    },
+    "autoload": {
+        "psr-4": {
+            "Laminas\\Router\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LaminasTest\\Router\\": "test/"
         }
     },
     "scripts": {
@@ -67,5 +67,8 @@
         "cs-fix": "phpcbf",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+    },
+    "replace": {
+        "zendframework/zend-router": "self.version"
     }
 }
