@@ -1,17 +1,18 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-router for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Router\Http;
+namespace LaminasTest\Router\Http;
 
+use Laminas\Http\Request as Request;
+use Laminas\Router\Http\Wildcard;
+use Laminas\Stdlib\Request as BaseRequest;
+use LaminasTest\Router\FactoryTester;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Http\Request as Request;
-use Zend\Stdlib\Request as BaseRequest;
-use Zend\Router\Http\Wildcard;
-use ZendTest\Router\FactoryTester;
 
 class WildcardTest extends TestCase
 {
@@ -98,7 +99,7 @@ class WildcardTest extends TestCase
         if ($params === null) {
             $this->assertNull($match);
         } else {
-            $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
+            $this->assertInstanceOf('Laminas\Router\Http\RouteMatch', $match);
 
             if ($offset === null) {
                 $this->assertEquals(strlen($path), $match->getLength());
@@ -154,7 +155,7 @@ class WildcardTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Router\Http\Wildcard',
+            'Laminas\Router\Http\Wildcard',
             [],
             []
         );

@@ -1,18 +1,19 @@
 <?php
+
 /**
- * @link      http://github.com/zendframework/zend-router for the canonical source repository
- * @copyright Copyright (c) 2005-2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas/laminas-router for the canonical source repository
+ * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Router\Http;
+namespace LaminasTest\Router\Http;
 
+use Laminas\Http\Request as Request;
+use Laminas\Router\Http\Hostname;
+use Laminas\Stdlib\Request as BaseRequest;
+use Laminas\Uri\Http as HttpUri;
+use LaminasTest\Router\FactoryTester;
 use PHPUnit_Framework_TestCase as TestCase;
-use Zend\Http\Request as Request;
-use Zend\Stdlib\Request as BaseRequest;
-use Zend\Uri\Http as HttpUri;
-use Zend\Router\Http\Hostname;
-use ZendTest\Router\FactoryTester;
 
 class HostnameTest extends TestCase
 {
@@ -171,7 +172,7 @@ class HostnameTest extends TestCase
         if ($params === null) {
             $this->assertNull($match);
         } else {
-            $this->assertInstanceOf('Zend\Router\Http\RouteMatch', $match);
+            $this->assertInstanceOf('Laminas\Router\Http\RouteMatch', $match);
 
             foreach ($params as $key => $value) {
                 $this->assertEquals($value, $match->getParam($key));
@@ -209,7 +210,7 @@ class HostnameTest extends TestCase
 
     public function testAssemblingWithMissingParameter()
     {
-        $this->setExpectedException('Zend\Router\Exception\InvalidArgumentException', 'Missing parameter "foo"');
+        $this->setExpectedException('Laminas\Router\Exception\InvalidArgumentException', 'Missing parameter "foo"');
 
         $route = new Hostname(':foo.example.com');
         $uri   = new HttpUri();
@@ -229,7 +230,7 @@ class HostnameTest extends TestCase
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
-            'Zend\Router\Http\Hostname',
+            'Laminas\Router\Http\Hostname',
             [
                 'route' => 'Missing "route" in options array'
             ],
@@ -240,11 +241,11 @@ class HostnameTest extends TestCase
     }
 
     /**
-     * @group zf5656
+     * @group laminas5656
      */
     public function testFailedHostnameSegmentMatchDoesNotEmitErrors()
     {
-        $this->setExpectedException('Zend\Router\Exception\RuntimeException');
+        $this->setExpectedException('Laminas\Router\Exception\RuntimeException');
         $route = new Hostname(':subdomain.with_underscore.com');
     }
 }
