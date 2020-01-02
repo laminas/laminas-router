@@ -8,3 +8,6 @@ nav:
 site_name: laminas-router
 site_description: 'laminas-router: Flexible routing system for HTTP applications'
 repo_url: 'https://github.com/laminas/laminas-router'
+extra:
+    project: Components
+    project_url: 'https://docs.laminas.dev'
