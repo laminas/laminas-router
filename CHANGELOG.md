@@ -45,7 +45,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- [#9](https://github.com/laminas/laminas-router/pull/9) fixes tests PHP 7.4 compatibility
 
 ## 3.3.0 - 2019-02-26
 

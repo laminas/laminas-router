@@ -39,7 +39,7 @@
     "require-dev": {
         "laminas/laminas-coding-standard": "~1.0.0",
         "laminas/laminas-i18n": "^2.7.4",
-        "phpunit/phpunit": "^7.3"
+        "phpunit/phpunit": "^7.5.18"
     },
     "suggest": {
         "laminas/laminas-i18n": "^2.7.4, if defining translatable HTTP path segments"
