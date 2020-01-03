@@ -1,6 +1,6 @@
 # laminas-router
 
-[![Build Status](https://travis-ci.org/laminas/laminas-router.svg?branch=master)](https://travis-ci.org/laminas/laminas-router)
+[![Build Status](https://travis-ci.com/laminas/laminas-router.svg?branch=master)](https://travis-ci.com/laminas/laminas-router)
 [![Coverage Status](https://coveralls.io/repos/github/laminas/laminas-router/badge.svg?branch=master)](https://coveralls.io/github/laminas/laminas-router?branch=master)
 
 laminas-router provides flexible HTTP routing.
