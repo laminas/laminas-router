@@ -1,7 +1,7 @@
 docs_dir: docs/book
 site_dir: docs/html
 nav:
-    - index.md
+    - Home: index.md
     - Routing: routing.md
     - Migration:
         - "V2 to V3": migration/v2-to-v3.md
@@ -10,4 +10,3 @@ site_description: 'laminas-router: Flexible routing system for HTTP applications
 repo_url: 'https://github.com/laminas/laminas-router'
 extra:
     project: Components
-    project_url: 'https://docs.laminas.dev'
