@@ -25,7 +25,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
-## 3.3.2 - TBD
+## 3.3.2 - 2020-03-29
 
 ### Added
 
@@ -45,7 +45,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- Nothing.
+- Fixed `replace` version constraint in composer.json so repository can be used as replacement of `zendframework/zend-router:^3.3.0`.
 
 ## 3.3.1 - 2020-01-03
 
