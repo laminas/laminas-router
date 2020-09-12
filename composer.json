@@ -20,10 +20,6 @@
         "sort-packages": true
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "3.3.x-dev",
-            "dev-develop": "4.0.x-dev"
-        },
         "laminas": {
             "component": "Laminas\\Router",
             "config-provider": "Laminas\\Router\\ConfigProvider"
