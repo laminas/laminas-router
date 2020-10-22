@@ -126,6 +126,7 @@ class WildcardTest extends TestCase
     {
         if ($params === null || $skipAssembling) {
             // Data which will not match are not tested for assembling.
+            $this->expectNotToPerformAssertions();
             return;
         }
 

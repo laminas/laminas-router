@@ -35,7 +35,7 @@ class TranslatorAwareTreeRouteStackTest extends TestCase
      */
     protected $fooRoute;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->markTestIncomplete('Re-enable once laminas-i18n is updated to laminas-servicemanager v3');
 

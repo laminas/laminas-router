@@ -90,6 +90,7 @@ class LiteralTest extends TestCase
     {
         if (! $shouldMatch) {
             // Data which will not match are not tested for assembling.
+            $this->expectNotToPerformAssertions();
             return;
         }
 

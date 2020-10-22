@@ -50,6 +50,7 @@ class TreeRouteStackTest extends TestCase
         $stack->addRoute('foo', new ArrayIterator([
             'type' => TestAsset\DummyRoute::class
         ]));
+        $this->assertTrue($stack->hasRoute('foo'));
     }
 
     public function testNoMatchWithoutUriMethod()
