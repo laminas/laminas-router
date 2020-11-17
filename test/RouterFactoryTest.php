@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router;
 
-use Interop\Container\ContainerInterface;
 use Laminas\Router\Http\HttpRouterFactory;
 use Laminas\Router\RoutePluginManager;
 use Laminas\Router\RouterFactory;
@@ -20,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 
 class RouterFactoryTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->defaultServiceConfig = [
             'factories' => [
@@ -32,11 +31,6 @@ class RouterFactoryTest extends TestCase
         ];
 
         $this->factory  = new RouterFactory();
-    }
-
-    private function createContainer()
-    {
-        return $this->prophesize(ContainerInterface::class)->reveal();
     }
 
     public function testFactoryCanCreateRouterBasedOnConfiguredName()

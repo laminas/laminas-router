@@ -16,7 +16,7 @@ use LaminasTest\Router\RouterFactoryTest as TestCase;
 
 class HttpRouterFactoryTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->defaultServiceConfig = [
             'factories' => [

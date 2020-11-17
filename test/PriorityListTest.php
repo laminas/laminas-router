@@ -20,7 +20,7 @@ class PriorityListTest extends TestCase
      */
     protected $list;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->list = new PriorityList();
     }
@@ -50,6 +50,7 @@ class PriorityListTest extends TestCase
 
     public function testRemovingNonExistentRouteDoesNotYieldError()
     {
+        $this->expectNotToPerformAssertions();
         $this->list->remove('foo');
     }
 

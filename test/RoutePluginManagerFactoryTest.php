@@ -19,24 +19,32 @@ use PHPUnit\Framework\TestCase;
 
 class RoutePluginManagerFactoryTest extends TestCase
 {
-    public function setUp()
+    /**
+     * @var ContainerInterface|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $container;
+    /**
+     * @var RoutePluginManagerFactory
+     */
+    private $factory;
+
+    public function setUp(): void
     {
-        $this->container = $this->prophesize(ContainerInterface::class);
+        $this->container = $this->createMock(ContainerInterface::class);
         $this->factory = new RoutePluginManagerFactory();
     }
 
     public function testInvocationReturnsAPluginManager()
     {
-        $plugins = $this->factory->__invoke($this->container->reveal(), RoutePluginManager::class);
+        $plugins = $this->factory->__invoke($this->container, RoutePluginManager::class);
         $this->assertInstanceOf(RoutePluginManager::class, $plugins);
     }
 
     public function testCreateServiceReturnsAPluginManager()
     {
-        $container = $this->prophesize(ServiceLocatorInterface::class);
-        $container->willImplement(ContainerInterface::class);
+        $container = $this->createMock(ServiceLocatorInterface::class);
 
-        $plugins = $this->factory->createService($container->reveal());
+        $plugins = $this->factory->createService($container);
         $this->assertInstanceOf(RoutePluginManager::class, $plugins);
     }
 
@@ -44,11 +52,11 @@ class RoutePluginManagerFactoryTest extends TestCase
     {
         $options = ['factories' => [
             'TestRoute' => function ($container) {
-                return $this->prophesize(RouteInterface::class)->reveal();
+                return $this->createMock(RouteInterface::class);
             },
         ]];
         $plugins = $this->factory->__invoke(
-            $this->container->reveal(),
+            $this->container,
             RoutePluginManager::class,
             $options
         );
