@@ -197,7 +197,7 @@
             </div>
 
             
-            <div class="col-4 text-sm-right">
+            <div class="col-4 text-right">
                 
                     
 
@@ -302,7 +302,6 @@ Linux):</p>
 <pre class="highlight"><code class="language-bash">$ for code in $(grep -rl 'Laminas.Mvc.Router' .);do
 &gt; sed --in-place -e 's/Laminas\\Mvc\\Router/Laminas\\Router/g' ${code}
 &gt; done</code></pre>
-
 <p>The above recursively lists files that use the old namespace, and then edits
 them in place to replace the old namespace with the new one.</p>
 <p>(Make sure you don't do this at your project root, as that could also change the
