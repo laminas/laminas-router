@@ -24,7 +24,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
-## 4.0.0 - TBD
+## 3.4.0 - 2020-11-17
 
 ### Added
 
@@ -41,7 +41,7 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Removed
 
 - [zendframework/zend-router#44](https://github.com/zendframework/zend-router/pull/44) removes support
-  for PHP versions below PHP 7.1.
+  for PHP versions below PHP 7.3.
 
 ### Fixed
 
