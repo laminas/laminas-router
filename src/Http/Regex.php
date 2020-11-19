@@ -155,7 +155,7 @@ class Regex implements RouteInterface
             $spec = '%' . $key . '%';
 
             if (strpos($url, $spec) !== false) {
-                $url = str_replace($spec, rawurlencode($value), $url);
+                $url = str_replace($spec, rawurlencode((string) $value), $url);
 
                 $this->assembledParams[] = $key;
             }
