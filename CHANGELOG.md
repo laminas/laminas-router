@@ -2,27 +2,24 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 3.4.1 - TBD
+## 3.4.1 - 2020-11-19
 
-### Added
 
-- Nothing.
+-----
 
-### Changed
+### Release Notes for [3.4.1](https://github.com/laminas/laminas-router/milestone/4)
 
-- Nothing.
+3.4.x bugfix release (patch)
 
-### Deprecated
+### 3.4.1
 
-- Nothing.
+- Total issues resolved: **1**
+- Total pull requests resolved: **1**
+- Total contributors: **2**
 
-### Removed
+#### Bug
 
-- Nothing.
-
-### Fixed
-
-- Nothing.
+ - [15: Cast to string when calling rawurlencode within Regex router](https://github.com/laminas/laminas-router/pull/15) thanks to @weierophinney and @matbech
 
 ## 4.0.0 - TBD
 
