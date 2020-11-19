@@ -64,6 +64,12 @@ class RegexTest extends TestCase
                 null,
                 ['bar' => 'bar', 'baz' => 'baz']
             ],
+            'params-contain-non-string-scalar-values' => [
+                new Regex('/id/(?<id>\d+)/scale/(?<scale>\d+\.\d+)', '/id/%id%/scale/%scale%'),
+                '/id/42/scale/4.2',
+                null,
+                ['id' => 42, 'scale' => 4.2]
+            ],
         ];
     }
 
