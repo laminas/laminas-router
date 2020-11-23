@@ -2,27 +2,24 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 3.4.2 - TBD
+## 3.4.2 - 2020-11-23
 
-### Added
 
-- Nothing.
+-----
 
-### Changed
+### Release Notes for [3.4.2](https://github.com/laminas/laminas-router/milestone/6)
 
-- Nothing.
+3.4.x bugfix release (patch)
 
-### Deprecated
+### 3.4.2
 
-- Nothing.
+- Total issues resolved: **0**
+- Total pull requests resolved: **1**
+- Total contributors: **1**
 
-### Removed
+#### Bug
 
-- Nothing.
-
-### Fixed
-
-- Nothing.
+ - [17: bugfix: re-add `zendframework/zend-router` replacement](https://github.com/laminas/laminas-router/pull/17) thanks to @boesing
 
 ## 3.4.1 - 2020-11-19
 
