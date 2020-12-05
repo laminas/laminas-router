@@ -446,7 +446,7 @@ class Segment implements RouteInterface
      */
     protected function encode(string $value)
     {
-        $key = (string) $value;
+        $key = $value;
         if (! isset(static::$cacheEncode[$key])) {
             static::$cacheEncode[$key] = rawurlencode($value);
             static::$cacheEncode[$key] = strtr(static::$cacheEncode[$key], static::$urlencodeCorrectionMap);
