@@ -214,6 +214,35 @@ class HostnameTest extends TestCase
         $this->assertNull($route->match($request));
     }
 
+    public function testNoMatchWithRelativeUri(): void
+    {
+        $route   = new Hostname('example.com');
+        $request = new Request();
+        $request->setUri('/relative/path');
+
+        self::assertNull($route->match($request));
+    }
+
+    public function testNoMatchWithPlaceholderOnRelativeUri(): void
+    {
+        $route   = new Hostname(':domain');
+        $request = new Request();
+        $request->setUri('/relative/path');
+
+        self::assertNull($route->match($request));
+    }
+
+    public function testMatchesRelativeUriWithFullyOptionalDefinition(): void
+    {
+        $route   = new Hostname('[:domain]');
+        $request = new Request();
+        $request->setUri('/relative/path');
+
+        $match = $route->match($request);
+        self::assertInstanceOf(RouteMatch::class, $match);
+        self::assertArrayNotHasKey('domain', $match->getParams());
+    }
+
     public function testAssemblingWithMissingParameter()
     {
         $route = new Hostname(':foo.example.com');
