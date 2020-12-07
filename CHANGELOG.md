@@ -2,27 +2,28 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 3.4.3 - TBD
+## 3.4.3 - 2020-12-07
 
-### Added
 
-- Nothing.
+-----
 
-### Changed
+### Release Notes for [3.4.3](https://github.com/laminas/laminas-router/milestone/7)
 
-- Nothing.
+3.4.x bugfix release (patch)
 
-### Deprecated
+### 3.4.3
 
-- Nothing.
+- Total issues resolved: **1**
+- Total pull requests resolved: **2**
+- Total contributors: **3**
 
-### Removed
+#### Bug
 
-- Nothing.
+ - [21: Fix type issue in Hostname route uncovered by strict types](https://github.com/laminas/laminas-router/pull/21) thanks to @Xerkus and @lklapa
 
-### Fixed
+#### Bug,Enhancement
 
-- Nothing.
+ - [19: Removed redundant cast](https://github.com/laminas/laminas-router/pull/19) thanks to @matbech
 
 ## 3.4.2 - 2020-11-23
 
