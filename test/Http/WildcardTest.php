@@ -83,6 +83,12 @@ class WildcardTest extends TestCase
                 null,
                 ['foo' => 'foo bar']
             ],
+            'params-contain-non-string-scalar-values' => [
+                new Wildcard(),
+                '/int_param/42/float_param/4.2',
+                null,
+                ['int_param' => 42, 'float_param' => 4.2]
+            ],
         ];
     }
 
