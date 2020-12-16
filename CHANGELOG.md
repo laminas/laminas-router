@@ -20,6 +20,24 @@ All notable changes to this project will be documented in this file, in reverse 
 
 - Nothing.
 
+## 3.4.4 - 2020-12-16
+
+### Release Notes for [3.4.4](https://github.com/laminas/laminas-router/milestone/8)
+
+3.4.x bugfix release (patch)
+
+### 3.4.4
+
+- Total issues resolved: **1**
+- Total pull requests resolved: **1**
+- Total contributors: **1**
+
+#### Bug
+
+- [24: cast to string when calling rawurlencode() within Wildcard router](https://github.com/laminas/laminas-router/pull/24) thanks to @gkralik
+
+## 3.4.3 - 2020-12-07
+
 ### Fixed
 
 - Nothing.

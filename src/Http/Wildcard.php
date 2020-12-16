@@ -175,7 +175,7 @@ class Wildcard implements RouteInterface
                     continue;
                 }
 
-                $elements[] = rawurlencode($key) . $this->keyValueDelimiter . rawurlencode($value);
+                $elements[] = rawurlencode($key) . $this->keyValueDelimiter . rawurlencode((string) $value);
                 $this->assembledParams[] = $key;
             }
 
