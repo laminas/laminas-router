@@ -28,14 +28,13 @@
         "php": "^7.3 || ~8.0.0 || ~8.1.0",
         "container-interop/container-interop": "^1.2",
         "laminas/laminas-http": "^2.15",
-        "laminas/laminas-servicemanager": "^2.7.8 || ^3.3",
-        "laminas/laminas-stdlib": "^3.6",
-        "laminas/laminas-zendframework-bridge": "^1.0"
+        "laminas/laminas-servicemanager": "^3.7",
+        "laminas/laminas-stdlib": "^3.6"
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~1.0.0",
         "laminas/laminas-i18n": "^2.7.4",
-        "phpunit/phpunit": "^9.4"
+        "phpunit/phpunit": "^9.5.5"
     },
     "suggest": {
         "laminas/laminas-i18n": "^2.7.4, if defining translatable HTTP path segments"
@@ -60,7 +59,7 @@
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },
-    "replace": {
-        "zendframework/zend-router": "^3.3.0"
+    "conflict": {
+        "zendframework/zend-router": "*"
     }
 }
