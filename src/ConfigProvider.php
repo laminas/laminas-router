@@ -1,14 +1,10 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace Laminas\Router;
+
+use Zend\Router\Http\TreeRouteStack;
 
 /**
  * Provide base configuration for using the component.
@@ -28,7 +24,7 @@ class ConfigProvider
     public function __invoke()
     {
         return [
-            'dependencies' => $this->getDependencyConfig(),
+            'dependencies'  => $this->getDependencyConfig(),
             'route_manager' => $this->getRouteManagerConfig(),
         ];
     }
@@ -41,20 +37,20 @@ class ConfigProvider
     public function getDependencyConfig()
     {
         return [
-            'aliases' => [
-                'HttpRouter' => Http\TreeRouteStack::class,
-                'router' => RouteStackInterface::class,
-                'Router' => RouteStackInterface::class,
+            'aliases'   => [
+                'HttpRouter'         => Http\TreeRouteStack::class,
+                'router'             => RouteStackInterface::class,
+                'Router'             => RouteStackInterface::class,
                 'RoutePluginManager' => RoutePluginManager::class,
 
                 // Legacy Zend Framework aliases
-                \Zend\Router\Http\TreeRouteStack::class => Http\TreeRouteStack::class,
-                \Zend\Router\RoutePluginManager::class => RoutePluginManager::class,
+                TreeRouteStack::class                   => Http\TreeRouteStack::class,
+                \Zend\Router\RoutePluginManager::class  => RoutePluginManager::class,
                 \Zend\Router\RouteStackInterface::class => RouteStackInterface::class,
             ],
             'factories' => [
                 Http\TreeRouteStack::class => Http\HttpRouterFactory::class,
-                RoutePluginManager::class => RoutePluginManagerFactory::class,
+                RoutePluginManager::class  => RoutePluginManagerFactory::class,
                 RouteStackInterface::class => RouterFactory::class,
             ],
         ];

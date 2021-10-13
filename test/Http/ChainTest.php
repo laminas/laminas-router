@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
@@ -20,9 +14,12 @@ use Laminas\ServiceManager\ServiceManager;
 use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\TestCase;
 
+use function strlen;
+use function strpos;
+
 class ChainTest extends TestCase
 {
-    public static function getRoute()
+    public static function getRoute(): Chain
     {
         $routePlugins = new RoutePluginManager(new ServiceManager());
 
@@ -54,7 +51,7 @@ class ChainTest extends TestCase
         );
     }
 
-    public static function getRouteWithOptionalParam()
+    public static function getRouteWithOptionalParam(): Chain
     {
         $routePlugins = new RoutePluginManager(new ServiceManager());
 
@@ -83,10 +80,18 @@ class ChainTest extends TestCase
         );
     }
 
-    public static function routeProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     0: Chain,
+     *     1: string,
+     *     2: null|int,
+     *     3: array<string, string>
+     * }>
+     */
+    public static function routeProvider(): array
     {
         return [
-            'simple-match' => [
+            'simple-match'                  => [
                 self::getRoute(),
                 '/foo/bar',
                 null,
@@ -95,7 +100,7 @@ class ChainTest extends TestCase
                     'bar'        => 'bar',
                 ],
             ],
-            'offset-skips-beginning' => [
+            'offset-skips-beginning'        => [
                 self::getRoute(),
                 '/baz/foo/bar',
                 4,
@@ -110,25 +115,25 @@ class ChainTest extends TestCase
                 null,
                 [
                     'controller' => 'foo',
-                    'bar' => 'baz',
+                    'bar'        => 'baz',
                 ],
             ],
-            'optional-parameter' => [
+            'optional-parameter'            => [
                 self::getRouteWithOptionalParam(),
                 '/foo/baz',
                 null,
                 [
                     'controller' => 'foo',
-                    'bar' => 'baz',
+                    'bar'        => 'baz',
                 ],
             ],
-            'optional-parameter-empty' => [
+            'optional-parameter-empty'      => [
                 self::getRouteWithOptionalParam(),
                 '/foo',
                 null,
                 [
                     'controller' => 'foo',
-                    'bar' => 'bar',
+                    'bar'        => 'bar',
                 ],
             ],
         ];
@@ -136,12 +141,10 @@ class ChainTest extends TestCase
 
     /**
      * @dataProvider routeProvider
-     * @param        Chain   $route
-     * @param        string  $path
-     * @param        int     $offset
-     * @param        array   $params
+     * @param        string   $path
+     * @param        int|null $offset
      */
-    public function testMatching(Chain $route, $path, $offset, array $params = null)
+    public function testMatching(Chain $route, $path, $offset, ?array $params = null)
     {
         $request = new Request();
         $request->setUri('http://example.com' . $path);
@@ -164,12 +167,10 @@ class ChainTest extends TestCase
 
     /**
      * @dataProvider routeProvider
-     * @param        Chain   $route
-     * @param        string  $path
-     * @param        int     $offset
-     * @param        array   $params
+     * @param        string   $path
+     * @param        int|null $offset
      */
-    public function testAssembling(Chain $route, $path, $offset, array $params = null)
+    public function testAssembling(Chain $route, $path, $offset, ?array $params = null)
     {
         if ($params === null) {
             // Data which will not match are not tested for assembling.

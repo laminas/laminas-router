@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
@@ -22,94 +16,101 @@ use PHPUnit\Framework\TestCase;
 
 class HostnameTest extends TestCase
 {
-    public static function routeProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     0: Hostname,
+     *     1: string,
+     *     2: null|array<string, null|string>
+     * }>
+     */
+    public static function routeProvider(): array
     {
         return [
-            'simple-match' => [
+            'simple-match'                                                   => [
                 new Hostname(':foo.example.com'),
                 'bar.example.com',
-                ['foo' => 'bar']
+                ['foo' => 'bar'],
             ],
-            'no-match-on-different-hostname' => [
+            'no-match-on-different-hostname'                                 => [
                 new Hostname('foo.example.com'),
                 'bar.example.com',
-                null
+                null,
             ],
-            'no-match-with-different-number-of-parts' => [
+            'no-match-with-different-number-of-parts'                        => [
                 new Hostname('foo.example.com'),
                 'example.com',
-                null
+                null,
             ],
-            'no-match-with-different-number-of-parts-2' => [
+            'no-match-with-different-number-of-parts-2'                      => [
                 new Hostname('example.com'),
                 'foo.example.com',
-                null
+                null,
             ],
-            'match-overrides-default' => [
+            'match-overrides-default'                                        => [
                 new Hostname(':foo.example.com', [], ['foo' => 'baz']),
                 'bat.example.com',
-                ['foo' => 'bat']
+                ['foo' => 'bat'],
             ],
-            'constraints-prevent-match' => [
+            'constraints-prevent-match'                                      => [
                 new Hostname(':foo.example.com', ['foo' => '\d+']),
                 'bar.example.com',
-                null
+                null,
             ],
-            'constraints-allow-match' => [
+            'constraints-allow-match'                                        => [
                 new Hostname(':foo.example.com', ['foo' => '\d+']),
                 '123.example.com',
-                ['foo' => '123']
+                ['foo' => '123'],
             ],
-            'constraints-allow-match-2' => [
+            'constraints-allow-match-2'                                      => [
                 new Hostname(
                     'www.:domain.com',
                     ['domain' => '(mydomain|myaltdomain1|myaltdomain2)'],
-                    ['domain'    => 'mydomain']
+                    ['domain' => 'mydomain']
                 ),
                 'www.mydomain.com',
-                ['domain' => 'mydomain']
+                ['domain' => 'mydomain'],
             ],
-            'optional-subdomain' => [
+            'optional-subdomain'                                             => [
                 new Hostname('[:foo.]example.com'),
                 'bar.example.com',
                 ['foo' => 'bar'],
             ],
-            'two-optional-subdomain' => [
+            'two-optional-subdomain'                                         => [
                 new Hostname('[:foo.][:bar.]example.com'),
                 'baz.bat.example.com',
                 ['foo' => 'baz', 'bar' => 'bat'],
             ],
-            'missing-optional-subdomain' => [
+            'missing-optional-subdomain'                                     => [
                 new Hostname('[:foo.]example.com'),
                 'example.com',
                 ['foo' => null],
             ],
-            'one-of-two-missing-optional-subdomain' => [
+            'one-of-two-missing-optional-subdomain'                          => [
                 new Hostname('[:foo.][:bar.]example.com'),
                 'bat.example.com',
                 ['foo' => null, 'foo' => 'bat'],
             ],
-            'two-missing-optional-subdomain' => [
+            'two-missing-optional-subdomain'                                 => [
                 new Hostname('[:foo.][:bar.]example.com'),
                 'example.com',
                 ['foo' => null, 'bar' => null],
             ],
-            'two-optional-subdomain-nested' => [
+            'two-optional-subdomain-nested'                                  => [
                 new Hostname('[[:foo.]:bar.]example.com'),
                 'baz.bat.example.com',
                 ['foo' => 'baz', 'bar' => 'bat'],
             ],
-            'one-of-two-missing-optional-subdomain-nested' => [
+            'one-of-two-missing-optional-subdomain-nested'                   => [
                 new Hostname('[[:foo.]:bar.]example.com'),
                 'bat.example.com',
                 ['foo' => null, 'bar' => 'bat'],
             ],
-            'two-missing-optional-subdomain-nested' => [
+            'two-missing-optional-subdomain-nested'                          => [
                 new Hostname('[[:foo.]:bar.]example.com'),
                 'example.com',
                 ['foo' => null, 'bar' => null],
             ],
-            'no-match-on-different-hostname-and-optional-subdomain' => [
+            'no-match-on-different-hostname-and-optional-subdomain'          => [
                 new Hostname('[:foo.]example.com'),
                 'bar.test.com',
                 null,
@@ -119,42 +120,42 @@ class HostnameTest extends TestCase
                 'bar.baz.example.com',
                 null,
             ],
-            'match-overrides-default-optional-subdomain' => [
+            'match-overrides-default-optional-subdomain'                     => [
                 new Hostname('[:foo.]:bar.example.com', [], ['bar' => 'baz']),
                 'bat.qux.example.com',
                 ['foo' => 'bat', 'bar' => 'qux'],
             ],
-            'constraints-prevent-match-optional-subdomain' => [
+            'constraints-prevent-match-optional-subdomain'                   => [
                 new Hostname('[:foo.]example.com', ['foo' => '\d+']),
                 'bar.example.com',
                 null,
             ],
-            'constraints-allow-match-optional-subdomain' => [
+            'constraints-allow-match-optional-subdomain'                     => [
                 new Hostname('[:foo.]example.com', ['foo' => '\d+']),
                 '123.example.com',
                 ['foo' => '123'],
             ],
-            'middle-subdomain-optional' => [
+            'middle-subdomain-optional'                                      => [
                 new Hostname(':foo.[:bar.]example.com'),
                 'baz.bat.example.com',
                 ['foo' => 'baz', 'bar' => 'bat'],
             ],
-            'missing-middle-subdomain-optional' => [
+            'missing-middle-subdomain-optional'                              => [
                 new Hostname(':foo.[:bar.]example.com'),
                 'baz.example.com',
                 ['foo' => 'baz'],
             ],
-            'non-standard-delimeter' => [
+            'non-standard-delimeter'                                         => [
                 new Hostname('user-:username.example.com'),
                 'user-jdoe.example.com',
                 ['username' => 'jdoe'],
             ],
-            'non-standard-delimeter-optional' => [
+            'non-standard-delimeter-optional'                                => [
                 new Hostname(':page{-}[-:username].example.com'),
                 'article-jdoe.example.com',
                 ['page' => 'article', 'username' => 'jdoe'],
             ],
-            'missing-non-standard-delimeter-optional' => [
+            'missing-non-standard-delimeter-optional'                        => [
                 new Hostname(':page{-}[-:username].example.com'),
                 'article.example.com',
                 ['page' => 'article'],
@@ -164,11 +165,10 @@ class HostnameTest extends TestCase
 
     /**
      * @dataProvider routeProvider
-     * @param        Hostname $route
      * @param        string   $hostname
      * @param        array    $params
      */
-    public function testMatching(Hostname $route, $hostname, array $params = null)
+    public function testMatching(Hostname $route, $hostname, ?array $params = null)
     {
         $request = new Request();
         $request->setUri('http://' . $hostname . '/');
@@ -187,11 +187,10 @@ class HostnameTest extends TestCase
 
     /**
      * @dataProvider routeProvider
-     * @param        Hostname $route
      * @param        string   $hostname
      * @param        array    $params
      */
-    public function testAssembling(Hostname $route, $hostname, array $params = null)
+    public function testAssembling(Hostname $route, $hostname, ?array $params = null)
     {
         if ($params === null) {
             // Data which will not match are not tested for assembling.
@@ -268,10 +267,10 @@ class HostnameTest extends TestCase
         $tester->testFactory(
             Hostname::class,
             [
-                'route' => 'Missing "route" in options array'
+                'route' => 'Missing "route" in options array',
             ],
             [
-                'route' => 'example.com'
+                'route' => 'example.com',
             ]
         );
     }

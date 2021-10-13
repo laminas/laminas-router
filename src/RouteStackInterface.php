@@ -1,14 +1,10 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace Laminas\Router;
+
+use Traversable;
 
 interface RouteStackInterface extends RouteInterface
 {
@@ -25,7 +21,7 @@ interface RouteStackInterface extends RouteInterface
     /**
      * Add multiple routes to the stack.
      *
-     * @param  array|\Traversable $routes
+     * @param array|Traversable $routes
      * @return RouteStackInterface
      */
     public function addRoutes($routes);
@@ -41,7 +37,7 @@ interface RouteStackInterface extends RouteInterface
     /**
      * Remove all routes from the stack and set new ones.
      *
-     * @param  array|\Traversable $routes
+     * @param array|Traversable $routes
      * @return RouteStackInterface
      */
     public function setRoutes($routes);

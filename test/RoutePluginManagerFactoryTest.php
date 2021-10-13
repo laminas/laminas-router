@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace LaminasTest\Router;
@@ -15,23 +9,20 @@ use Laminas\Router\RouteInterface;
 use Laminas\Router\RoutePluginManager;
 use Laminas\Router\RoutePluginManagerFactory;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class RoutePluginManagerFactoryTest extends TestCase
 {
-    /**
-     * @var ContainerInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var ContainerInterface|MockObject */
     private $container;
-    /**
-     * @var RoutePluginManagerFactory
-     */
+    /** @var RoutePluginManagerFactory */
     private $factory;
 
     public function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);
-        $this->factory = new RoutePluginManagerFactory();
+        $this->factory   = new RoutePluginManagerFactory();
     }
 
     public function testInvocationReturnsAPluginManager()
@@ -50,11 +41,13 @@ class RoutePluginManagerFactoryTest extends TestCase
 
     public function testInvocationCanProvideOptionsToThePluginManager()
     {
-        $options = ['factories' => [
-            'TestRoute' => function ($container) {
-                return $this->createMock(RouteInterface::class);
-            },
-        ]];
+        $options = [
+            'factories' => [
+                'TestRoute' => function ($container) {
+                    return $this->createMock(RouteInterface::class);
+                },
+            ],
+        ];
         $plugins = $this->factory->__invoke(
             $this->container,
             RoutePluginManager::class,

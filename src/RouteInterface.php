@@ -1,16 +1,11 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace Laminas\Router;
 
 use Laminas\Stdlib\RequestInterface as Request;
+use Traversable;
 
 /**
  * RouteInterface interface.
@@ -27,7 +22,7 @@ interface RouteInterface
     /**
      * Create a new route with given options.
      *
-     * @param  array|\Traversable $options
+     * @param array|Traversable $options
      * @return RouteInterface
      */
     public static function factory($options = []);
@@ -35,7 +30,6 @@ interface RouteInterface
     /**
      * Match a given request.
      *
-     * @param  Request $request
      * @return RouteMatch|null
      */
     public function match(Request $request);

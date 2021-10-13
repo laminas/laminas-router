@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace Laminas\Router\Http;
@@ -16,6 +10,7 @@ use Laminas\Router\RouteStackInterface;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
+/** @psalm-suppress DeprecatedInterface */
 class HttpRouterFactory implements FactoryInterface
 {
     use RouterConfigTrait;
@@ -27,18 +22,17 @@ class HttpRouterFactory implements FactoryInterface
      * to instantiate the router. Uses the TreeRouteStack implementation by
      * default.
      *
-     * @param  ContainerInterface $container
      * @param  string $name
      * @param  null|array $options
      * @return RouteStackInterface
      */
-    public function __invoke(ContainerInterface $container, $name, array $options = null)
+    public function __invoke(ContainerInterface $container, $name, ?array $options = null)
     {
         $config = $container->has('config') ? $container->get('config') : [];
 
         // Defaults
         $class  = TreeRouteStack::class;
-        $config = isset($config['router']) ? $config['router'] : [];
+        $config = $config['router'] ?? [];
 
         return $this->createRouter($class, $config, $container);
     }

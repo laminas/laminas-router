@@ -1,19 +1,27 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace Laminas\Router\Http;
 
 use Laminas\Router\Exception;
+use Laminas\Router\Exception\InvalidArgumentException;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Stdlib\RequestInterface as Request;
 use Traversable;
+
+use function array_merge;
+use function is_array;
+use function is_int;
+use function is_numeric;
+use function method_exists;
+use function preg_match;
+use function rawurldecode;
+use function rawurlencode;
+use function sprintf;
+use function str_replace;
+use function strlen;
+use function strpos;
 
 /**
  * Regex route.
@@ -68,9 +76,10 @@ class Regex implements RouteInterface
      * factory(): defined by RouteInterface interface.
      *
      * @see    \Laminas\Router\RouteInterface::factory()
+     *
      * @param  array|Traversable $options
      * @return Regex
-     * @throws \Laminas\Router\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function factory($options = [])
     {
@@ -101,7 +110,6 @@ class Regex implements RouteInterface
     /**
      * match(): defined by RouteInterface interface.
      *
-     * @param  Request $request
      * @param  int $pathOffset
      * @return RouteMatch|null
      */
@@ -141,6 +149,7 @@ class Regex implements RouteInterface
      * assemble(): Defined by RouteInterface interface.
      *
      * @see    \Laminas\Router\RouteInterface::assemble()
+     *
      * @param  array $params
      * @param  array $options
      * @return mixed
@@ -168,6 +177,7 @@ class Regex implements RouteInterface
      * getAssembledParams(): defined by RouteInterface interface.
      *
      * @see    RouteInterface::getAssembledParams
+     *
      * @return array
      */
     public function getAssembledParams()

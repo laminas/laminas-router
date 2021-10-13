@@ -1,17 +1,14 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace LaminasTest\Router;
 
 use ArrayIterator;
+use Laminas\Router\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+
+use function sprintf;
 
 /**
  * Helper to test route factories.
@@ -27,8 +24,6 @@ class FactoryTester
 
     /**
      * Create a new factory tester.
-     *
-     * @param  TestCase $testCase
      */
     public function __construct(TestCase $testCase)
     {
@@ -38,16 +33,18 @@ class FactoryTester
     /**
      * Test a factory.
      *
-     * @param  string $className
+     * @param  string $classname
      * @return void
      */
     public function testFactory($classname, array $requiredOptions, array $options)
     {
+        $factory = sprintf('%s::factory', $classname);
+
         // Test that the factory does not allow a scalar option.
         try {
-            $classname::factory(0);
+            $factory(0);
             $this->testCase->fail('An expected exception was not thrown');
-        } catch (\Laminas\Router\Exception\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $this->testCase->assertStringContainsString(
                 'factory expects an array or Traversable set of options',
                 $e->getMessage()
@@ -61,17 +58,17 @@ class FactoryTester
             unset($testOptions[$option]);
 
             try {
-                $classname::factory($testOptions);
+                $factory($testOptions);
                 $this->testCase->fail('An expected exception was not thrown');
-            } catch (\Laminas\Router\Exception\InvalidArgumentException $e) {
+            } catch (InvalidArgumentException $e) {
                 $this->testCase->assertStringContainsString($exceptionMessage, $e->getMessage());
             }
         }
 
         // Create the route, will throw an exception if something goes wrong.
-        $classname::factory($options);
+        $factory($options);
 
         // Try the same with an iterator.
-        $classname::factory(new ArrayIterator($options));
+        $factory(new ArrayIterator($options));
     }
 }

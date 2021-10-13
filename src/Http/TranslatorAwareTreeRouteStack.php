@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace Laminas\Router\Http;
@@ -45,7 +39,7 @@ class TranslatorAwareTreeRouteStack extends TreeRouteStack implements Translator
      * match(): defined by \Laminas\Router\RouteInterface
      *
      * @see    \Laminas\Router\RouteInterface::match()
-     * @param  Request      $request
+     *
      * @param  integer|null $pathOffset
      * @param  array        $options
      * @return RouteMatch|null
@@ -67,6 +61,7 @@ class TranslatorAwareTreeRouteStack extends TreeRouteStack implements Translator
      * assemble(): defined by \Laminas\Router\RouteInterface interface.
      *
      * @see    \Laminas\Router\RouteInterface::assemble()
+     *
      * @param  array $params
      * @param  array $options
      * @return mixed
@@ -90,11 +85,11 @@ class TranslatorAwareTreeRouteStack extends TreeRouteStack implements Translator
      * setTranslator(): defined by TranslatorAwareInterface.
      *
      * @see    TranslatorAwareInterface::setTranslator()
-     * @param  Translator $translator
+     *
      * @param  string     $textDomain
      * @return TreeRouteStack
      */
-    public function setTranslator(Translator $translator = null, $textDomain = null)
+    public function setTranslator(?Translator $translator = null, $textDomain = null)
     {
         $this->translator = $translator;
 
@@ -109,6 +104,7 @@ class TranslatorAwareTreeRouteStack extends TreeRouteStack implements Translator
      * getTranslator(): defined by TranslatorAwareInterface.
      *
      * @see    TranslatorAwareInterface::getTranslator()
+     *
      * @return Translator
      */
     public function getTranslator()
@@ -120,6 +116,7 @@ class TranslatorAwareTreeRouteStack extends TreeRouteStack implements Translator
      * hasTranslator(): defined by TranslatorAwareInterface.
      *
      * @see    TranslatorAwareInterface::hasTranslator()
+     *
      * @return bool
      */
     public function hasTranslator()
@@ -131,6 +128,7 @@ class TranslatorAwareTreeRouteStack extends TreeRouteStack implements Translator
      * setTranslatorEnabled(): defined by TranslatorAwareInterface.
      *
      * @see    TranslatorAwareInterface::setTranslatorEnabled()
+     *
      * @param  bool $enabled
      * @return TreeRouteStack
      */
@@ -144,6 +142,7 @@ class TranslatorAwareTreeRouteStack extends TreeRouteStack implements Translator
      * isTranslatorEnabled(): defined by TranslatorAwareInterface.
      *
      * @see    TranslatorAwareInterface::isTranslatorEnabled()
+     *
      * @return bool
      */
     public function isTranslatorEnabled()
@@ -155,6 +154,7 @@ class TranslatorAwareTreeRouteStack extends TreeRouteStack implements Translator
      * setTranslatorTextDomain(): defined by TranslatorAwareInterface.
      *
      * @see    TranslatorAwareInterface::setTranslatorTextDomain()
+     *
      * @param  string $textDomain
      * @return self
      */
@@ -169,6 +169,7 @@ class TranslatorAwareTreeRouteStack extends TreeRouteStack implements Translator
      * getTranslatorTextDomain(): defined by TranslatorAwareInterface.
      *
      * @see    TranslatorAwareInterface::getTranslatorTextDomain()
+     *
      * @return string
      */
     public function getTranslatorTextDomain()

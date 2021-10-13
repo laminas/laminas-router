@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
@@ -19,35 +13,37 @@ use PHPUnit\Framework\TestCase;
 
 class MethodTest extends TestCase
 {
-    public static function routeProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     0: HttpMethod,
+     *     1: string
+     * }>
+     */
+    public static function routeProvider(): array
     {
         return [
-            'simple-match' => [
+            'simple-match'                   => [
                 new HttpMethod('get'),
-                'get'
+                'get',
             ],
-            'match-comma-separated-verbs' => [
+            'match-comma-separated-verbs'    => [
                 new HttpMethod('get,post'),
-                'get'
+                'get',
             ],
             'match-comma-separated-verbs-ws' => [
                 new HttpMethod('get ,   post , put'),
-                'post'
+                'post',
             ],
-            'match-ignores-case' => [
+            'match-ignores-case'             => [
                 new HttpMethod('Get'),
-                'get'
-            ]
+                'get',
+            ],
         ];
     }
 
     /**
      * @dataProvider routeProvider
-     * @param    HttpMethod $route
-     * @param    $verb
-     * @internal param string $path
-     * @internal param int $offset
-     * @internal param bool $shouldMatch
+     * @param string $verb
      */
     public function testMatching(HttpMethod $route, $verb)
     {
@@ -73,10 +69,10 @@ class MethodTest extends TestCase
         $tester->testFactory(
             HttpMethod::class,
             [
-                'verb' => 'Missing "verb" in options array'
+                'verb' => 'Missing "verb" in options array',
             ],
             [
-                'verb' => 'get'
+                'verb' => 'get',
             ]
         );
     }

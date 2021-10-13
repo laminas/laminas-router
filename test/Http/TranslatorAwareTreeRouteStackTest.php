@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
@@ -20,19 +14,13 @@ use PHPUnit\Framework\TestCase;
 
 class TranslatorAwareTreeRouteStackTest extends TestCase
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $testFilesDir;
 
-    /**
-     * @var Translator
-     */
+    /** @var Translator */
     protected $translator;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $fooRoute;
 
     public function setUp(): void
@@ -46,13 +34,13 @@ class TranslatorAwareTreeRouteStackTest extends TestCase
         $this->translator->addTranslationFile('phpArray', $this->testFilesDir . '/tokens.de.php', 'route', 'de');
 
         $this->fooRoute = [
-            'type' => 'Segment',
-            'options' => [
+            'type'         => 'Segment',
+            'options'      => [
                 'route' => '/:locale',
             ],
             'child_routes' => [
                 'index' => [
-                    'type' => 'Segment',
+                    'type'    => 'Segment',
                     'options' => [
                         'route' => '/{homepage}',
                     ],

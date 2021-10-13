@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
@@ -17,70 +11,79 @@ use Laminas\Stdlib\Request as BaseRequest;
 use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\TestCase;
 
+use function strlen;
+use function strpos;
+
 class RegexTest extends TestCase
 {
-    public static function routeProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     0: Regex,
+     *     1: string,
+     *     2: null|int,
+     *     3: null|array<string, string|int|float>
+     * }>
+     */
+    public static function routeProvider(): array
     {
         return [
-            'simple-match' => [
+            'simple-match'                             => [
                 new Regex('/(?<foo>[^/]+)', '/%foo%'),
                 '/bar',
                 null,
-                ['foo' => 'bar']
+                ['foo' => 'bar'],
             ],
-            'no-match-without-leading-slash' => [
+            'no-match-without-leading-slash'           => [
                 new Regex('(?<foo>[^/]+)', '%foo%'),
                 '/bar',
                 null,
-                null
+                null,
             ],
-            'no-match-with-trailing-slash' => [
+            'no-match-with-trailing-slash'             => [
                 new Regex('/(?<foo>[^/]+)', '/%foo%'),
                 '/bar/',
                 null,
-                null
+                null,
             ],
-            'offset-skips-beginning' => [
+            'offset-skips-beginning'                   => [
                 new Regex('(?<foo>[^/]+)', '%foo%'),
                 '/bar',
                 1,
-                ['foo' => 'bar']
+                ['foo' => 'bar'],
             ],
-            'offset-enables-partial-matching' => [
+            'offset-enables-partial-matching'          => [
                 new Regex('/(?<foo>[^/]+)', '/%foo%'),
                 '/bar/baz',
                 0,
-                ['foo' => 'bar']
+                ['foo' => 'bar'],
             ],
-            'url-encoded-parameters-are-decoded' => [
+            'url-encoded-parameters-are-decoded'       => [
                 new Regex('/(?<foo>[^/]+)', '/%foo%'),
                 '/foo%20bar',
                 null,
-                ['foo' => 'foo bar']
+                ['foo' => 'foo bar'],
             ],
             'empty-matches-are-replaced-with-defaults' => [
                 new Regex('/foo(?:/(?<bar>[^/]+))?/baz-(?<baz>[^/]+)', '/foo/baz-%baz%', ['bar' => 'bar']),
                 '/foo/baz-baz',
                 null,
-                ['bar' => 'bar', 'baz' => 'baz']
+                ['bar' => 'bar', 'baz' => 'baz'],
             ],
-            'params-contain-non-string-scalar-values' => [
+            'params-contain-non-string-scalar-values'  => [
                 new Regex('/id/(?<id>\d+)/scale/(?<scale>\d+\.\d+)', '/id/%id%/scale/%scale%'),
                 '/id/42/scale/4.2',
                 null,
-                ['id' => 42, 'scale' => 4.2]
+                ['id' => 42, 'scale' => 4.2],
             ],
         ];
     }
 
     /**
      * @dataProvider routeProvider
-     * @param        Regex   $route
-     * @param        string  $path
-     * @param        int     $offset
-     * @param        array   $params
+     * @param        string   $path
+     * @param        int|null $offset
      */
-    public function testMatching(Regex $route, $path, $offset, array $params = null)
+    public function testMatching(Regex $route, $path, $offset, ?array $params = null)
     {
         $request = new Request();
         $request->setUri('http://example.com' . $path);
@@ -103,12 +106,10 @@ class RegexTest extends TestCase
 
     /**
      * @dataProvider routeProvider
-     * @param        Regex   $route
-     * @param        string  $path
-     * @param        int     $offset
-     * @param        array   $params
+     * @param        string   $path
+     * @param        int|null $offset
      */
-    public function testAssembling(Regex $route, $path, $offset, array $params = null)
+    public function testAssembling(Regex $route, $path, $offset, ?array $params = null)
     {
         if ($params === null) {
             // Data which will not match are not tested for assembling.
@@ -148,11 +149,11 @@ class RegexTest extends TestCase
             Regex::class,
             [
                 'regex' => 'Missing "regex" in options array',
-                'spec'  => 'Missing "spec" in options array'
+                'spec'  => 'Missing "spec" in options array',
             ],
             [
                 'regex' => '/foo',
-                'spec'  => '/foo'
+                'spec'  => '/foo',
             ]
         );
     }
@@ -161,11 +162,11 @@ class RegexTest extends TestCase
     {
         // verify all characters which don't absolutely require encoding pass through match unchanged
         // this includes every character other than #, %, / and ?
-        $raw = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`-=[]\\;\',.~!@$^&*()_+{}|:"<>';
+        $raw     = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`-=[]\\;\',.~!@$^&*()_+{}|:"<>';
         $request = new Request();
         $request->setUri('http://example.com/' . $raw);
-        $route   = new Regex('/(?<foo>[^/]+)', '/%foo%');
-        $match   = $route->match($request);
+        $route = new Regex('/(?<foo>[^/]+)', '/%foo%');
+        $match = $route->match($request);
 
         $this->assertSame($raw, $match->getParam('foo'));
     }
@@ -180,8 +181,8 @@ class RegexTest extends TestCase
 
         $request = new Request();
         $request->setUri('http://example.com/' . $in);
-        $route   = new Regex('/(?<foo>[^/]+)', '/%foo%');
-        $match   = $route->match($request);
+        $route = new Regex('/(?<foo>[^/]+)', '/%foo%');
+        $match = $route->match($request);
 
         $this->assertSame($out, $match->getParam('foo'));
     }

@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 namespace LaminasTest\Router\Http;
 
 use Laminas\Http\Request;
@@ -20,27 +14,28 @@ use PHPUnit\Framework\TestCase;
 
 class PlaceholderTest extends TestCase
 {
+    /** @var array<string, array<string, mixed>> */
     private static $routeConfig = [
         'auth' => [
-            'type' => Placeholder::class,
+            'type'         => Placeholder::class,
             'child_routes' => [
-                'login' => [
-                    'type' => Literal::class,
+                'login'    => [
+                    'type'    => Literal::class,
                     'options' => [
-                        'route' => '/',
+                        'route'    => '/',
                         'defaults' => [
                             'controller' => 'AuthController',
-                            'action' => 'login'
+                            'action'     => 'login',
                         ],
                     ],
                 ],
                 'register' => [
-                    'type' => Literal::class,
+                    'type'    => Literal::class,
                     'options' => [
-                        'route' => '/register',
+                        'route'    => '/register',
                         'defaults' => [
                             'controller' => 'RegistrationController',
-                            'action' => 'register'
+                            'action'     => 'register',
                         ],
                     ],
                 ],
@@ -85,7 +80,7 @@ class PlaceholderTest extends TestCase
     public function testPlaceholderDefault($additionalConfig, $uri, $expectedRouteName)
     {
         $routeConfig = ArrayUtils::merge(self::$routeConfig, $additionalConfig);
-        $router = TreeRouteStack::factory(['routes' => $routeConfig]);
+        $router      = TreeRouteStack::factory(['routes' => $routeConfig]);
 
         $request = new Request();
         $request->setUri($uri);
@@ -95,56 +90,63 @@ class PlaceholderTest extends TestCase
         $this->assertEquals($expectedRouteName, $match->getMatchedRouteName());
     }
 
-    public function placeholderProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     0: array<string, array<string, mixed>>,
+     *     1: string,
+     *     2: string
+     * }>
+     */
+    public function placeholderProvider(): array
     {
         $home = [
             'home' => [
-                'type' => Literal::class,
+                'type'    => Literal::class,
                 'options' => [
-                    'route' => '/home',
+                    'route'    => '/home',
                     'defaults' => [
                         'controller' => 'HomeController',
-                        'action' => 'index'
+                        'action'     => 'index',
                     ],
                 ],
-            ]
+            ],
         ];
 
         $homeAtRootAuthMoved = [
             'home' => [
-                'type' => Literal::class,
+                'type'    => Literal::class,
                 'options' => [
-                    'route' => '/',
+                    'route'    => '/',
                     'defaults' => [
                         'controller' => 'HomeController',
-                        'action' => 'index'
+                        'action'     => 'index',
                     ],
                 ],
             ],
             'auth' => [
-                'type' => Literal::class,
-                'options' => ['route' => '/auth']
-            ]
+                'type'    => Literal::class,
+                'options' => ['route' => '/auth'],
+            ],
         ];
 
         $homeAtRootAuthOnSubDomain = [
             'home' => [
-                'type' => Hostname::class,
+                'type'    => Hostname::class,
                 'options' => [
-                    'route' => 'example.com',
+                    'route'    => 'example.com',
                     'defaults' => [
                         'controller' => 'HomeController',
-                        'action' => 'index'
+                        'action'     => 'index',
                     ],
                 ],
             ],
             'auth' => [
-                'type' => Hostname::class,
-                'options' => ['route' => 'auth.example.com']
-            ]
+                'type'    => Hostname::class,
+                'options' => ['route' => 'auth.example.com'],
+            ],
         ];
 
-        // @codingStandardsIgnoreStart
+        // phpcs:disable Generic.Files.LineLength.TooLong
         return [
             'no-override-login'           => [$home,                      'http://example.com/',              'auth/login'],
             'no-override-register'        => [$home,                      'http://example.com/register',      'auth/register'],
@@ -156,6 +158,6 @@ class PlaceholderTest extends TestCase
             'subdomain-override-register' => [$homeAtRootAuthOnSubDomain, 'http://auth.example.com/register', 'auth/register'],
             'subdomina-override-home'     => [$homeAtRootAuthOnSubDomain, 'http://example.com/',              'home'],
         ];
-        // @codingStandardsIgnoreEnd
+        // phpcs:enable Generic.Files.LineLength.TooLong
     }
 }
