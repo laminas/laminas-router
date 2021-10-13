@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace Laminas\Router;
@@ -14,6 +8,10 @@ use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Stdlib\RequestInterface as Request;
 use Traversable;
+
+use function array_merge;
+use function is_array;
+use function sprintf;
 
 /**
  * Simple route stack implementation.
@@ -43,10 +41,8 @@ class SimpleRouteStack implements RouteStackInterface
 
     /**
      * Create a new simple route stack.
-     *
-     * @param RoutePluginManager $routePluginManager
      */
-    public function __construct(RoutePluginManager $routePluginManager = null)
+    public function __construct(?RoutePluginManager $routePluginManager = null)
     {
         $this->routes = new PriorityList();
 
@@ -63,6 +59,7 @@ class SimpleRouteStack implements RouteStackInterface
      * factory(): defined by RouteInterface interface.
      *
      * @see    \Laminas\Router\RouteInterface::factory()
+     *
      * @param  array|Traversable $options
      * @return SimpleRouteStack
      * @throws Exception\InvalidArgumentException
@@ -108,7 +105,6 @@ class SimpleRouteStack implements RouteStackInterface
     /**
      * Set the route plugin manager.
      *
-     * @param  RoutePluginManager $routePlugins
      * @return SimpleRouteStack
      */
     public function setRoutePluginManager(RoutePluginManager $routePlugins)
@@ -131,6 +127,7 @@ class SimpleRouteStack implements RouteStackInterface
      * addRoutes(): defined by RouteStackInterface interface.
      *
      * @see    RouteStackInterface::addRoutes()
+     *
      * @param  array|Traversable $routes
      * @return SimpleRouteStack
      * @throws Exception\InvalidArgumentException
@@ -152,6 +149,7 @@ class SimpleRouteStack implements RouteStackInterface
      * addRoute(): defined by RouteStackInterface interface.
      *
      * @see    RouteStackInterface::addRoute()
+     *
      * @param  string  $name
      * @param  mixed   $route
      * @param  int $priority
@@ -176,6 +174,7 @@ class SimpleRouteStack implements RouteStackInterface
      * removeRoute(): defined by RouteStackInterface interface.
      *
      * @see    RouteStackInterface::removeRoute()
+     *
      * @param  string $name
      * @return SimpleRouteStack
      */
@@ -293,7 +292,7 @@ class SimpleRouteStack implements RouteStackInterface
      * match(): defined by RouteInterface interface.
      *
      * @see    \Laminas\Router\RouteInterface::match()
-     * @param  Request $request
+     *
      * @return RouteMatch|null
      */
     public function match(Request $request)
@@ -312,13 +311,14 @@ class SimpleRouteStack implements RouteStackInterface
             }
         }
 
-        return;
+        return null;
     }
 
     /**
      * assemble(): defined by RouteInterface interface.
      *
      * @see    \Laminas\Router\RouteInterface::assemble()
+     *
      * @param  array $params
      * @param  array $options
      * @return mixed

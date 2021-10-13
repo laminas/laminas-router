@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace Laminas\Router;
@@ -15,6 +9,10 @@ use Laminas\ServiceManager\AbstractFactoryInterface;
 use Laminas\ServiceManager\Exception\ServiceNotCreatedException;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+
+use function class_exists;
+use function is_subclass_of;
+use function sprintf;
 
 /**
  * Specialized invokable/abstract factory for use with RoutePluginManager.
@@ -38,7 +36,6 @@ class RouteInvokableFactory implements
      *
      * Only works for FQCN $routeName values, for classes that implement RouteInterface.
      *
-     * @param ContainerInterface $container
      * @param string $routeName
      * @return bool
      */
@@ -60,7 +57,6 @@ class RouteInvokableFactory implements
      *
      * Proxies to canCreate().
      *
-     * @param ServiceLocatorInterface $container
      * @param string $normalizedName
      * @param string $routeName
      * @return bool
@@ -79,19 +75,18 @@ class RouteInvokableFactory implements
      * Otherwise, it uses the class' `factory()` method with the provided
      * $options to produce an instance.
      *
-     * @param ContainerInterface $container
      * @param string $routeName
      * @param null|array $options
      * @return RouteInterface
      */
-    public function __invoke(ContainerInterface $container, $routeName, array $options = null)
+    public function __invoke(ContainerInterface $container, $routeName, ?array $options = null)
     {
         $options = $options ?: [];
 
         if (! class_exists($routeName)) {
             throw new ServiceNotCreatedException(sprintf(
                 '%s: failed retrieving invokable class "%s"; class does not exist',
-                __CLASS__,
+                self::class,
                 $routeName
             ));
         }
@@ -99,7 +94,7 @@ class RouteInvokableFactory implements
         if (! is_subclass_of($routeName, RouteInterface::class)) {
             throw new ServiceNotCreatedException(sprintf(
                 '%s: failed retrieving invokable class "%s"; class does not implement %s',
-                __CLASS__,
+                self::class,
                 $routeName,
                 RouteInterface::class
             ));
@@ -113,7 +108,6 @@ class RouteInvokableFactory implements
      *
      * Proxies to __invoke().
      *
-     * @param ServiceLocatorInterface $container
      * @param string $normalizedName
      * @param string $routeName
      * @return RouteInterface
@@ -128,7 +122,8 @@ class RouteInvokableFactory implements
      *
      * For use with laminas-servicemanager v2; proxies to __invoke().
      *
-     * @param ServiceLocatorInterface $container
+     * @param null|string $normalizedName Not used
+     * @param null|string $routeName
      * @return RouteInterface
      */
     public function createService(ServiceLocatorInterface $container, $normalizedName = null, $routeName = null)

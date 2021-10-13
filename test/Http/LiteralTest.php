@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
@@ -17,50 +11,60 @@ use Laminas\Stdlib\Request as BaseRequest;
 use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\TestCase;
 
+use function strlen;
+use function strpos;
+
 class LiteralTest extends TestCase
 {
-    public static function routeProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     0: Literal,
+     *     1: string,
+     *     2: null|int,
+     *     3: bool
+     * }>
+     */
+    public static function routeProvider(): array
     {
         return [
-            'simple-match' => [
+            'simple-match'                    => [
                 new Literal('/foo'),
                 '/foo',
                 null,
-                true
+                true,
             ],
-            'no-match-without-leading-slash' => [
+            'no-match-without-leading-slash'  => [
                 new Literal('foo'),
                 '/foo',
                 null,
-                false
+                false,
             ],
-            'no-match-with-trailing-slash' => [
+            'no-match-with-trailing-slash'    => [
                 new Literal('/foo'),
                 '/foo/',
                 null,
-                false
+                false,
             ],
-            'offset-skips-beginning' => [
+            'offset-skips-beginning'          => [
                 new Literal('foo'),
                 '/foo',
                 1,
-                true
+                true,
             ],
             'offset-enables-partial-matching' => [
                 new Literal('/foo'),
                 '/foo/bar',
                 0,
-                true
+                true,
             ],
         ];
     }
 
     /**
      * @dataProvider routeProvider
-     * @param        Literal $route
-     * @param        string  $path
-     * @param        int     $offset
-     * @param        bool    $shouldMatch
+     * @param        string   $path
+     * @param        int|null $offset
+     * @param        bool     $shouldMatch
      */
     public function testMatching(Literal $route, $path, $offset, $shouldMatch)
     {
@@ -81,10 +85,9 @@ class LiteralTest extends TestCase
 
     /**
      * @dataProvider routeProvider
-     * @param        Literal $route
-     * @param        string  $path
-     * @param        int     $offset
-     * @param        bool    $shouldMatch
+     * @param        string   $path
+     * @param        int|null $offset
+     * @param        bool     $shouldMatch
      */
     public function testAssembling(Literal $route, $path, $offset, $shouldMatch)
     {
@@ -125,10 +128,10 @@ class LiteralTest extends TestCase
         $tester->testFactory(
             Literal::class,
             [
-                'route' => 'Missing "route" in options array'
+                'route' => 'Missing "route" in options array',
             ],
             [
-                'route' => '/foo'
+                'route' => '/foo',
             ]
         );
     }
@@ -139,7 +142,7 @@ class LiteralTest extends TestCase
     public function testEmptyLiteral()
     {
         $request = new Request();
-        $route = new Literal('');
+        $route   = new Literal('');
         $this->assertNull($route->match($request, 0));
     }
 }

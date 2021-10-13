@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace LaminasTest\Router;
@@ -16,6 +10,8 @@ use Laminas\Router\RouterFactory;
 use Laminas\ServiceManager\Config;
 use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
+
+use function array_merge_recursive;
 
 class RouterFactoryTest extends TestCase
 {
@@ -30,17 +26,19 @@ class RouterFactoryTest extends TestCase
             ],
         ];
 
-        $this->factory  = new RouterFactory();
+        $this->factory = new RouterFactory();
     }
 
     public function testFactoryCanCreateRouterBasedOnConfiguredName()
     {
-        $config = new Config(array_merge_recursive($this->defaultServiceConfig, [
-            'services' => [ 'config' => [
-                'router' => [
-                    'router_class' => TestAsset\Router::class,
+        $config   = new Config(array_merge_recursive($this->defaultServiceConfig, [
+            'services' => [
+                'config' => [
+                    'router' => [
+                        'router_class' => TestAsset\Router::class,
+                    ],
                 ],
-            ]],
+            ],
         ]));
         $services = new ServiceManager();
         $config->configureServiceManager($services);
@@ -51,12 +49,14 @@ class RouterFactoryTest extends TestCase
 
     public function testFactoryCanCreateRouterWhenOnlyHttpRouterConfigPresent()
     {
-        $config = new Config(array_merge_recursive($this->defaultServiceConfig, [
-            'services' => [ 'config' => [
-                'router' => [
-                    'router_class' => TestAsset\Router::class,
+        $config   = new Config(array_merge_recursive($this->defaultServiceConfig, [
+            'services' => [
+                'config' => [
+                    'router' => [
+                        'router_class' => TestAsset\Router::class,
+                    ],
                 ],
-            ]],
+            ],
         ]));
         $services = new ServiceManager();
         $config->configureServiceManager($services);

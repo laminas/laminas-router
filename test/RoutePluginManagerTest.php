@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace LaminasTest\Router;
@@ -26,10 +20,12 @@ class RoutePluginManagerTest extends TestCase
 
     public function testCanLoadAnyRoute()
     {
-        $routes = new RoutePluginManager(new ServiceManager(), ['invokables' => [
-            'DummyRoute' => TestAsset\DummyRoute::class,
-        ]]);
-        $route = $routes->get('DummyRoute');
+        $routes = new RoutePluginManager(new ServiceManager(), [
+            'invokables' => [
+                'DummyRoute' => TestAsset\DummyRoute::class,
+            ],
+        ]);
+        $route  = $routes->get('DummyRoute');
 
         $this->assertInstanceOf(TestAsset\DummyRoute::class, $route);
     }

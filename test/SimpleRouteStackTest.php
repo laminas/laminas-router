@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace LaminasTest\Router;
@@ -44,7 +38,7 @@ class SimpleRouteStackTest extends TestCase
     {
         $stack = new SimpleRouteStack();
         $stack->addRoutes([
-            'foo' => new TestAsset\DummyRoute()
+            'foo' => new TestAsset\DummyRoute(),
         ]);
 
         $this->assertInstanceOf(RouteMatch::class, $stack->match(new Request()));
@@ -54,7 +48,7 @@ class SimpleRouteStackTest extends TestCase
     {
         $stack = new SimpleRouteStack();
         $stack->addRoutes(new ArrayIterator([
-            'foo' => new TestAsset\DummyRoute()
+            'foo' => new TestAsset\DummyRoute(),
         ]));
 
         $this->assertInstanceOf(RouteMatch::class, $stack->match(new Request()));
@@ -73,7 +67,7 @@ class SimpleRouteStackTest extends TestCase
     {
         $stack = new SimpleRouteStack();
         $stack->setRoutes([
-            'foo' => new TestAsset\DummyRoute()
+            'foo' => new TestAsset\DummyRoute(),
         ]);
 
         $this->assertInstanceOf(RouteMatch::class, $stack->match(new Request()));
@@ -87,7 +81,7 @@ class SimpleRouteStackTest extends TestCase
     {
         $stack = new SimpleRouteStack();
         $stack->setRoutes(new ArrayIterator([
-            'foo' => new TestAsset\DummyRoute()
+            'foo' => new TestAsset\DummyRoute(),
         ]));
 
         $this->assertInstanceOf(RouteMatch::class, $stack->match(new Request()));
@@ -101,7 +95,7 @@ class SimpleRouteStackTest extends TestCase
     {
         $stack = new SimpleRouteStack();
         $stack->addRoutes([
-            'foo' => new TestAsset\DummyRoute()
+            'foo' => new TestAsset\DummyRoute(),
         ]);
 
         $this->assertEquals($stack, $stack->removeRoute('foo'));
@@ -121,7 +115,7 @@ class SimpleRouteStackTest extends TestCase
     {
         $stack = new SimpleRouteStack();
         $stack->addRoute('foo', [
-            'type' => TestAsset\DummyRoute::class
+            'type' => TestAsset\DummyRoute::class,
         ]);
 
         $this->assertInstanceOf(RouteMatch::class, $stack->match(new Request()));
@@ -132,7 +126,7 @@ class SimpleRouteStackTest extends TestCase
         $stack = new SimpleRouteStack();
         $stack->addRoute('foo', [
             'type'    => TestAsset\DummyRoute::class,
-            'options' => []
+            'options' => [],
         ]);
 
         $this->assertInstanceOf(RouteMatch::class, $stack->match(new Request()));
@@ -153,10 +147,10 @@ class SimpleRouteStackTest extends TestCase
 
         $stack->addRoute('foo', [
             'type'     => TestAsset\DummyRouteWithParam::class,
-            'priority' => 2
+            'priority' => 2,
         ])->addRoute('bar', [
             'type'     => TestAsset\DummyRoute::class,
-            'priority' => 1
+            'priority' => 1,
         ]);
 
         $this->assertEquals('bar', $stack->match(new Request())->getParam('foo'));
@@ -166,13 +160,13 @@ class SimpleRouteStackTest extends TestCase
     {
         $stack = new SimpleRouteStack();
 
-        $route = new TestAsset\DummyRouteWithParam();
+        $route           = new TestAsset\DummyRouteWithParam();
         $route->priority = 2;
         $stack->addRoute('baz', $route);
 
         $stack->addRoute('foo', [
             'type'     => TestAsset\DummyRoute::class,
-            'priority' => 1
+            'priority' => 1,
         ]);
 
         $this->assertEquals('bar', $stack->match(new Request())->getParam('foo'));
@@ -182,7 +176,7 @@ class SimpleRouteStackTest extends TestCase
     {
         $stack = new SimpleRouteStack();
         $stack->addRoute('foo', new ArrayIterator([
-            'type' => TestAsset\DummyRoute::class
+            'type' => TestAsset\DummyRoute::class,
         ]));
 
         $this->assertInstanceOf(RouteMatch::class, $stack->match(new Request()));
@@ -258,7 +252,7 @@ class SimpleRouteStackTest extends TestCase
             [
                 'route_plugins'  => new RoutePluginManager(new ServiceManager()),
                 'routes'         => [],
-                'default_params' => []
+                'default_params' => [],
             ]
         );
     }

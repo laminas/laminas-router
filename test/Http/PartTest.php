@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
@@ -27,12 +21,15 @@ use Laminas\Stdlib\Request as BaseRequest;
 use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\TestCase;
 
+use function strlen;
+use function strpos;
+
 class PartTest extends TestCase
 {
-    public static function getRoutePlugins()
+    public static function getRoutePlugins(): RoutePluginManager
     {
         return new RoutePluginManager(new ServiceManager(), [
-            'aliases' => [
+            'aliases'   => [
                 'literal'  => Literal::class,
                 'Literal'  => Literal::class,
                 'part'     => Part::class,
@@ -51,7 +48,6 @@ class PartTest extends TestCase
                 Wildcard::class => RouteInvokableFactory::class,
 
                 // v2 normalized names
-
                 'laminasmvcrouterhttpliteral'  => RouteInvokableFactory::class,
                 'laminasmvcrouterhttppart'     => RouteInvokableFactory::class,
                 'laminasmvcrouterhttpsegment'  => RouteInvokableFactory::class,
@@ -60,7 +56,7 @@ class PartTest extends TestCase
         ]);
     }
 
-    public static function getRoute()
+    public static function getRoute(): Part
     {
         return new Part(
             [
@@ -68,9 +64,9 @@ class PartTest extends TestCase
                 'options' => [
                     'route'    => '/foo',
                     'defaults' => [
-                        'controller' => 'foo'
-                    ]
-                ]
+                        'controller' => 'foo',
+                    ],
+                ],
             ],
             true,
             self::getRoutePlugins(),
@@ -80,185 +76,194 @@ class PartTest extends TestCase
                     'options' => [
                         'route'    => '/bar',
                         'defaults' => [
-                            'controller' => 'bar'
-                        ]
-                    ]
+                            'controller' => 'bar',
+                        ],
+                    ],
                 ],
                 'baz' => [
-                    'type'    => Literal::class,
-                    'options' => [
-                        'route' => '/baz'
+                    'type'         => Literal::class,
+                    'options'      => [
+                        'route' => '/baz',
                     ],
                     'child_routes' => [
                         'bat' => [
-                            'type'    => Segment::class,
-                            'options' => [
-                                'route' => '/:controller'
+                            'type'          => Segment::class,
+                            'options'       => [
+                                'route' => '/:controller',
                             ],
                             'may_terminate' => true,
                             'child_routes'  => [
                                 'wildcard' => [
-                                    'type' => Wildcard::class
-                                ]
-                            ]
-                        ]
-                    ]
+                                    'type' => Wildcard::class,
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
                 'bat' => [
-                    'type'    => Segment::class,
-                    'options' => [
+                    'type'          => Segment::class,
+                    'options'       => [
                         'route'    => '/bat[/:foo]',
                         'defaults' => [
-                            'foo' => 'bar'
-                        ]
+                            'foo' => 'bar',
+                        ],
                     ],
                     'may_terminate' => true,
                     'child_routes'  => [
-                        'literal' => [
-                            'type'   => Literal::class,
+                        'literal'  => [
+                            'type'    => Literal::class,
                             'options' => [
-                                'route' => '/bar'
-                            ]
+                                'route' => '/bar',
+                            ],
                         ],
                         'optional' => [
-                            'type'   => Segment::class,
+                            'type'    => Segment::class,
                             'options' => [
-                                'route' => '/bat[/:bar]'
-                            ]
+                                'route' => '/bat[/:bar]',
+                            ],
                         ],
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
     }
 
-    public static function getRouteAlternative()
+    public static function getRouteAlternative(): Part
     {
         return new Part(
             [
-                'type' => Segment::class,
+                'type'    => Segment::class,
                 'options' => [
-                    'route' => '/[:controller[/:action]]',
+                    'route'    => '/[:controller[/:action]]',
                     'defaults' => [
                         'controller' => 'fo-fo',
-                        'action' => 'index'
-                    ]
-                ]
+                        'action'     => 'index',
+                    ],
+                ],
             ],
             true,
             self::getRoutePlugins(),
             [
                 'wildcard' => [
-                    'type' => Wildcard::class,
+                    'type'    => Wildcard::class,
                     'options' => [
                         'key_value_delimiter' => '/',
-                        'param_delimiter' => '/'
-                    ]
+                        'param_delimiter'     => '/',
+                    ],
                 ],
             ]
         );
     }
 
-    public static function routeProvider()
+    /**
+     * @psalm-return array<string, array{
+     *     0: Part,
+     *     1: string,
+     *     2: null|int,
+     *     3: null|string,
+     *     4: null|array<string, string>
+     * }>
+     */
+    public static function routeProvider(): array
     {
         return [
-            'simple-match' => [
+            'simple-match'                                     => [
                 self::getRoute(),
                 '/foo',
                 null,
                 null,
-                ['controller' => 'foo']
+                ['controller' => 'foo'],
             ],
-            'offset-skips-beginning' => [
+            'offset-skips-beginning'                           => [
                 self::getRoute(),
                 '/bar/foo',
                 4,
                 null,
-                ['controller' => 'foo']
+                ['controller' => 'foo'],
             ],
-            'simple-child-match' => [
+            'simple-child-match'                               => [
                 self::getRoute(),
                 '/foo/bar',
                 null,
                 'bar',
-                ['controller' => 'bar']
+                ['controller' => 'bar'],
             ],
-            'offset-does-not-enable-partial-matching' => [
+            'offset-does-not-enable-partial-matching'          => [
                 self::getRoute(),
                 '/foo/foo',
                 null,
                 null,
-                null
+                null,
             ],
             'offset-does-not-enable-partial-matching-in-child' => [
                 self::getRoute(),
                 '/foo/bar/baz',
                 null,
                 null,
-                null
+                null,
             ],
-            'non-terminating-part-does-not-match' => [
+            'non-terminating-part-does-not-match'              => [
                 self::getRoute(),
                 '/foo/baz',
                 null,
                 null,
-                null
+                null,
             ],
-            'child-of-non-terminating-part-does-match' => [
+            'child-of-non-terminating-part-does-match'         => [
                 self::getRoute(),
                 '/foo/baz/bat',
                 null,
                 'baz/bat',
-                ['controller' => 'bat']
+                ['controller' => 'bat'],
             ],
-            'parameters-are-used-only-once' => [
+            'parameters-are-used-only-once'                    => [
                 self::getRoute(),
                 '/foo/baz/wildcard/foo/bar',
                 null,
                 'baz/bat/wildcard',
-                ['controller' => 'wildcard', 'foo' => 'bar']
+                ['controller' => 'wildcard', 'foo' => 'bar'],
             ],
-            'optional-parameters-are-dropped-without-child' => [
+            'optional-parameters-are-dropped-without-child'    => [
                 self::getRoute(),
                 '/foo/bat',
                 null,
                 'bat',
-                ['foo' => 'bar']
+                ['foo' => 'bar'],
             ],
-            'optional-parameters-are-not-dropped-with-child' => [
+            'optional-parameters-are-not-dropped-with-child'   => [
                 self::getRoute(),
                 '/foo/bat/bar/bar',
                 null,
                 'bat/literal',
-                ['foo' => 'bar']
+                ['foo' => 'bar'],
             ],
-            'optional-parameters-not-required-in-last-part' => [
+            'optional-parameters-not-required-in-last-part'    => [
                 self::getRoute(),
                 '/foo/bat/bar/bat',
                 null,
                 'bat/optional',
-                ['foo' => 'bar']
+                ['foo' => 'bar'],
             ],
-            'simple-match' => [
+            'simple-match'                                     => [
                 self::getRouteAlternative(),
                 '/',
                 null,
                 null,
                 [
                     'controller' => 'fo-fo',
-                    'action' => 'index'
-                ]
+                    'action'     => 'index',
+                ],
             ],
-            'match-wildcard' => [
+            'match-wildcard'                                   => [
                 self::getRouteAlternative(),
                 '/fo-fo/index/param1/value1',
                 null,
                 'wildcard',
                 [
-                        'controller' => 'fo-fo',
-                        'action' => 'index',
-                        'param1' => 'value1'
-                ]
+                    'controller' => 'fo-fo',
+                    'action'     => 'index',
+                    'param1'     => 'value1',
+                ],
             ],
             /*
             'match-query' => array(
@@ -277,13 +282,11 @@ class PartTest extends TestCase
 
     /**
      * @dataProvider routeProvider
-     * @param        Part    $route
-     * @param        string  $path
-     * @param        int     $offset
-     * @param        string  $routeName
-     * @param        array   $params
+     * @param        string   $path
+     * @param        int|null $offset
+     * @param        string   $routeName
      */
-    public function testMatching(Part $route, $path, $offset, $routeName, array $params = null)
+    public function testMatching(Part $route, $path, $offset, $routeName, ?array $params = null)
     {
         $request = new Request();
         $request->setUri('http://example.com' . $path);
@@ -308,13 +311,11 @@ class PartTest extends TestCase
 
     /**
      * @dataProvider routeProvider
-     * @param        Part    $route
-     * @param        string  $path
-     * @param        int     $offset
-     * @param        string  $routeName
-     * @param        array   $params
+     * @param        string   $path
+     * @param        int|null $offset
+     * @param        string   $routeName
      */
-    public function testAssembling(Part $route, $path, $offset, $routeName, array $params = null)
+    public function testAssembling(Part $route, $path, $offset, $routeName, ?array $params = null)
     {
         if ($params === null) {
             // Data which will not match are not tested for assembling.
@@ -369,10 +370,10 @@ class PartTest extends TestCase
             Part::class,
             [
                 'route'         => 'Missing "route" in options array',
-                'route_plugins' => 'Missing "route_plugins" in options array'
+                'route_plugins' => 'Missing "route_plugins" in options array',
             ],
             [
-                'route'         => new \Laminas\Router\Http\Literal('/foo'),
+                'route'         => new Literal('/foo'),
                 'route_plugins' => self::getRoutePlugins(),
             ]
         );
@@ -387,7 +388,7 @@ class PartTest extends TestCase
             'create' => [
                 'type'    => 'Literal',
                 'options' => [
-                    'route' => 'create',
+                    'route'    => 'create',
                     'defaults' => [
                         'controller' => 'user-admin',
                         'action'     => 'edit',
@@ -395,11 +396,11 @@ class PartTest extends TestCase
                 ],
             ],
         ]);
-        $options = [
-            'route'        => [
-                'type' => Literal::class,
+        $options  = [
+            'route'         => [
+                'type'    => Literal::class,
                 'options' => [
-                    'route' => '/admin/users',
+                    'route'    => '/admin/users',
                     'defaults' => [
                         'controller' => 'Admin\UserController',
                         'action'     => 'index',
@@ -421,10 +422,10 @@ class PartTest extends TestCase
     public function testPartRouteMarkedAsMayTerminateCanMatchWhenQueryStringPresent()
     {
         $options = [
-            'route' => [
-                'type' => Literal::class,
+            'route'         => [
+                'type'    => Literal::class,
                 'options' => [
-                    'route' => '/resource',
+                    'route'    => '/resource',
                     'defaults' => [
                         'controller' => 'ResourceController',
                         'action'     => 'resource',
@@ -435,9 +436,9 @@ class PartTest extends TestCase
             'may_terminate' => true,
             'child_routes'  => [
                 'child' => [
-                    'type' => Literal::class,
+                    'type'    => Literal::class,
                     'options' => [
-                        'route' => '/child',
+                        'route'    => '/child',
                         'defaults' => [
                             'action' => 'child',
                         ],
@@ -446,7 +447,7 @@ class PartTest extends TestCase
             ],
         ];
 
-        $route = Part::factory($options);
+        $route   = Part::factory($options);
         $request = new Request();
         $request->setUri('http://example.com/resource?foo=bar');
         $query = new Parameters(['foo' => 'bar']);
@@ -464,10 +465,10 @@ class PartTest extends TestCase
     public function testPartRouteMarkedAsMayTerminateButWithQueryRouteChildWillMatchChildRoute()
     {
         $options = [
-            'route' => [
-                'type' => Literal::class,
+            'route'         => [
+                'type'    => Literal::class,
                 'options' => [
-                    'route' => '/resource',
+                    'route'    => '/resource',
                     'defaults' => [
                         'controller' => 'ResourceController',
                         'action'     => 'resource',
@@ -478,7 +479,7 @@ class PartTest extends TestCase
             'may_terminate' => true,
         ];
 
-        $route = Part::factory($options);
+        $route   = Part::factory($options);
         $request = new Request();
         $request->setUri('http://example.com/resource?foo=bar');
         $query = new Parameters(['foo' => 'bar']);

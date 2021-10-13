@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace LaminasTest\Router;
@@ -13,11 +7,12 @@ namespace LaminasTest\Router;
 use Laminas\Router\PriorityList;
 use PHPUnit\Framework\TestCase;
 
+use function array_keys;
+use function iterator_to_array;
+
 class PriorityListTest extends TestCase
 {
-    /**
-     * @var PriorityList
-     */
+    /** @var PriorityList */
     protected $list;
 
     public function setUp(): void

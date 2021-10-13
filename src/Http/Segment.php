@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace Laminas\Router\Http;
@@ -15,6 +9,19 @@ use Laminas\Router\Exception;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Stdlib\RequestInterface as Request;
 use Traversable;
+
+use function array_merge;
+use function count;
+use function is_array;
+use function method_exists;
+use function preg_match;
+use function preg_quote;
+use function rawurldecode;
+use function rawurlencode;
+use function sprintf;
+use function str_replace;
+use function strlen;
+use function strtr;
 
 /**
  * Segment route.
@@ -120,6 +127,7 @@ class Segment implements RouteInterface
      * factory(): defined by RouteInterface interface.
      *
      * @see    \Laminas\Router\RouteInterface::factory()
+     *
      * @param  array|Traversable $options
      * @return Segment
      * @throws Exception\InvalidArgumentException
@@ -175,20 +183,22 @@ class Segment implements RouteInterface
             }
 
             if ($matches['token'] === ':') {
-                if (! preg_match(
-                    '(\G(?P<name>[^:/{\[\]]+)(?:{(?P<delimiters>[^}]+)})?:?)',
-                    $def,
-                    $matches,
-                    0,
-                    $currentPos
-                )) {
+                if (
+                    ! preg_match(
+                        '(\G(?P<name>[^:/{\[\]]+)(?:{(?P<delimiters>[^}]+)})?:?)',
+                        $def,
+                        $matches,
+                        0,
+                        $currentPos
+                    )
+                ) {
                     throw new Exception\RuntimeException('Found empty parameter name');
                 }
 
                 $levelParts[$level][] = [
                     'parameter',
                     $matches['name'],
-                    isset($matches['delimiters']) ? $matches['delimiters'] : null
+                    $matches['delimiters'] ?? null,
                 ];
 
                 $currentPos += strlen($matches[0]);
@@ -201,7 +211,7 @@ class Segment implements RouteInterface
 
                 $levelParts[$level][] = ['translated-literal', $matches['literal']];
             } elseif ($matches['token'] === '[') {
-                $levelParts[$level][] = ['optional', []];
+                $levelParts[$level][]   = ['optional', []];
                 $levelParts[$level + 1] = &$levelParts[$level][count($levelParts[$level]) - 1][1];
 
                 $level++;
@@ -261,7 +271,7 @@ class Segment implements RouteInterface
                     break;
 
                 case 'translated-literal':
-                    $regex .= '#' . $part[1] . '#';
+                    $regex                  .= '#' . $part[1] . '#';
                     $this->translationKeys[] = $part[1];
                     break;
             }
@@ -290,8 +300,8 @@ class Segment implements RouteInterface
             }
 
             $translator = $options['translator'];
-            $textDomain = (isset($options['text_domain']) ? $options['text_domain'] : 'default');
-            $locale     = (isset($options['locale']) ? $options['locale'] : null);
+            $textDomain = $options['text_domain'] ?? 'default';
+            $locale     = $options['locale'] ?? null;
         }
 
         $path      = '';
@@ -313,7 +323,8 @@ class Segment implements RouteInterface
                         }
 
                         return '';
-                    } elseif (! $isOptional
+                    } elseif (
+                        ! $isOptional
                         || $hasChild
                         || ! isset($this->defaults[$part[1]])
                         || $this->defaults[$part[1]] !== $mergedParams[$part[1]]
@@ -353,7 +364,7 @@ class Segment implements RouteInterface
      * match(): defined by RouteInterface interface.
      *
      * @see    \Laminas\Router\RouteInterface::match()
-     * @param  Request     $request
+     *
      * @param  string|null $pathOffset
      * @param  array       $options
      * @return RouteMatch|null
@@ -376,8 +387,8 @@ class Segment implements RouteInterface
             }
 
             $translator = $options['translator'];
-            $textDomain = (isset($options['text_domain']) ? $options['text_domain'] : 'default');
-            $locale     = (isset($options['locale']) ? $options['locale'] : null);
+            $textDomain = $options['text_domain'] ?? 'default';
+            $locale     = $options['locale'] ?? null;
 
             foreach ($this->translationKeys as $key) {
                 $regex = str_replace('#' . $key . '#', $translator->translate($key, $textDomain, $locale), $regex);
@@ -410,6 +421,7 @@ class Segment implements RouteInterface
      * assemble(): Defined by RouteInterface interface.
      *
      * @see    \Laminas\Router\RouteInterface::assemble()
+     *
      * @param  array $params
      * @param  array $options
      * @return mixed
@@ -422,7 +434,7 @@ class Segment implements RouteInterface
             $this->parts,
             array_merge($this->defaults, $params),
             false,
-            (isset($options['has_child']) ? $options['has_child'] : false),
+            $options['has_child'] ?? false,
             $options
         );
     }
@@ -431,6 +443,7 @@ class Segment implements RouteInterface
      * getAssembledParams(): defined by RouteInterface interface.
      *
      * @see    RouteInterface::getAssembledParams
+     *
      * @return array
      */
     public function getAssembledParams()
@@ -441,7 +454,6 @@ class Segment implements RouteInterface
     /**
      * Encode a path segment.
      *
-     * @param  string $value
      * @return string
      */
     protected function encode(string $value)

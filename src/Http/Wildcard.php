@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace Laminas\Router\Http;
@@ -14,6 +8,21 @@ use Laminas\Router\Exception;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Stdlib\RequestInterface as Request;
 use Traversable;
+
+use function array_merge;
+use function array_shift;
+use function count;
+use function end;
+use function explode;
+use function implode;
+use function is_array;
+use function is_scalar;
+use function method_exists;
+use function rawurldecode;
+use function rawurlencode;
+use function sprintf;
+use function strlen;
+use function substr;
 
 /**
  * Wildcard route.
@@ -34,7 +43,7 @@ class Wildcard implements RouteInterface
     /**
      * Delimiter before parameters.
      *
-     * @var array
+     * @var string
      */
     protected $paramDelimiter;
 
@@ -70,6 +79,7 @@ class Wildcard implements RouteInterface
      * factory(): defined by RouteInterface interface.
      *
      * @see    \Laminas\Router\RouteInterface::factory()
+     *
      * @param  array|Traversable $options
      * @return Wildcard
      * @throws Exception\InvalidArgumentException
@@ -104,14 +114,14 @@ class Wildcard implements RouteInterface
      * match(): defined by RouteInterface interface.
      *
      * @see    \Laminas\Router\RouteInterface::match()
-     * @param  Request      $request
+     *
      * @param  integer|null $pathOffset
      * @return RouteMatch|null
      */
     public function match(Request $request, $pathOffset = null)
     {
         if (! method_exists($request, 'getUri')) {
-            return;
+            return null;
         }
 
         $uri  = $request->getUri();
@@ -129,7 +139,7 @@ class Wildcard implements RouteInterface
         $params  = explode($this->paramDelimiter, $path);
 
         if (count($params) > 1 && ($params[0] !== '' || end($params) === '')) {
-            return;
+            return null;
         }
 
         if ($this->keyValueDelimiter === $this->paramDelimiter) {
@@ -159,6 +169,7 @@ class Wildcard implements RouteInterface
      * assemble(): Defined by RouteInterface interface.
      *
      * @see    \Laminas\Router\RouteInterface::assemble()
+     *
      * @param  array $params
      * @param  array $options
      * @return mixed
@@ -175,7 +186,9 @@ class Wildcard implements RouteInterface
                     continue;
                 }
 
-                $elements[] = rawurlencode($key) . $this->keyValueDelimiter . rawurlencode((string) $value);
+                $elements[]              = rawurlencode($key)
+                    . $this->keyValueDelimiter
+                    . rawurlencode((string) $value);
                 $this->assembledParams[] = $key;
             }
 
@@ -189,6 +202,7 @@ class Wildcard implements RouteInterface
      * getAssembledParams(): defined by RouteInterface interface.
      *
      * @see    RouteInterface::getAssembledParams
+     *
      * @return array
      */
     public function getAssembledParams()

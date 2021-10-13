@@ -1,16 +1,12 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace Laminas\Router\Http;
 
 use Laminas\Router\RouteMatch as BaseRouteMatch;
+
+use function array_merge;
 
 /**
  * Part route match.
@@ -41,6 +37,7 @@ class RouteMatch extends BaseRouteMatch
      * setMatchedRouteName(): defined by BaseRouteMatch.
      *
      * @see    BaseRouteMatch::setMatchedRouteName()
+     *
      * @param  string $name
      * @return RouteMatch
      */
@@ -58,7 +55,6 @@ class RouteMatch extends BaseRouteMatch
     /**
      * Merge parameters from another match.
      *
-     * @param  RouteMatch $match
      * @return RouteMatch
      */
     public function merge(RouteMatch $match)

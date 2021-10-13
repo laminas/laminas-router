@@ -114,9 +114,9 @@
     </UnsafeInstantiation>
   </file>
   <file src="src/Http/HttpRouterFactory.php">
-    <DeprecatedInterface occurrences="1">
-      <code>HttpRouterFactory</code>
-    </DeprecatedInterface>
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$this-&gt;createRouter($class, $config, $container)</code>
+    </LessSpecificReturnStatement>
     <MixedArgument occurrences="1">
       <code>$config</code>
     </MixedArgument>
@@ -127,12 +127,9 @@
       <code>$config</code>
       <code>$config</code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="1">
+    <MoreSpecificReturnType occurrences="1">
       <code>RouteStackInterface</code>
-    </MixedInferredReturnType>
-    <MixedReturnStatement occurrences="1">
-      <code>$this-&gt;createRouter($class, $config, $container)</code>
-    </MixedReturnStatement>
+    </MoreSpecificReturnType>
   </file>
   <file src="src/Http/Literal.php">
     <DocblockTypeContradiction occurrences="1">
@@ -300,6 +297,7 @@
       <code>$matches[0]</code>
       <code>$options['constraints']</code>
       <code>$options['defaults']</code>
+      <code>$options['has_child'] ?? false</code>
       <code>$options['route']</code>
       <code>$part[1]</code>
       <code>$part[1]</code>
@@ -308,7 +306,6 @@
       <code>$path</code>
       <code>$path</code>
       <code>$textDomain</code>
-      <code>isset($options['has_child']) ? $options['has_child'] : false</code>
     </MixedArgument>
     <MixedArrayAccess occurrences="18">
       <code>$part[0]</code>
@@ -522,47 +519,20 @@
     </UndefinedMethod>
   </file>
   <file src="src/Http/Wildcard.php">
-    <DocblockTypeContradiction occurrences="2">
-      <code>$this-&gt;keyValueDelimiter === $this-&gt;paramDelimiter</code>
+    <DocblockTypeContradiction occurrences="1">
       <code>is_array($options)</code>
     </DocblockTypeContradiction>
-    <InvalidArgument occurrences="1">
-      <code>$this-&gt;paramDelimiter</code>
-    </InvalidArgument>
-    <InvalidCast occurrences="1">
-      <code>$this-&gt;paramDelimiter</code>
-    </InvalidCast>
-    <InvalidOperand occurrences="1">
-      <code>$this-&gt;paramDelimiter</code>
-    </InvalidOperand>
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>$paramDelimiter</code>
-    </InvalidPropertyAssignmentValue>
-    <MixedArgument occurrences="12">
+    <MixedArgument occurrences="5">
       <code>$options['defaults']</code>
       <code>$options['key_value_delimiter']</code>
       <code>$options['param_delimiter']</code>
-      <code>$param</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
-      <code>$params[$i + 1]</code>
-      <code>$params[$i]</code>
       <code>$path</code>
       <code>$path</code>
     </MixedArgument>
     <MixedArgumentTypeCoercion occurrences="1">
       <code>$key</code>
     </MixedArgumentTypeCoercion>
-    <MixedArrayAccess occurrences="3">
-      <code>$params[$i + 1]</code>
-      <code>$params[$i]</code>
-      <code>$params[0]</code>
-    </MixedArrayAccess>
-    <MixedAssignment occurrences="4">
-      <code>$param</code>
-      <code>$params</code>
+    <MixedAssignment occurrences="2">
       <code>$path</code>
       <code>$uri</code>
     </MixedAssignment>
@@ -577,19 +547,9 @@
     <DeprecatedInterface occurrences="1">
       <code>RouteInvokableFactory</code>
     </DeprecatedInterface>
-    <MissingParamType occurrences="2">
-      <code>$normalizedName</code>
-      <code>$routeName</code>
-    </MissingParamType>
     <MissingReturnType occurrences="1">
       <code>setCreationOptions</code>
     </MissingReturnType>
-    <MixedArgument occurrences="1">
-      <code>$routeName</code>
-    </MixedArgument>
-    <MixedAssignment occurrences="1">
-      <code>$routeName</code>
-    </MixedAssignment>
     <ParamNameMismatch occurrences="8">
       <code>$container</code>
       <code>$container</code>
@@ -607,7 +567,9 @@
     </PropertyNotSetInConstructor>
   </file>
   <file src="src/RoutePluginManager.php">
-    <DocblockTypeContradiction occurrences="1"/>
+    <DocblockTypeContradiction occurrences="1">
+      <code>gettype($instance)</code>
+    </DocblockTypeContradiction>
     <ImplementedReturnTypeMismatch occurrences="1">
       <code>void</code>
     </ImplementedReturnTypeMismatch>
@@ -634,17 +596,11 @@
     <NonInvariantDocblockPropertyType occurrences="1">
       <code>$instanceOf</code>
     </NonInvariantDocblockPropertyType>
-    <RedundantConditionGivenDocblockType occurrences="1"/>
-  </file>
-  <file src="src/RoutePluginManagerFactory.php">
-    <DeprecatedInterface occurrences="1">
-      <code>RoutePluginManagerFactory</code>
-    </DeprecatedInterface>
+    <RedundantConditionGivenDocblockType occurrences="1">
+      <code>is_object($instance)</code>
+    </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/RouterConfigTrait.php">
-    <MissingReturnType occurrences="1">
-      <code>createRouter</code>
-    </MissingReturnType>
     <MixedArgument occurrences="1">
       <code>$config['router_class']</code>
     </MixedArgument>
@@ -652,11 +608,11 @@
       <code>$config['route_plugins']</code>
       <code>$routePluginManager</code>
     </MixedAssignment>
+    <MixedInferredReturnType occurrences="1">
+      <code>RouteInterface</code>
+    </MixedInferredReturnType>
   </file>
   <file src="src/RouterFactory.php">
-    <DeprecatedInterface occurrences="1">
-      <code>RouterFactory</code>
-    </DeprecatedInterface>
     <MixedInferredReturnType occurrences="1">
       <code>RouteStackInterface</code>
     </MixedInferredReturnType>
@@ -728,36 +684,18 @@
     </UnsafeInstantiation>
   </file>
   <file src="test/FactoryTester.php">
-    <InvalidDocblockParamName occurrences="1">
-      <code>$className</code>
-    </InvalidDocblockParamName>
-    <MissingParamType occurrences="1">
-      <code>$classname</code>
-    </MissingParamType>
     <MixedArgument occurrences="1">
       <code>$exceptionMessage</code>
     </MixedArgument>
     <MixedAssignment occurrences="1">
       <code>$exceptionMessage</code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="4">
-      <code>$classname::factory($options)</code>
-      <code>$classname::factory($testOptions)</code>
-      <code>$classname::factory(0)</code>
-      <code>$classname::factory(new ArrayIterator($options))</code>
-    </MixedMethodCall>
   </file>
   <file src="test/Http/ChainTest.php">
     <DeprecatedClass occurrences="1">
       <code>Wildcard::class</code>
     </DeprecatedClass>
-    <DocblockTypeContradiction occurrences="1">
-      <code>$offset === null</code>
-    </DocblockTypeContradiction>
-    <MissingReturnType occurrences="6">
-      <code>getRoute</code>
-      <code>getRouteWithOptionalParam</code>
-      <code>routeProvider</code>
+    <MissingReturnType occurrences="3">
       <code>testAssembling</code>
       <code>testFactory</code>
       <code>testMatching</code>
@@ -769,16 +707,12 @@
       <code>$result</code>
       <code>$value</code>
     </MixedAssignment>
-    <RedundantConditionGivenDocblockType occurrences="1">
-      <code>$offset !== null</code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="test/Http/HostnameTest.php">
     <DuplicateArrayKey occurrences="1">
       <code>'foo' =&gt; 'bat'</code>
     </DuplicateArrayKey>
-    <MissingReturnType occurrences="8">
-      <code>routeProvider</code>
+    <MissingReturnType occurrences="7">
       <code>testAssembling</code>
       <code>testAssemblingWithMissingParameter</code>
       <code>testFactory</code>
@@ -811,11 +745,7 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="test/Http/LiteralTest.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>$offset === null</code>
-    </DocblockTypeContradiction>
-    <MissingReturnType occurrences="7">
-      <code>routeProvider</code>
+    <MissingReturnType occurrences="6">
       <code>testAssembling</code>
       <code>testEmptyLiteral</code>
       <code>testFactory</code>
@@ -826,23 +756,13 @@
     <MixedAssignment occurrences="1">
       <code>$result</code>
     </MixedAssignment>
-    <RedundantConditionGivenDocblockType occurrences="1">
-      <code>$offset !== null</code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="test/Http/MethodTest.php">
-    <MissingParamType occurrences="1">
-      <code>$verb</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="4">
-      <code>routeProvider</code>
+    <MissingReturnType occurrences="3">
       <code>testFactory</code>
       <code>testMatching</code>
       <code>testNoMatchWithoutVerb</code>
     </MissingReturnType>
-    <MixedArgument occurrences="1">
-      <code>$verb</code>
-    </MixedArgument>
   </file>
   <file src="test/Http/PartTest.php">
     <DeprecatedClass occurrences="7">
@@ -854,15 +774,8 @@
       <code>Wildcard::class</code>
       <code>Wildcard::class</code>
     </DeprecatedClass>
-    <DocblockTypeContradiction occurrences="1">
-      <code>$offset === null</code>
-    </DocblockTypeContradiction>
     <DuplicateArrayKey occurrences="1"/>
-    <MissingReturnType occurrences="14">
-      <code>getRoute</code>
-      <code>getRouteAlternative</code>
-      <code>getRoutePlugins</code>
-      <code>routeProvider</code>
+    <MissingReturnType occurrences="10">
       <code>testAssembleNonTerminatedRoute</code>
       <code>testAssembling</code>
       <code>testBaseRouteMayNotBePartRoute</code>
@@ -874,30 +787,19 @@
       <code>testPartRouteMarkedAsMayTerminateButWithQueryRouteChildWillMatchChildRoute</code>
       <code>testPartRouteMarkedAsMayTerminateCanMatchWhenQueryStringPresent</code>
     </MissingReturnType>
-    <MixedArgument occurrences="2">
-      <code>self::getRoutePlugins()</code>
-      <code>self::getRoutePlugins()</code>
-    </MixedArgument>
     <MixedArgumentTypeCoercion occurrences="1">
       <code>$key</code>
     </MixedArgumentTypeCoercion>
-    <MixedAssignment occurrences="6">
+    <MixedAssignment occurrences="4">
       <code>$query</code>
       <code>$query</code>
       <code>$result</code>
-      <code>$route</code>
-      <code>$route</code>
       <code>$value</code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="4">
-      <code>assemble</code>
-      <code>assemble</code>
-      <code>getAssembledParams</code>
-      <code>match</code>
-    </MixedMethodCall>
-    <RedundantConditionGivenDocblockType occurrences="1">
-      <code>$offset !== null</code>
-    </RedundantConditionGivenDocblockType>
+    <PossiblyInvalidArgument occurrences="2">
+      <code>testAssembling</code>
+      <code>testMatching</code>
+    </PossiblyInvalidArgument>
     <UnusedVariable occurrences="3">
       <code>$query</code>
       <code>$query</code>
@@ -905,27 +807,16 @@
     </UnusedVariable>
   </file>
   <file src="test/Http/PlaceholderTest.php">
-    <MissingPropertyType occurrences="1">
-      <code>$routeConfig</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="6">
-      <code>placeholderProvider</code>
+    <MissingReturnType occurrences="5">
       <code>testAssembling</code>
       <code>testFactory</code>
       <code>testGetAssembledParams</code>
       <code>testMatch</code>
       <code>testPlaceholderDefault</code>
     </MissingReturnType>
-    <MixedArgument occurrences="1">
-      <code>self::$routeConfig</code>
-    </MixedArgument>
   </file>
   <file src="test/Http/RegexTest.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>$offset === null</code>
-    </DocblockTypeContradiction>
-    <MissingReturnType occurrences="8">
-      <code>routeProvider</code>
+    <MissingReturnType occurrences="7">
       <code>testAssembling</code>
       <code>testEncodedDecode</code>
       <code>testFactory</code>
@@ -945,9 +836,6 @@
       <code>getParam</code>
       <code>getParam</code>
     </PossiblyNullReference>
-    <RedundantConditionGivenDocblockType occurrences="1">
-      <code>$offset !== null</code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="test/Http/RouteMatchTest.php">
     <MissingReturnType occurrences="6">
@@ -976,18 +864,14 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$exceptionName</code>
     </ArgumentTypeCoercion>
-    <DocblockTypeContradiction occurrences="2">
-      <code>$offset === null</code>
+    <DocblockTypeContradiction occurrences="1">
       <code>$offset === null</code>
     </DocblockTypeContradiction>
     <InvalidScalarArgument occurrences="2">
       <code>$offset</code>
       <code>$offset</code>
     </InvalidScalarArgument>
-    <MissingReturnType occurrences="17">
-      <code>l10nRouteProvider</code>
-      <code>parseExceptionsProvider</code>
-      <code>routeProvider</code>
+    <MissingReturnType occurrences="14">
       <code>testAssembling</code>
       <code>testAssemblingWithExistingChild</code>
       <code>testAssemblingWithL10n</code>
@@ -1038,12 +922,15 @@
       <code>null</code>
       <code>null</code>
     </NullArgument>
+    <PossiblyInvalidArgument occurrences="2">
+      <code>testAssembling</code>
+      <code>testMatching</code>
+    </PossiblyInvalidArgument>
     <PossiblyNullReference occurrences="2">
       <code>getParam</code>
       <code>getParam</code>
     </PossiblyNullReference>
-    <RedundantConditionGivenDocblockType occurrences="2">
-      <code>$offset !== null</code>
+    <RedundantConditionGivenDocblockType occurrences="1">
       <code>$offset !== null</code>
     </RedundantConditionGivenDocblockType>
     <UndefinedMethod occurrences="3">
@@ -1161,11 +1048,8 @@
       <code>new Wildcard()</code>
       <code>new Wildcard()</code>
     </DeprecatedClass>
-    <DocblockTypeContradiction occurrences="1">
-      <code>$offset === null</code>
-    </DocblockTypeContradiction>
-    <MissingReturnType occurrences="9">
-      <code>routeProvider</code>
+    <LessSpecificReturnStatement occurrences="1"/>
+    <MissingReturnType occurrences="8">
       <code>testAssembling</code>
       <code>testEncodedDecode</code>
       <code>testFactory</code>
@@ -1183,16 +1067,14 @@
       <code>$result</code>
       <code>$value</code>
     </MixedAssignment>
+    <MoreSpecificReturnType occurrences="1"/>
     <PossiblyNullReference occurrences="2">
       <code>getParam</code>
       <code>getParam</code>
     </PossiblyNullReference>
-    <RedundantConditionGivenDocblockType occurrences="1">
-      <code>$offset !== null</code>
-    </RedundantConditionGivenDocblockType>
     <UndefinedClass occurrences="2">
-      <code>\Some\ConnectMiddleware</code>
-      <code>\Some\Handler</code>
+      <code>ConnectMiddleware</code>
+      <code>Handler</code>
     </UndefinedClass>
   </file>
   <file src="test/PriorityListTest.php">
@@ -1330,20 +1212,15 @@
     </UnsafeInstantiation>
   </file>
   <file src="test/TestAsset/Router.php">
-    <ImplementedReturnTypeMismatch occurrences="2">
+    <ImplementedReturnTypeMismatch occurrences="1">
       <code>RouteMatch|null</code>
-      <code>void</code>
     </ImplementedReturnTypeMismatch>
-    <InvalidReturnStatement occurrences="1">
-      <code>new static()</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="6">
+    <InvalidReturnType occurrences="5">
       <code>RouteStackInterface</code>
       <code>RouteStackInterface</code>
       <code>RouteStackInterface</code>
       <code>RouteStackInterface</code>
       <code>mixed</code>
-      <code>void</code>
     </InvalidReturnType>
     <UndefinedDocblockClass occurrences="1">
       <code>RouteMatch|null</code>

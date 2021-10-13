@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
@@ -20,7 +14,9 @@ use Laminas\Router\Http\TreeRouteStack;
 use Laminas\Stdlib\Request as BaseRequest;
 use Laminas\Uri\Http as HttpUri;
 use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\TestAsset\DummyRoute;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 class TreeRouteStackTest extends TestCase
 {
@@ -30,7 +26,7 @@ class TreeRouteStackTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Route definition must be an array or Traversable object');
-        $stack->addRoute('foo', new \LaminasTest\Router\TestAsset\DummyRoute());
+        $stack->addRoute('foo', new DummyRoute());
     }
 
     public function testAddRouteViaStringRequiresHttpSpecificRoute()
@@ -40,7 +36,7 @@ class TreeRouteStackTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Given route does not implement HTTP route interface');
         $stack->addRoute('foo', [
-            'type' => \LaminasTest\Router\TestAsset\DummyRoute::class
+            'type' => DummyRoute::class,
         ]);
     }
 
@@ -48,14 +44,14 @@ class TreeRouteStackTest extends TestCase
     {
         $stack = new TreeRouteStack();
         $stack->addRoute('foo', new ArrayIterator([
-            'type' => TestAsset\DummyRoute::class
+            'type' => TestAsset\DummyRoute::class,
         ]));
         $this->assertTrue($stack->hasRoute('foo'));
     }
 
     public function testNoMatchWithoutUriMethod()
     {
-        $stack  = new TreeRouteStack();
+        $stack   = new TreeRouteStack();
         $request = new BaseRequest();
 
         $this->assertNull($stack->match($request));
@@ -81,7 +77,7 @@ class TreeRouteStackTest extends TestCase
         $stack = new TreeRouteStack();
         $stack->setBaseUrl('/foo');
         $stack->addRoute('foo', [
-            'type' => TestAsset\DummyRoute::class
+            'type' => TestAsset\DummyRoute::class,
         ]);
 
         $this->assertEquals(4, $stack->match(new Request())->getParam('offset'));
@@ -91,7 +87,7 @@ class TreeRouteStackTest extends TestCase
     {
         $stack = new TreeRouteStack();
         $stack->addRoute('foo', [
-            'type' => TestAsset\DummyRoute::class
+            'type' => TestAsset\DummyRoute::class,
         ]);
 
         $this->assertEquals(null, $stack->match(new Request())->getParam('offset'));
@@ -143,7 +139,7 @@ class TreeRouteStackTest extends TestCase
     {
         $stack = new TreeRouteStack();
         $stack->addRoute('foo', new Hostname('example.com'));
-        $uri   = new HttpUri();
+        $uri = new HttpUri();
         $uri->setScheme('http');
 
         $this->assertEquals('http://example.com/', $stack->assemble([], ['name' => 'foo', 'uri' => $uri]));
@@ -153,7 +149,7 @@ class TreeRouteStackTest extends TestCase
     {
         $stack = new TreeRouteStack();
         $stack->addRoute('foo', new Hostname('example.com'));
-        $uri   = new HttpUri();
+        $uri = new HttpUri();
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Request URI has not been set');
@@ -162,7 +158,7 @@ class TreeRouteStackTest extends TestCase
 
     public function testAssembleCanonicalUriWithHostnameRouteAndRequestUriWithoutScheme()
     {
-        $uri   = new HttpUri();
+        $uri = new HttpUri();
         $uri->setScheme('http');
         $stack = new TreeRouteStack();
         $stack->setRequestUri($uri);
@@ -177,7 +173,7 @@ class TreeRouteStackTest extends TestCase
         $stack->addRoute(
             'index',
             [
-                'type' => 'Literal',
+                'type'    => 'Literal',
                 'options' => [
                     'route' => '/',
                 ],
@@ -193,7 +189,7 @@ class TreeRouteStackTest extends TestCase
         $stack->addRoute(
             'index',
             [
-                'type' => 'Literal',
+                'type'    => 'Literal',
                 'options' => [
                     'route' => '/this%2Fthat',
                 ],
@@ -209,7 +205,7 @@ class TreeRouteStackTest extends TestCase
         $stack->addRoute(
             'index',
             [
-                'type' => 'Literal',
+                'type'    => 'Literal',
                 'options' => [
                     'route' => '/this%2Fthat',
                 ],
@@ -224,7 +220,7 @@ class TreeRouteStackTest extends TestCase
 
     public function testAssembleWithScheme()
     {
-        $uri   = new HttpUri();
+        $uri = new HttpUri();
         $uri->setScheme('http');
         $uri->setHost('example.com');
         $stack = new TreeRouteStack();
@@ -232,15 +228,15 @@ class TreeRouteStackTest extends TestCase
         $stack->addRoute(
             'secure',
             [
-                'type' => 'Scheme',
-                'options' => [
-                    'scheme' => 'https'
+                'type'         => 'Scheme',
+                'options'      => [
+                    'scheme' => 'https',
                 ],
                 'child_routes' => [
                     'index' => [
                         'type'    => 'Literal',
                         'options' => [
-                            'route'    => '/',
+                            'route' => '/',
                         ],
                     ],
                 ],
@@ -255,7 +251,7 @@ class TreeRouteStackTest extends TestCase
         $stack->addRoute(
             'index',
             [
-                'type' => 'Literal',
+                'type'    => 'Literal',
                 'options' => [
                     'route' => '/',
                 ],
@@ -289,7 +285,7 @@ class TreeRouteStackTest extends TestCase
         $stack->addRoute(
             'index',
             [
-                'type' => 'Literal',
+                'type'    => 'Literal',
                 'options' => [
                     'route' => '/',
                 ],
@@ -361,20 +357,20 @@ class TreeRouteStackTest extends TestCase
         $stack = new TreeRouteStack();
         $stack->addRoutes([
             'foo' => [
-                'type' => 'Literal',
-                'priority' => 1000,
-                'options' => [
-                    'route' => '/foo',
+                'type'          => 'Literal',
+                'priority'      => 1000,
+                'options'       => [
+                    'route'    => '/foo',
                     'defaults' => [
                         'controller' => 'foo',
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes' => [
+                'child_routes'  => [
                     'bar' => [
-                        'type' => 'Literal',
+                        'type'    => 'Literal',
                         'options' => [
-                            'route' => '/bar',
+                            'route'    => '/bar',
                             'defaults' => [
                                 'controller' => 'foo',
                                 'action'     => 'bar',
@@ -385,7 +381,7 @@ class TreeRouteStackTest extends TestCase
             ],
         ]);
 
-        $reflectedClass    = new \ReflectionClass($stack);
+        $reflectedClass    = new ReflectionClass($stack);
         $reflectedProperty = $reflectedClass->getProperty('routes');
         $reflectedProperty->setAccessible(true);
         $routes = $reflectedProperty->getValue($stack);
@@ -414,12 +410,12 @@ class TreeRouteStackTest extends TestCase
         $stack->addRoute(
             'foo',
             [
-                'type' => 'literal',
-                'options' => [
-                    'route' => '/foo'
+                'type'         => 'literal',
+                'options'      => [
+                    'route' => '/foo',
                 ],
                 'chain_routes' => [
-                    'bar'
+                    'bar',
                 ],
             ]
         );
@@ -430,28 +426,28 @@ class TreeRouteStackTest extends TestCase
     {
         $stack = new TreeRouteStack();
 
-        $uri = new \Laminas\Uri\Http();
+        $uri = new HttpUri();
         $uri->setHost('localhost');
 
         $stack->setRequestUri($uri);
         $stack->addRoute(
             'foo',
             [
-                'type' => 'literal',
-                'options' => [
-                    'route' => '/foo'
+                'type'         => 'literal',
+                'options'      => [
+                    'route' => '/foo',
                 ],
                 'chain_routes' => [
-                    ['type' => 'scheme', 'options' => ['scheme' => 'https']]
+                    ['type' => 'scheme', 'options' => ['scheme' => 'https']],
                 ],
                 'child_routes' => [
                     'baz' => [
-                        'type' => 'literal',
+                        'type'    => 'literal',
                         'options' => [
-                            'route' => '/baz'
+                            'route' => '/baz',
                         ],
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
         $this->assertEquals('https://localhost/foo/baz', $stack->assemble([], ['name' => 'foo/baz']));

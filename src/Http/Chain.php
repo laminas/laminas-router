@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace Laminas\Router\Http;
@@ -17,6 +11,16 @@ use Laminas\Router\RoutePluginManager;
 use Laminas\Stdlib\ArrayUtils;
 use Laminas\Stdlib\RequestInterface as Request;
 use Traversable;
+
+use function array_diff_key;
+use function array_flip;
+use function array_reverse;
+use function end;
+use function is_array;
+use function key;
+use function method_exists;
+use function sprintf;
+use function strlen;
 
 /**
  * Chain route.
@@ -41,21 +45,20 @@ class Chain extends TreeRouteStack implements RouteInterface
      * Create a new part route.
      *
      * @param  array              $routes
-     * @param  RoutePluginManager $routePlugins
-     * @param  ArrayObject|null   $prototypes
      */
-    public function __construct(array $routes, RoutePluginManager $routePlugins, ArrayObject $prototypes = null)
+    public function __construct(array $routes, RoutePluginManager $routePlugins, ?ArrayObject $prototypes = null)
     {
-        $this->chainRoutes         = array_reverse($routes);
-        $this->routePluginManager  = $routePlugins;
-        $this->routes              = new PriorityList();
-        $this->prototypes          = $prototypes;
+        $this->chainRoutes        = array_reverse($routes);
+        $this->routePluginManager = $routePlugins;
+        $this->routes             = new PriorityList();
+        $this->prototypes         = $prototypes;
     }
 
     /**
      * factory(): defined by RouteInterface interface.
      *
      * @see    \Laminas\Router\RouteInterface::factory()
+     *
      * @param  mixed $options
      * @throws Exception\InvalidArgumentException
      * @return Part
@@ -98,7 +101,7 @@ class Chain extends TreeRouteStack implements RouteInterface
      * match(): defined by RouteInterface interface.
      *
      * @see    \Laminas\Router\RouteInterface::match()
-     * @param  Request  $request
+     *
      * @param  int|null $pathOffset
      * @param  array    $options
      * @return RouteMatch|null
@@ -147,6 +150,7 @@ class Chain extends TreeRouteStack implements RouteInterface
      * assemble(): Defined by RouteInterface interface.
      *
      * @see    \Laminas\Router\RouteInterface::assemble()
+     *
      * @param  array $params
      * @param  array $options
      * @return mixed
@@ -169,12 +173,12 @@ class Chain extends TreeRouteStack implements RouteInterface
         foreach ($routes as $key => $route) {
             /** @var RouteInterface $route */
             $chainOptions = $options;
-            $hasChild     = isset($options['has_child']) ? $options['has_child'] : false;
+            $hasChild     = $options['has_child'] ?? false;
 
-            $chainOptions['has_child'] = ($hasChild || $key !== $lastRouteKey);
+            $chainOptions['has_child'] = $hasChild || $key !== $lastRouteKey;
 
-            $path   .= $route->assemble($params, $chainOptions);
-            $params  = array_diff_key($params, array_flip($route->getAssembledParams()));
+            $path  .= $route->assemble($params, $chainOptions);
+            $params = array_diff_key($params, array_flip($route->getAssembledParams()));
 
             $this->assembledParams += $route->getAssembledParams();
         }
@@ -186,6 +190,7 @@ class Chain extends TreeRouteStack implements RouteInterface
      * getAssembledParams(): defined by RouteInterface interface.
      *
      * @see    RouteInterface::getAssembledParams
+     *
      * @return array
      */
     public function getAssembledParams()

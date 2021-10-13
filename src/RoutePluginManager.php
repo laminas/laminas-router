@@ -1,18 +1,19 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-router for the canonical source repository
- * @copyright https://github.com/laminas/laminas-router/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-router/blob/master/LICENSE.md New BSD License
- */
-
 declare(strict_types=1);
 
 namespace Laminas\Router;
 
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
+use Laminas\ServiceManager\ConfigInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
+
+use function array_merge;
+use function get_class;
+use function gettype;
+use function is_object;
+use function sprintf;
 
 /**
  * Plugin manager implementation for routes
@@ -53,7 +54,7 @@ class RoutePluginManager extends AbstractPluginManager
      * Ensure that the instance is seeded with the RouteInvokableFactory as an
      * abstract factory.
      *
-     * @param ContainerInterface|\Laminas\ServiceManager\ConfigInterface $configOrContainerInstance
+     * @param ContainerInterface|ConfigInterface $configOrContainerInstance
      * @param array $v3config
      */
     public function __construct($configOrContainerInstance, array $v3config = [])
@@ -73,7 +74,7 @@ class RoutePluginManager extends AbstractPluginManager
         if (! $instance instanceof $this->instanceOf) {
             throw new InvalidServiceException(sprintf(
                 'Plugin of type %s is invalid; must implement %s',
-                (is_object($instance) ? get_class($instance) : gettype($instance)),
+                is_object($instance) ? get_class($instance) : gettype($instance),
                 RouteInterface::class
             ));
         }
@@ -131,15 +132,15 @@ class RoutePluginManager extends AbstractPluginManager
     }
 
      /**
-     * Create aliases for invokable classes.
-     *
-     * If an invokable service name does not match the class it maps to, this
-     * creates an alias to the class (which will later be mapped as an
-     * invokable factory).
-     *
-     * @param array $invokables
-     * @return array
-     */
+      * Create aliases for invokable classes.
+      *
+      * If an invokable service name does not match the class it maps to, this
+      * creates an alias to the class (which will later be mapped as an
+      * invokable factory).
+      *
+      * @param array $invokables
+      * @return array
+      */
     protected function createAliasesForInvokables(array $invokables)
     {
         $aliases = [];
