@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.7.2@83a0325c0a95c0ab531d6b90c877068b464377b5">
+<files psalm-version="4.10.0@916b098b008f6de4543892b1e0651c1c3b92cbfa">
   <file src="src/Http/Chain.php">
     <InvalidReturnStatement occurrences="1"/>
     <InvalidReturnType occurrences="1">
       <code>Part</code>
     </InvalidReturnType>
-    <MixedArgument occurrences="7">
+    <MixedArgument occurrences="6">
       <code>$options['child_routes']</code>
       <code>$options['prototypes']</code>
       <code>$options['route_plugins']</code>
       <code>$options['routes']</code>
-      <code>$route-&gt;getAssembledParams()</code>
       <code>$subMatch</code>
       <code>$uri-&gt;getPath()</code>
     </MixedArgument>
@@ -21,16 +20,12 @@
       <code>$subMatch</code>
       <code>$uri</code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="5">
-      <code>assemble</code>
-      <code>getAssembledParams</code>
-      <code>getAssembledParams</code>
+    <MixedMethodCall occurrences="2">
       <code>getPath</code>
       <code>match</code>
     </MixedMethodCall>
-    <MixedOperand occurrences="2">
+    <MixedOperand occurrences="1">
       <code>$route-&gt;assemble($params, $chainOptions)</code>
-      <code>$route-&gt;getAssembledParams()</code>
     </MixedOperand>
     <PossiblyNullPropertyAssignmentValue occurrences="3">
       <code>$prototypes</code>
@@ -612,9 +607,7 @@
     </PropertyNotSetInConstructor>
   </file>
   <file src="src/RoutePluginManager.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>gettype($plugin)</code>
-    </DocblockTypeContradiction>
+    <DocblockTypeContradiction occurrences="1"/>
     <ImplementedReturnTypeMismatch occurrences="1">
       <code>void</code>
     </ImplementedReturnTypeMismatch>
@@ -641,9 +634,7 @@
     <NonInvariantDocblockPropertyType occurrences="1">
       <code>$instanceOf</code>
     </NonInvariantDocblockPropertyType>
-    <RedundantConditionGivenDocblockType occurrences="1">
-      <code>is_object($plugin)</code>
-    </RedundantConditionGivenDocblockType>
+    <RedundantConditionGivenDocblockType occurrences="1"/>
   </file>
   <file src="src/RoutePluginManagerFactory.php">
     <DeprecatedInterface occurrences="1">
@@ -1216,52 +1207,9 @@
       <code>testRemove</code>
       <code>testRemovingNonExistentRouteDoesNotYieldError</code>
     </MissingReturnType>
-    <MixedArrayAssignment occurrences="4">
-      <code>$orders[]</code>
-      <code>$orders[]</code>
-      <code>$orders[]</code>
-      <code>$orders[]</code>
-    </MixedArrayAssignment>
-    <MixedAssignment occurrences="14">
-      <code>$key</code>
-      <code>$key</code>
-      <code>$key</code>
-      <code>$key</code>
-      <code>$key</code>
-      <code>$orders[]</code>
-      <code>$orders[]</code>
-      <code>$orders[]</code>
-      <code>$orders[]</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-    </MixedAssignment>
     <NullArgument occurrences="1">
       <code>null</code>
     </NullArgument>
-    <PossiblyUndefinedVariable occurrences="8">
-      <code>$orders</code>
-      <code>$orders</code>
-      <code>$orders</code>
-      <code>$orders</code>
-      <code>$orders</code>
-      <code>$orders</code>
-      <code>$orders</code>
-      <code>$orders</code>
-    </PossiblyUndefinedVariable>
-    <UnusedVariable occurrences="9">
-      <code>$order</code>
-      <code>$order</code>
-      <code>$order</code>
-      <code>$order</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-      <code>$value</code>
-    </UnusedVariable>
   </file>
   <file src="test/RouteMatchTest.php">
     <MissingReturnType occurrences="6">
