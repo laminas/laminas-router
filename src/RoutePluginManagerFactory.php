@@ -35,11 +35,10 @@ class RoutePluginManagerFactory implements FactoryInterface
      *
      * For use with laminas-servicemanager v2; proxies to __invoke().
      *
-     * @param ServiceLocatorInterface $container
      * @return RoutePluginManager
      */
-    public function createService(ServiceLocatorInterface $container)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $this($container, RoutePluginManager::class);
+        return $this($serviceLocator, RoutePluginManager::class);
     }
 }

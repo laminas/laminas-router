@@ -167,6 +167,7 @@ class Chain extends TreeRouteStack implements RouteInterface
         $path         = '';
 
         foreach ($routes as $key => $route) {
+            /** @var RouteInterface $route */
             $chainOptions = $options;
             $hasChild     = isset($options['has_child']) ? $options['has_child'] : false;
 

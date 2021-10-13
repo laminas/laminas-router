@@ -31,9 +31,8 @@ class PriorityListTest extends TestCase
 
         $this->assertCount(1, $this->list);
 
-        foreach ($this->list as $key => $value) {
-            $this->assertEquals('foo', $key);
-        }
+        $list = iterator_to_array($this->list);
+        $this->assertSame(['foo'], array_keys($list));
     }
 
     public function testRemove()
@@ -83,13 +82,9 @@ class PriorityListTest extends TestCase
         $this->list->insert('bar', new TestAsset\DummyRoute(), 0);
         $this->list->insert('baz', new TestAsset\DummyRoute(), 0);
 
-        $order = [];
+        $list = iterator_to_array($this->list);
 
-        foreach ($this->list as $key => $value) {
-            $orders[] = $key;
-        }
-
-        $this->assertEquals(['baz', 'bar', 'foo'], $orders);
+        $this->assertEquals(['baz', 'bar', 'foo'], array_keys($list));
     }
 
     public function testPriorityOnly()
@@ -98,13 +93,9 @@ class PriorityListTest extends TestCase
         $this->list->insert('bar', new TestAsset\DummyRoute(), 0);
         $this->list->insert('baz', new TestAsset\DummyRoute(), 2);
 
-        $order = [];
+        $list = iterator_to_array($this->list);
 
-        foreach ($this->list as $key => $value) {
-            $orders[] = $key;
-        }
-
-        $this->assertEquals(['baz', 'foo', 'bar'], $orders);
+        $this->assertEquals(['baz', 'foo', 'bar'], array_keys($list));
     }
 
     public function testLIFOWithPriority()
@@ -113,13 +104,9 @@ class PriorityListTest extends TestCase
         $this->list->insert('bar', new TestAsset\DummyRoute(), 0);
         $this->list->insert('baz', new TestAsset\DummyRoute(), 1);
 
-        $order = [];
+        $list = iterator_to_array($this->list);
 
-        foreach ($this->list as $key => $value) {
-            $orders[] = $key;
-        }
-
-        $this->assertEquals(['baz', 'bar', 'foo'], $orders);
+        $this->assertEquals(['baz', 'bar', 'foo'], array_keys($list));
     }
 
     public function testPriorityWithNegativesAndNull()
@@ -128,12 +115,8 @@ class PriorityListTest extends TestCase
         $this->list->insert('bar', new TestAsset\DummyRoute(), 1);
         $this->list->insert('baz', new TestAsset\DummyRoute(), -1);
 
-        $order = [];
+        $list = iterator_to_array($this->list);
 
-        foreach ($this->list as $key => $value) {
-            $orders[] = $key;
-        }
-
-        $this->assertEquals(['bar', 'foo', 'baz'], $orders);
+        $this->assertEquals(['bar', 'foo', 'baz'], array_keys($list));
     }
 }

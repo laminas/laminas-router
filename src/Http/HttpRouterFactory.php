@@ -48,11 +48,10 @@ class HttpRouterFactory implements FactoryInterface
      *
      * For use with laminas-servicemanager v2; proxies to __invoke().
      *
-     * @param ServiceLocatorInterface $container
      * @return RouteStackInterface
      */
-    public function createService(ServiceLocatorInterface $container)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $this($container, RouteStackInterface::class);
+        return $this($serviceLocator, RouteStackInterface::class);
     }
 }
