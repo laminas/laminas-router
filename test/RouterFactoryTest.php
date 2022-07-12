@@ -8,13 +8,25 @@ use Laminas\Router\Http\HttpRouterFactory;
 use Laminas\Router\RoutePluginManager;
 use Laminas\Router\RouterFactory;
 use Laminas\ServiceManager\Config;
+use Laminas\ServiceManager\ConfigInterface;
 use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
 
 use function array_merge_recursive;
 
+/**
+ * @see ConfigInterface
+ *
+ * @psalm-import-type ServiceManagerConfigurationType from ConfigInterface
+ */
 class RouterFactoryTest extends TestCase
 {
+    /** @psalm-var ServiceManagerConfigurationType */
+    protected $defaultServiceConfig;
+
+    /** @var HttpRouterFactory|RouterFactory */
+    protected $factory;
+
     public function setUp(): void
     {
         $this->defaultServiceConfig = [
@@ -29,7 +41,7 @@ class RouterFactoryTest extends TestCase
         $this->factory = new RouterFactory();
     }
 
-    public function testFactoryCanCreateRouterBasedOnConfiguredName()
+    public function testFactoryCanCreateRouterBasedOnConfiguredName(): void
     {
         $config   = new Config(array_merge_recursive($this->defaultServiceConfig, [
             'services' => [
@@ -47,7 +59,7 @@ class RouterFactoryTest extends TestCase
         $this->assertInstanceOf(TestAsset\Router::class, $router);
     }
 
-    public function testFactoryCanCreateRouterWhenOnlyHttpRouterConfigPresent()
+    public function testFactoryCanCreateRouterWhenOnlyHttpRouterConfigPresent(): void
     {
         $config   = new Config(array_merge_recursive($this->defaultServiceConfig, [
             'services' => [

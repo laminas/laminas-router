@@ -28,7 +28,8 @@ use function sprintf;
  *
  * @see ServiceManager for expected configuration shape
  *
- * @extends AbstractPluginManager<RouteInterface>
+ * @template InstanceType of RouteInterface
+ * @extends AbstractPluginManager<InstanceType>
  * @psalm-import-type ServiceManagerConfiguration from ServiceManager
  */
 class RoutePluginManager extends AbstractPluginManager
@@ -62,6 +63,7 @@ class RoutePluginManager extends AbstractPluginManager
      *
      * @param ContainerInterface|ConfigInterface $configOrContainerInstance
      * @param array $v3config
+     * @psalm-param ServiceManagerConfiguration $v3config
      */
     public function __construct($configOrContainerInstance, array $v3config = [])
     {
@@ -72,9 +74,9 @@ class RoutePluginManager extends AbstractPluginManager
     /**
      * Validate a route plugin. (v2)
      *
-     * @param object $instance
+     * @param InstanceType $instance
      * @throws InvalidServiceException
-     * @psalm-assert RouteInterface $instance
+     * @psalm-assert InstanceType $instance
      */
     public function validate($instance)
     {
@@ -90,9 +92,9 @@ class RoutePluginManager extends AbstractPluginManager
     /**
      * Validate a route plugin. (v2)
      *
-     * @param object $plugin
+     * @param InstanceType $plugin
      * @throws Exception\RuntimeException
-     * @psalm-assert RouteInterface $instance
+     * @psalm-assert InstanceType $instance
      */
     public function validatePlugin($plugin)
     {
