@@ -29,6 +29,8 @@ class RoutePluginManagerFactory implements FactoryInterface
      *
      * For use with laminas-servicemanager v2; proxies to __invoke().
      *
+     * @deprecated Since 3.6.0 - This component is no longer compatible with Service Manager v2
+     *
      * @return RoutePluginManager
      */
     public function createService(ServiceLocatorInterface $serviceLocator)

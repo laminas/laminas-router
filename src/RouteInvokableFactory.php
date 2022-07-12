@@ -57,6 +57,8 @@ class RouteInvokableFactory implements
      *
      * Proxies to canCreate().
      *
+     * @deprecated Since 3.6.0 - This component is no longer compatible with Service Manager v2
+     *
      * @param string $normalizedName
      * @param string $routeName
      * @return bool
@@ -108,6 +110,8 @@ class RouteInvokableFactory implements
      *
      * Proxies to __invoke().
      *
+     * @deprecated Since 3.6.0 - This component is no longer compatible with Service Manager v2
+     *
      * @param string $normalizedName
      * @param string $routeName
      * @return RouteInterface
@@ -122,6 +126,8 @@ class RouteInvokableFactory implements
      *
      * For use with laminas-servicemanager v2; proxies to __invoke().
      *
+     * @deprecated Since 3.6.0 - This component is no longer compatible with Service Manager v2
+     *
      * @param null|string $normalizedName Not used
      * @param null|string $routeName
      * @return RouteInterface
@@ -134,6 +140,8 @@ class RouteInvokableFactory implements
 
     /**
      * Set options to use when creating a service (v2)
+     *
+     * @deprecated Since 3.6.0 - This component is no longer compatible with Service Manager v2
      *
      * @param array $creationOptions
      */

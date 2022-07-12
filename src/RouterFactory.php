@@ -30,6 +30,8 @@ class RouterFactory implements FactoryInterface
      *
      * For use with laminas-servicemanager v2; proxies to __invoke().
      *
+     * @deprecated Since 3.6.0 - This component is no longer compatible with Service Manager v2
+     *
      * @param null|string $normalizedName
      * @param null|string $requestedName
      * @return RouteStackInterface
