@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router;
 
-use Interop\Container\ContainerInterface;
 use Laminas\Router\RouteInterface;
 use Laminas\Router\RoutePluginManager;
 use Laminas\Router\RoutePluginManagerFactory;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 
 class RoutePluginManagerFactoryTest extends TestCase
 {

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Laminas\Router;
 
-use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\AbstractFactoryInterface;
 use Laminas\ServiceManager\Exception\ServiceNotCreatedException;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
 
 use function class_exists;
 use function is_subclass_of;

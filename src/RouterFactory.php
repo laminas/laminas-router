@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Laminas\Router;
 
-use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
 
 /** @psalm-suppress DeprecatedInterface */
 class RouterFactory implements FactoryInterface

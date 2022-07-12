@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Laminas\Router;
 
-use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\ConfigInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
+use Laminas\ServiceManager\ServiceManager;
+use Psr\Container\ContainerInterface;
 
 use function array_merge;
 use function get_class;
@@ -24,13 +25,18 @@ use function sprintf;
  *
  * The manager is marked to not share by default, in order to allow multiple
  * route instances of the same type.
+ *
+ * @see ServiceManager for expected configuration shape
+ *
+ * @extends AbstractPluginManager<RouteInterface>
+ * @psalm-import-type ServiceManagerConfiguration from ServiceManager
  */
 class RoutePluginManager extends AbstractPluginManager
 {
     /**
      * Only RouteInterface instances are valid
      *
-     * @var string
+     * @var class-string
      */
     protected $instanceOf = RouteInterface::class;
 
@@ -68,6 +74,7 @@ class RoutePluginManager extends AbstractPluginManager
      *
      * @param object $instance
      * @throws InvalidServiceException
+     * @psalm-assert RouteInterface $instance
      */
     public function validate($instance)
     {
@@ -85,6 +92,7 @@ class RoutePluginManager extends AbstractPluginManager
      *
      * @param object $plugin
      * @throws Exception\RuntimeException
+     * @psalm-assert RouteInterface $instance
      */
     public function validatePlugin($plugin)
     {
@@ -107,6 +115,7 @@ class RoutePluginManager extends AbstractPluginManager
      * before passing to the parent.
      *
      * @param array $config
+     * @psalm-param ServiceManagerConfiguration $config
      * @return void
      */
     public function configure(array $config)
@@ -138,8 +147,8 @@ class RoutePluginManager extends AbstractPluginManager
       * creates an alias to the class (which will later be mapped as an
       * invokable factory).
       *
-      * @param array $invokables
-      * @return array
+      * @param array<string, class-string> $invokables
+      * @return array<string, class-string>
       */
     protected function createAliasesForInvokables(array $invokables)
     {
@@ -160,8 +169,8 @@ class RoutePluginManager extends AbstractPluginManager
      * creates an invokable factory entry for the class name; otherwise, it
      * creates an invokable factory for the entry name.
      *
-     * @param array $invokables
-     * @return array
+     * @param array<string, class-string> $invokables
+     * @return array<class-string, class-string>
      */
     protected function createFactoriesForInvokables(array $invokables)
     {
