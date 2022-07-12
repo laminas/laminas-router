@@ -191,16 +191,12 @@ class SegmentTest extends TestCase
      */
     public function l10nRouteProvider(): array
     {
-        $this->markTestIncomplete(
-            'Translation tests need to be updated once laminas-i18n is updated for laminas-servicemanager v3'
-        );
-
         $translator = new Translator();
         $translator->setLocale('en-US');
 
-        $enLoader     = $this->getMock(FileLoaderInterface::class);
-        $deLoader     = $this->getMock(FileLoaderInterface::class);
-        $domainLoader = $this->getMock(FileLoaderInterface::class);
+        $enLoader     = $this->createMock(FileLoaderInterface::class);
+        $deLoader     = $this->createMock(FileLoaderInterface::class);
+        $domainLoader = $this->createMock(FileLoaderInterface::class);
 
         $enLoader->expects($this->any())->method('load')->willReturn(new TextDomain(['fw' => 'framework']));
         $deLoader->expects($this->any())->method('load')->willReturn(new TextDomain(['fw' => 'baukasten']));

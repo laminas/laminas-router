@@ -44,7 +44,7 @@
         "vimeo/psalm": "^4.24.0"
     },
     "suggest": {
-        "laminas/laminas-i18n": "^2.7.4, if defining translatable HTTP path segments"
+        "laminas/laminas-i18n": "^2.15.0 if defining translatable HTTP path segments"
     },
     "autoload": {
         "psr-4": {
