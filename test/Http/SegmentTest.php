@@ -191,16 +191,12 @@ class SegmentTest extends TestCase
      */
     public function l10nRouteProvider(): array
     {
-        $this->markTestIncomplete(
-            'Translation tests need to be updated once laminas-i18n is updated for laminas-servicemanager v3'
-        );
-
         $translator = new Translator();
         $translator->setLocale('en-US');
 
-        $enLoader     = $this->getMock(FileLoaderInterface::class);
-        $deLoader     = $this->getMock(FileLoaderInterface::class);
-        $domainLoader = $this->getMock(FileLoaderInterface::class);
+        $enLoader     = $this->createMock(FileLoaderInterface::class);
+        $deLoader     = $this->createMock(FileLoaderInterface::class);
+        $domainLoader = $this->createMock(FileLoaderInterface::class);
 
         $enLoader->expects($this->any())->method('load')->willReturn(new TextDomain(['fw' => 'framework']));
         $deLoader->expects($this->any())->method('load')->willReturn(new TextDomain(['fw' => 'baukasten']));
@@ -274,13 +270,16 @@ class SegmentTest extends TestCase
 
     /**
      * @dataProvider routeProvider
-     * @param        string  $path
-     * @param        int     $offset
-     * @param        array   $params
-     * @param        array   $options
+     * @param array|null $params
+     * @param array $options
      */
-    public function testMatching(Segment $route, $path, $offset, ?array $params = null, array $options = [])
-    {
+    public function testMatching(
+        Segment $route,
+        string $path,
+        ?int $offset,
+        ?array $params = null,
+        array $options = []
+    ): void {
         $request = new Request();
         $request->setUri('http://example.com' . $path);
         $match = $route->match($request, $offset, $options);
@@ -302,11 +301,14 @@ class SegmentTest extends TestCase
 
     /**
      * @dataProvider routeProvider
-     * @param        string  $path
-     * @param        int     $offset
      */
-    public function testAssembling(Segment $route, $path, $offset, ?array $params = null, array $options = [])
-    {
+    public function testAssembling(
+        Segment $route,
+        string $path,
+        ?int $offset,
+        ?array $params = null,
+        array $options = []
+    ): void {
         if ($params === null) {
             // Data which will not match are not tested for assembling.
             $this->expectNotToPerformAssertions();
