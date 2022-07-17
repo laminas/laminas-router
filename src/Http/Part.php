@@ -47,9 +47,9 @@ class Part extends TreeRouteStack implements RouteInterface
 
     /**
      * Priority.
+     * @internal For internal classes only. Not designed for general use.
      *
      * @var int|null
-     * @internal For internal classes only. Not designed for general use.
      */
     public $priority;
 
