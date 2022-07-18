@@ -46,6 +46,15 @@ class Part extends TreeRouteStack implements RouteInterface
     protected $childRoutes;
 
     /**
+     * Priority.
+     *
+     * @internal For internal classes only. Not designed for general use.
+     *
+     * @var int|null
+     */
+    public $priority;
+
+    /**
      * Create a new part route.
      *
      * @param  mixed              $route
