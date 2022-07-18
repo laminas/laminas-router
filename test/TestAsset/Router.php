@@ -1,5 +1,6 @@
 <?php // phpcs:disable Squiz.Commenting.FunctionComment.InvalidNoReturn
 
+
 declare(strict_types=1);
 
 namespace LaminasTest\Router\TestAsset;
