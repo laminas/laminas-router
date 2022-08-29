@@ -326,7 +326,7 @@ class PartTest extends TestCase
         $result = $route->assemble($params, ['name' => $routeName]);
 
         if ($offset !== null) {
-            $this->assertEquals($offset, strpos($path, $result, $offset));
+            $this->assertEquals($offset, strpos($path, (string) $result, $offset));
         } else {
             $this->assertEquals($path, $result);
         }

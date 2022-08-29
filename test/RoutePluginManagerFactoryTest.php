@@ -16,8 +16,7 @@ class RoutePluginManagerFactoryTest extends TestCase
 {
     /** @var ContainerInterface|MockObject */
     private $container;
-    /** @var RoutePluginManagerFactory */
-    private $factory;
+    private RoutePluginManagerFactory $factory;
 
     public function setUp(): void
     {
@@ -43,9 +42,7 @@ class RoutePluginManagerFactoryTest extends TestCase
     {
         $options = [
             'factories' => [
-                'TestRoute' => function ($container) {
-                    return $this->createMock(RouteInterface::class);
-                },
+                'TestRoute' => fn($container) => $this->createMock(RouteInterface::class),
             ],
         ];
         $plugins = $this->factory->__invoke(

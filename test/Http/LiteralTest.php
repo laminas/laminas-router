@@ -100,7 +100,7 @@ class LiteralTest extends TestCase
         $result = $route->assemble();
 
         if ($offset !== null) {
-            $this->assertEquals($offset, strpos($path, $result, $offset));
+            $this->assertEquals($offset, strpos($path, (string) $result, $offset));
         } else {
             $this->assertEquals($path, $result);
         }

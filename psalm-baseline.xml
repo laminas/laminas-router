@@ -726,8 +726,8 @@
     <MissingClosureParamType occurrences="1">
       <code>$services</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="1">
-      <code>function ($services) {</code>
+    <MissingClosureReturnType occurrences="2">
+      <code>static fn($services)</code>
     </MissingClosureReturnType>
     <MixedArgument occurrences="1">
       <code>$services</code>
@@ -1038,8 +1038,8 @@
     <MissingClosureParamType occurrences="1">
       <code>$container</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="1">
-      <code>function ($container) {</code>
+    <MissingClosureReturnType occurrences="2">
+      <code>fn($container)</code>
     </MissingClosureReturnType>
     <MissingReturnType occurrences="3">
       <code>testCreateServiceReturnsAPluginManager</code>
@@ -1065,8 +1065,8 @@
     <MissingClosureParamType occurrences="1">
       <code>$services</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="1">
-      <code>function ($services) {</code>
+    <MissingClosureReturnType occurrences="2">
+      <code>static fn($services)</code>
     </MissingClosureReturnType>
     <MixedArgument occurrences="1">
       <code>$services</code>
