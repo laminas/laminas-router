@@ -14,9 +14,7 @@ class HttpRouterFactoryTest extends TestCase
     {
         $this->defaultServiceConfig = [
             'factories' => [
-                'RoutePluginManager' => function ($services) {
-                    return new RoutePluginManager($services);
-                },
+                'RoutePluginManager' => static fn($services) => new RoutePluginManager($services),
             ],
         ];
 

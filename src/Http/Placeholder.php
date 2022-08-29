@@ -17,8 +17,7 @@ use function sprintf;
  */
 class Placeholder implements RouteInterface
 {
-    /** @var array */
-    private $defaults;
+    private array $defaults;
 
     public function __construct(array $defaults)
     {

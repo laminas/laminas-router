@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 class PlaceholderTest extends TestCase
 {
     /** @var array<string, array<string, mixed>> */
-    private static $routeConfig = [
+    private static array $routeConfig = [
         'auth' => [
             'type'         => Placeholder::class,
             'child_routes' => [
