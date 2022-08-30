@@ -726,8 +726,8 @@
     <MissingClosureParamType occurrences="1">
       <code>$services</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="2">
-      <code>static fn($services)</code>
+    <MissingClosureReturnType occurrences="1">
+      <code>static fn($services) =&gt; new RoutePluginManager($services)</code>
     </MissingClosureReturnType>
     <MixedArgument occurrences="1">
       <code>$services</code>
@@ -1038,8 +1038,8 @@
     <MissingClosureParamType occurrences="1">
       <code>$container</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="2">
-      <code>fn($container)</code>
+    <MissingClosureReturnType occurrences="1">
+      <code>fn($container) =&gt; $this-&gt;createMock(RouteInterface::class)</code>
     </MissingClosureReturnType>
     <MissingReturnType occurrences="3">
       <code>testCreateServiceReturnsAPluginManager</code>
@@ -1065,8 +1065,8 @@
     <MissingClosureParamType occurrences="1">
       <code>$services</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="2">
-      <code>static fn($services)</code>
+    <MissingClosureReturnType occurrences="1">
+      <code>static fn($services) =&gt; new RoutePluginManager($services)</code>
     </MissingClosureReturnType>
     <MixedArgument occurrences="1">
       <code>$services</code>
@@ -1076,6 +1076,9 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>'Traversable'</code>
     </ArgumentTypeCoercion>
+    <DeprecatedProperty occurrences="1">
+      <code>$route-&gt;priority</code>
+    </DeprecatedProperty>
     <InvalidArgument occurrences="2">
       <code>'foo'</code>
       <code>'foo'</code>
@@ -1114,9 +1117,6 @@
       <code>getParam</code>
       <code>getParam</code>
     </PossiblyNullReference>
-    <UndefinedPropertyAssignment occurrences="1">
-      <code>$route-&gt;priority</code>
-    </UndefinedPropertyAssignment>
   </file>
   <file src="test/TestAsset/DummyRoute.php">
     <UnsafeInstantiation occurrences="1">
