@@ -14,6 +14,9 @@ use Traversable;
  */
 class DummyRoute implements RouteInterface
 {
+    /** @deprecated Setting priority with a public property should be factored out in the next major */
+    public ?int $priority = null;
+
     /**
      * match(): defined by RouteInterface interface.
      *
