@@ -59,6 +59,14 @@ class Regex implements RouteInterface
     protected $assembledParams = [];
 
     /**
+     * @internal
+     * @deprecated Since 3.9.0 This property will be removed or made private in version 4.0
+     *
+     * @var int|null
+     */
+    public $priority;
+
+    /**
      * Create a new regex route.
      *
      * @param  string $regex
