@@ -11,7 +11,6 @@ use Laminas\ServiceManager\ServiceManager;
 use Psr\Container\ContainerInterface;
 
 use function array_merge;
-use function get_class;
 use function gettype;
 use function is_object;
 use function sprintf;
@@ -83,7 +82,7 @@ class RoutePluginManager extends AbstractPluginManager
         if (! $instance instanceof $this->instanceOf) {
             throw new InvalidServiceException(sprintf(
                 'Plugin of type %s is invalid; must implement %s',
-                is_object($instance) ? get_class($instance) : gettype($instance),
+                is_object($instance) ? $instance::class : gettype($instance),
                 RouteInterface::class
             ));
         }

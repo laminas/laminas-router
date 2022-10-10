@@ -7,6 +7,14 @@ namespace LaminasTest\Router;
 use ArrayIterator;
 use Laminas\Router\Exception\InvalidArgumentException;
 use Laminas\Router\Exception\RuntimeException;
+use Laminas\Router\Http\Chain;
+use Laminas\Router\Http\Hostname;
+use Laminas\Router\Http\Literal;
+use Laminas\Router\Http\Method;
+use Laminas\Router\Http\Placeholder;
+use Laminas\Router\Http\Regex;
+use Laminas\Router\Http\Scheme;
+use Laminas\Router\Http\Segment;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RoutePluginManager;
 use Laminas\Router\SimpleRouteStack;
@@ -279,5 +287,112 @@ class SimpleRouteStackTest extends TestCase
 
         $stack->addRoute('foo', new TestAsset\DummyRoute());
         $this->assertEquals(true, $stack->hasRoute('foo'));
+    }
+
+    /** @return array<class-string, array{0: array, 1: int}> */
+    public function routeTypeProvider(): array
+    {
+        $routePlugins = new RoutePluginManager(new ServiceManager());
+        return [
+            Chain::class       => [
+                [
+                    'type'     => Chain::class,
+                    'priority' => 1,
+                    'options'  => [
+                        'routes'        => [],
+                        'route_plugins' => $routePlugins,
+                    ],
+                ],
+                1,
+            ],
+            Hostname::class    => [
+                [
+                    'type'     => Hostname::class,
+                    'options'  => [
+                        'route'    => 'www.example.com',
+                        'defaults' => [
+                            'controller' => 'SomeController',
+                            'action'     => 'index',
+                        ],
+                    ],
+                    'priority' => 5,
+                ],
+                5,
+            ],
+            Literal::class     => [
+                [
+                    'type'     => Literal::class,
+                    'options'  => [
+                        'route'    => '/blah',
+                        'defaults' => [
+                            'controller' => 'SomeController',
+                            'action'     => 'index',
+                        ],
+                    ],
+                    'priority' => 10,
+                ],
+                10,
+            ],
+            Method::class      => [
+                [
+                    'type'     => Method::class,
+                    'options'  => [
+                        'route' => '/duck',
+                        'verb'  => 'QUACK',
+                    ],
+                    'priority' => 20,
+                ],
+                20,
+            ],
+            Placeholder::class => [
+                [
+                    'type'     => Placeholder::class,
+                    'options'  => [],
+                    'priority' => 30,
+                ],
+                30,
+            ],
+            Regex::class       => [
+                [
+                    'type'     => Regex::class,
+                    'options'  => [
+                        'regex' => '/(?<foo>[^/]+)',
+                        'spec'  => '/%foo%',
+                    ],
+                    'priority' => 40,
+                ],
+                40,
+            ],
+            Scheme::class      => [
+                [
+                    'type'     => Scheme::class,
+                    'options'  => [
+                        'scheme' => 'carrots',
+                    ],
+                    'priority' => 50,
+                ],
+                50,
+            ],
+            Segment::class     => [
+                [
+                    'type'     => Segment::class,
+                    'options'  => [
+                        'route' => '/mushrooms',
+                    ],
+                    'priority' => 60,
+                ],
+                60,
+            ],
+        ];
+    }
+
+    /** @dataProvider routeTypeProvider */
+    public function testSimpleRouteStackSetsPriorityForAllKnownRouteTypes(array $routeSpec, int $expectedPriority): void
+    {
+        $router = new SimpleRouteStack();
+        $router->addRoute('name', $routeSpec);
+
+        $route = $router->getRoute('name');
+        self::assertEquals($expectedPriority, $route->priority);
     }
 }
