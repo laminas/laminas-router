@@ -39,9 +39,9 @@
     "require-dev": {
         "laminas/laminas-coding-standard": "~2.4.0",
         "laminas/laminas-i18n": "^2.17",
-        "phpunit/phpunit": "^9.5.25",
+        "phpunit/phpunit": "^9.5.26",
         "psalm/plugin-phpunit": "^0.17.0",
-        "vimeo/psalm": "^4.28"
+        "vimeo/psalm": "^4.29.0"
     },
     "suggest": {
         "laminas/laminas-i18n": "^2.15.0 if defining translatable HTTP path segments"
