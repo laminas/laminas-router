@@ -20,14 +20,16 @@ use function sprintf;
 use function strlen;
 
 /**
- * Part route.
+ * @template TRoute of \Laminas\Router\Http\RouteInterface
+ *
+ * @template-extends TreeRouteStack<TRoute>
  */
 class Part extends TreeRouteStack implements RouteInterface
 {
     /**
      * RouteInterface to match.
      *
-     * @var RouteInterface
+     * @var TRoute
      */
     protected $route;
 
@@ -48,9 +50,12 @@ class Part extends TreeRouteStack implements RouteInterface
     /**
      * Create a new part route.
      *
-     * @param  mixed              $route
-     * @param  bool               $mayTerminate
-     * @param  array|null         $childRoutes
+     * @param TRoute|iterable|string           $route
+     * @param bool                             $mayTerminate
+     * @param array|null                       $childRoutes
+     * @param RoutePluginManager<TRoute>       $routePlugins
+     * @param ArrayObject<string, TRoute>|null $prototypes
+     * 
      * @throws Exception\InvalidArgumentException
      */
     public function __construct(
@@ -74,6 +79,7 @@ class Part extends TreeRouteStack implements RouteInterface
         $this->mayTerminate = $mayTerminate;
         $this->childRoutes  = $childRoutes;
         $this->prototypes   = $prototypes;
+        /** @var PriorityList<string, TRoute> routes */
         $this->routes       = new PriorityList();
     }
 
