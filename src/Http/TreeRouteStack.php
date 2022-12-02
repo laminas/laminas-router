@@ -6,7 +6,6 @@ namespace Laminas\Router\Http;
 
 use ArrayObject;
 use Laminas\Router\Exception;
-use Laminas\Router\RouteInterface;
 use Laminas\Router\RouteInvokableFactory;
 use Laminas\Router\SimpleRouteStack;
 use Laminas\ServiceManager\Config;
