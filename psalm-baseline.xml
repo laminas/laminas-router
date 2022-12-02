@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.30.0@d0bc6e25d89f649e4f36a534f330f8bb4643dd69">
+<files psalm-version="5.0.0@4e177bf0c9f03c17d2fbfd83b7cc9c47605274d8">
   <file src="src/Http/Chain.php">
     <InvalidReturnStatement occurrences="1"/>
     <InvalidReturnType occurrences="1">
@@ -102,6 +102,9 @@
     <UnsafeInstantiation occurrences="1">
       <code>new static($options['route'], $options['constraints'], $options['defaults'])</code>
     </UnsafeInstantiation>
+    <UnsupportedReferenceUsage occurrences="1">
+      <code>$levelParts[$level + 1] = &amp;$levelParts[$level][count($levelParts[$level]) - 1][1]</code>
+    </UnsupportedReferenceUsage>
   </file>
   <file src="src/Http/HttpRouterFactory.php">
     <LessSpecificReturnStatement occurrences="1">
@@ -178,6 +181,9 @@
     <MixedOperand occurrences="1">
       <code>$path</code>
     </MixedOperand>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$route</code>
+    </PossiblyInvalidArgument>
     <PossiblyNullPropertyAssignmentValue occurrences="1">
       <code>$prototypes</code>
     </PossiblyNullPropertyAssignmentValue>
@@ -319,9 +325,8 @@
       <code>$textDomain</code>
       <code>$uri</code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="2">
+    <MixedInferredReturnType occurrences="1">
       <code>array</code>
-      <code>string</code>
     </MixedInferredReturnType>
     <MixedMethodCall occurrences="2">
       <code>getPath</code>
@@ -335,9 +340,8 @@
       <code>$part[2]</code>
       <code>$translator-&gt;translate($part[1], $textDomain, $locale)</code>
     </MixedOperand>
-    <MixedReturnStatement occurrences="2">
+    <MixedReturnStatement occurrences="1">
       <code>$parts</code>
-      <code>static::$cacheEncode[$value]</code>
     </MixedReturnStatement>
     <PossiblyInvalidArgument occurrences="1">
       <code>$levelParts[$level]</code>
@@ -353,6 +357,9 @@
     <UnsafeInstantiation occurrences="1">
       <code>new static($options['route'], $options['constraints'], $options['defaults'])</code>
     </UnsafeInstantiation>
+    <UnsupportedReferenceUsage occurrences="1">
+      <code>$levelParts[$level + 1] = &amp;$levelParts[$level][count($levelParts[$level]) - 1][1]</code>
+    </UnsupportedReferenceUsage>
   </file>
   <file src="src/Http/TranslatorAwareTreeRouteStack.php">
     <LessSpecificImplementedReturnType occurrences="3">
@@ -373,10 +380,6 @@
     </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/Http/TreeRouteStack.php">
-    <ArgumentTypeCoercion occurrences="2">
-      <code>$route</code>
-      <code>$route</code>
-    </ArgumentTypeCoercion>
     <DeprecatedClass occurrences="5">
       <code>Wildcard::class</code>
       <code>Wildcard::class</code>
@@ -394,9 +397,6 @@
       <code>is_array($options)</code>
       <code>is_array($specs)</code>
     </DocblockTypeContradiction>
-    <ImplementedParamTypeMismatch occurrences="1">
-      <code>$route</code>
-    </ImplementedParamTypeMismatch>
     <MixedArgument occurrences="6">
       <code>$name</code>
       <code>$options['fragment']</code>
@@ -453,12 +453,17 @@
     <MixedPropertyAssignment occurrences="1">
       <code>$route</code>
     </MixedPropertyAssignment>
-    <MixedReturnStatement occurrences="1">
+    <MixedReturnStatement occurrences="2">
+      <code>$route</code>
       <code>$route</code>
     </MixedReturnStatement>
     <NoInterfaceProperties occurrences="1">
       <code>$route-&gt;priority</code>
     </NoInterfaceProperties>
+    <PossiblyInvalidArgument occurrences="2">
+      <code>$route</code>
+      <code>$route</code>
+    </PossiblyInvalidArgument>
     <PossiblyNullOperand occurrences="1">
       <code>$baseUrlLength</code>
     </PossiblyNullOperand>
@@ -480,29 +485,35 @@
     <DocblockTypeContradiction occurrences="1">
       <code>is_array($options)</code>
     </DocblockTypeContradiction>
-    <MixedArgument occurrences="5">
+    <MixedArgument occurrences="6">
       <code>$options['defaults']</code>
       <code>$options['key_value_delimiter']</code>
       <code>$options['param_delimiter']</code>
+      <code>$param</code>
       <code>$path</code>
       <code>$path</code>
     </MixedArgument>
     <MixedArgumentTypeCoercion occurrences="1">
       <code>$key</code>
     </MixedArgumentTypeCoercion>
-    <MixedAssignment occurrences="2">
+    <MixedAssignment occurrences="3">
+      <code>$param</code>
       <code>$path</code>
       <code>$uri</code>
     </MixedAssignment>
     <MixedMethodCall occurrences="1">
       <code>getPath</code>
     </MixedMethodCall>
+    <PossiblyFalseIterator occurrences="1">
+      <code>$params</code>
+    </PossiblyFalseIterator>
     <UnsafeInstantiation occurrences="1">
       <code>new static($options['key_value_delimiter'], $options['param_delimiter'], $options['defaults'])</code>
     </UnsafeInstantiation>
   </file>
   <file src="src/RouteInvokableFactory.php">
-    <DeprecatedInterface occurrences="1">
+    <DeprecatedInterface occurrences="2">
+      <code>RouteInvokableFactory</code>
       <code>RouteInvokableFactory</code>
     </DeprecatedInterface>
     <MissingReturnType occurrences="1">
@@ -525,35 +536,25 @@
     </PropertyNotSetInConstructor>
   </file>
   <file src="src/RoutePluginManager.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>gettype($instance)</code>
-    </DocblockTypeContradiction>
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>void</code>
-    </ImplementedReturnTypeMismatch>
+    <ArgumentTypeCoercion occurrences="3">
+      <code>$config</code>
+      <code>$config['invokables']</code>
+      <code>$config['invokables']</code>
+    </ArgumentTypeCoercion>
     <MissingReturnType occurrences="1">
       <code>validatePlugin</code>
     </MissingReturnType>
-    <MixedArgument occurrences="4">
-      <code>$config['aliases']</code>
+    <MixedArgument occurrences="1">
       <code>$config['factories']</code>
-      <code>$config['invokables']</code>
-      <code>$config['invokables']</code>
     </MixedArgument>
-    <MoreSpecificImplementedParamType occurrences="1">
-      <code>$instance</code>
-    </MoreSpecificImplementedParamType>
     <NonInvariantDocblockPropertyType occurrences="1">
       <code>$instanceOf</code>
     </NonInvariantDocblockPropertyType>
-    <RedundantConditionGivenDocblockType occurrences="1">
-      <code>is_object($instance)</code>
-    </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/RoutePluginManagerFactory.php">
-    <MixedArgumentTypeCoercion occurrences="1">
+    <ArgumentTypeCoercion occurrences="1">
       <code>$options</code>
-    </MixedArgumentTypeCoercion>
+    </ArgumentTypeCoercion>
   </file>
   <file src="src/RouterConfigTrait.php">
     <MixedArgument occurrences="1">
@@ -613,15 +614,22 @@
     <MixedPropertyAssignment occurrences="1">
       <code>$route</code>
     </MixedPropertyAssignment>
-    <MixedReturnStatement occurrences="1">
+    <MixedReturnStatement occurrences="2">
+      <code>$route</code>
       <code>$route</code>
     </MixedReturnStatement>
     <NoInterfaceProperties occurrences="1">
       <code>$route-&gt;priority</code>
     </NoInterfaceProperties>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$route</code>
+    </PossiblyInvalidArgument>
     <PossiblyNullArgument occurrences="1">
       <code>$priority</code>
     </PossiblyNullArgument>
+    <TypeDoesNotContainType occurrences="1">
+      <code>! is_array($routes) &amp;&amp; ! $routes instanceof Traversable</code>
+    </TypeDoesNotContainType>
     <UnsafeInstantiation occurrences="1">
       <code>new static($routePluginManager)</code>
     </UnsafeInstantiation>
@@ -810,10 +818,10 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$exceptionName</code>
     </ArgumentTypeCoercion>
-    <InvalidScalarArgument occurrences="2">
+    <InvalidArgument occurrences="2">
       <code>$offset</code>
       <code>$offset</code>
-    </InvalidScalarArgument>
+    </InvalidArgument>
     <MissingReturnType occurrences="12">
       <code>testAssemblingWithExistingChild</code>
       <code>testAssemblingWithL10n</code>

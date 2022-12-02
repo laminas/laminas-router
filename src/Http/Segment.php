@@ -31,7 +31,7 @@ class Segment implements RouteInterface
     /**
      * Cache for the encode output.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected static $cacheEncode = [];
 
@@ -45,7 +45,7 @@ class Segment implements RouteInterface
      * sub-delims    = "!" / "$" / "&" / "'" / "(" / ")"
      *               / "*" / "+" / "," / ";" / "="
      *
-     * @var array
+     * @var array<string, string>
      */
     protected static $urlencodeCorrectionMap = [
         '%21' => "!", // sub-delims

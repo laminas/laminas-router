@@ -5,10 +5,16 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\TestAsset;
 
+use Laminas\Router\RouteInterface;
 use Laminas\Router\RouteStackInterface;
 use Laminas\Stdlib\RequestInterface as Request;
 use Traversable;
 
+/**
+ * @template TRoute of RouteInterface
+ *
+ * @template-implements RouteStackInterface<TRoute>
+ */
 class Router implements RouteStackInterface
 {
     /**
