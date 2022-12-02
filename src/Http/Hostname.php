@@ -197,7 +197,6 @@ class Hostname implements RouteInterface
      * @param Parts $parts
      * @param array $constraints
      * @param int   $groupIndex
-     *
      * @return string
      * @throws Exception\RuntimeException
      */
@@ -240,7 +239,6 @@ class Hostname implements RouteInterface
      * @param Parts                 $parts
      * @param array<string, string> $mergedParams
      * @param bool                  $isOptional
-     *
      * @return string
      * @throws Exception\RuntimeException
      * @throws Exception\InvalidArgumentException

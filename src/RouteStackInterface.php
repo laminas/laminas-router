@@ -17,7 +17,6 @@ interface RouteStackInterface extends RouteInterface
      * @param string                   $name
      * @param array|Traversable|TRoute $route
      * @param int                      $priority
-     *
      * @return static
      */
     public function addRoute($name, $route, $priority = null);

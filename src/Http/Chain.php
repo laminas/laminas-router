@@ -23,8 +23,7 @@ use function sprintf;
 use function strlen;
 
 /**
- * @template TRoute of \Laminas\Router\Http\RouteInterface
- *
+ * @template TRoute of RouteInterface
  * @template-extends TreeRouteStack<TRoute>
  */
 class Chain extends TreeRouteStack implements RouteInterface
@@ -55,8 +54,8 @@ class Chain extends TreeRouteStack implements RouteInterface
         $this->chainRoutes        = array_reverse($routes);
         $this->routePluginManager = $routePlugins;
         /** @var PriorityList<string, TRoute> $this->routes */
-        $this->routes             = new PriorityList();
-        $this->prototypes         = $prototypes;
+        $this->routes     = new PriorityList();
+        $this->prototypes = $prototypes;
     }
 
     /**

@@ -12,7 +12,6 @@ use Traversable;
 
 /**
  * @template TRoute of RouteInterface
- *
  * @template-implements RouteStackInterface<TRoute>
  */
 class Router implements RouteStackInterface

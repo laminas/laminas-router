@@ -26,8 +26,7 @@ use function strlen;
 /**
  * Tree search implementation.
  *
- * @template TRoute of \Laminas\Router\Http\RouteInterface
- *
+ * @template TRoute of RouteInterface
  * @template-extends SimpleRouteStack<TRoute>
  */
 class TreeRouteStack extends SimpleRouteStack
@@ -161,7 +160,6 @@ class TreeRouteStack extends SimpleRouteStack
      * @param string                          $name
      * @param string|array|Traversable|TRoute $route
      * @param int                             $priority
-     *
      * @return $this
      */
     public function addRoute($name, $route, $priority = null)
@@ -175,7 +173,6 @@ class TreeRouteStack extends SimpleRouteStack
 
     /**
      * @inheritDoc
-     *
      * @param  string|iterable $specs
      * @return TRoute
      * @throws Exception\InvalidArgumentException When route definition is not an array nor traversable.
@@ -245,7 +242,6 @@ class TreeRouteStack extends SimpleRouteStack
      * Add multiple prototypes at once.
      *
      * @param array<string|array|Traversable|TRoute>|Traversable<string|array|Traversable|TRoute> $routes
-     *
      * @return $this
      * @throws Exception\InvalidArgumentException
      */
@@ -267,7 +263,6 @@ class TreeRouteStack extends SimpleRouteStack
      *
      * @param string                          $name
      * @param string|array|Traversable|TRoute $route
-     *
      * @return $this
      */
     public function addPrototype($name, $route)
@@ -299,12 +294,11 @@ class TreeRouteStack extends SimpleRouteStack
     /**
      * match(): defined by \Laminas\Router\RouteInterface
      *
+     * @see    \Laminas\Router\RouteInterface::match()
+     *
      * @param  int|null $pathOffset
      * @param  array $options
-     *
      * @return RouteMatch|null
-     *
-     * @see    \Laminas\Router\RouteInterface::match()
      */
     public function match(Request $request, $pathOffset = null, array $options = [])
     {

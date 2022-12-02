@@ -15,9 +15,8 @@ use function sprintf;
 
 /**
  * Simple route stack implementation.
- * 
- * @template TRoute of RouteInterface
  *
+ * @template TRoute of RouteInterface
  * @template-implements RouteStackInterface<TRoute>
  */
 class SimpleRouteStack implements RouteStackInterface
@@ -49,7 +48,7 @@ class SimpleRouteStack implements RouteStackInterface
     public function __construct(?RoutePluginManager $routePluginManager = null)
     {
         /** @var PriorityList<string, TRoute> $this->routes */
-        $this->routes             = new PriorityList();
+        $this->routes = new PriorityList();
         /** @var RoutePluginManager<TRoute> $this->routePluginManager */
         $this->routePluginManager = $routePluginManager ?? new RoutePluginManager(new ServiceManager());
 
@@ -105,7 +104,6 @@ class SimpleRouteStack implements RouteStackInterface
 
     /**
      * @param RoutePluginManager<TRoute> $routePlugins
-     *
      * @return $this
      */
     public function setRoutePluginManager(RoutePluginManager $routePlugins)
