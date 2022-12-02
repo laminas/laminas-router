@@ -116,6 +116,7 @@ class SimpleRouteStackTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Route definition must be an array or Traversable object');
+        /** @psalm-suppress InvalidArgument we're explicitly verifying runtime type checks here */
         $stack->addRoute('foo', 'bar');
     }
 
@@ -393,6 +394,7 @@ class SimpleRouteStackTest extends TestCase
         $router->addRoute('name', $routeSpec);
 
         $route = $router->getRoute('name');
+        self::assertNotNull($route);
         self::assertEquals($expectedPriority, $route->priority);
     }
 }

@@ -26,6 +26,7 @@ class TreeRouteStackTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Route definition must be an array or Traversable object');
+        /** @psalm-suppress InvalidArgument we're explicitly testing runtime type validation here */
         $stack->addRoute('foo', new DummyRoute());
     }
 

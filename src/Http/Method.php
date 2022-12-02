@@ -61,7 +61,7 @@ class Method implements RouteInterface
      *
      * @see    \Laminas\Router\RouteInterface::factory()
      *
-     * @param  array|Traversable $options
+     * @param  iterable $options
      * @return Method
      * @throws Exception\InvalidArgumentException
      */

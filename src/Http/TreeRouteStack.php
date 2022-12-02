@@ -25,6 +25,9 @@ use function strlen;
 
 /**
  * Tree search implementation.
+ *
+ * @template TRoute of RouteInterface
+ * @template-extends SimpleRouteStack<TRoute>
  */
 class TreeRouteStack extends SimpleRouteStack
 {
@@ -48,7 +51,7 @@ class TreeRouteStack extends SimpleRouteStack
      * We use an ArrayObject in this case so we can easily pass it down the tree
      * by reference.
      *
-     * @var ArrayObject
+     * @var ArrayObject<string, TRoute>
      */
     protected $prototypes;
 
@@ -65,7 +68,7 @@ class TreeRouteStack extends SimpleRouteStack
      *
      * @see    \Laminas\Router\RouteInterface::factory()
      *
-     * @param  array|Traversable $options
+     * @param  iterable $options
      * @return SimpleRouteStack
      * @throws Exception\InvalidArgumentException
      */
@@ -98,6 +101,7 @@ class TreeRouteStack extends SimpleRouteStack
      */
     protected function init()
     {
+        /** @var ArrayObject<string, TRoute> $this->prototypes */
         $this->prototypes = new ArrayObject();
 
         (new Config([
@@ -153,12 +157,10 @@ class TreeRouteStack extends SimpleRouteStack
     /**
      * addRoute(): defined by RouteStackInterface interface.
      *
-     * @see    RouteStackInterface::addRoute()
-     *
-     * @param  string  $name
-     * @param  mixed   $route
-     * @param  int $priority
-     * @return TreeRouteStack
+     * @param string                 $name
+     * @param string|iterable|TRoute $route
+     * @param int                    $priority
+     * @return $this
      */
     public function addRoute($name, $route, $priority = null)
     {
@@ -170,12 +172,9 @@ class TreeRouteStack extends SimpleRouteStack
     }
 
     /**
-     * routeFromArray(): defined by SimpleRouteStack.
-     *
-     * @see    SimpleRouteStack::routeFromArray()
-     *
-     * @param  string|array|Traversable $specs
-     * @return RouteInterface
+     * @inheritDoc
+     * @param  string|iterable $specs
+     * @return TRoute
      * @throws Exception\InvalidArgumentException When route definition is not an array nor traversable.
      * @throws Exception\InvalidArgumentException When chain routes are not an array nor traversable.
      * @throws Exception\RuntimeException         When a generated routes does not implement the HTTP route interface.
@@ -242,8 +241,8 @@ class TreeRouteStack extends SimpleRouteStack
     /**
      * Add multiple prototypes at once.
      *
-     * @param  Traversable $routes
-     * @return TreeRouteStack
+     * @param iterable<string|iterable|TRoute> $routes
+     * @return $this
      * @throws Exception\InvalidArgumentException
      */
     public function addPrototypes($routes)
@@ -262,9 +261,9 @@ class TreeRouteStack extends SimpleRouteStack
     /**
      * Add a prototype.
      *
-     * @param  string $name
-     * @param  mixed  $route
-     * @return TreeRouteStack
+     * @param string                 $name
+     * @param string|iterable|TRoute $route
+     * @return $this
      */
     public function addPrototype($name, $route)
     {
@@ -281,7 +280,7 @@ class TreeRouteStack extends SimpleRouteStack
      * Get a prototype.
      *
      * @param  string $name
-     * @return RouteInterface|null
+     * @return TRoute|null
      */
     public function getPrototype($name)
     {
@@ -297,8 +296,8 @@ class TreeRouteStack extends SimpleRouteStack
      *
      * @see    \Laminas\Router\RouteInterface::match()
      *
-     * @param  integer|null $pathOffset
-     * @param  array        $options
+     * @param  int|null $pathOffset
+     * @param  array $options
      * @return RouteMatch|null
      */
     public function match(Request $request, $pathOffset = null, array $options = [])

@@ -5,16 +5,20 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\TestAsset;
 
+use Laminas\Router\RouteInterface;
 use Laminas\Router\RouteStackInterface;
 use Laminas\Stdlib\RequestInterface as Request;
-use Traversable;
 
+/**
+ * @template TRoute of RouteInterface
+ * @template-implements RouteStackInterface<TRoute>
+ */
 class Router implements RouteStackInterface
 {
     /**
      * Create a new route with given options.
      *
-     * @param array|Traversable $options
+     * @param iterable $options
      * @return self
      */
     public static function factory($options = [])
@@ -42,45 +46,27 @@ class Router implements RouteStackInterface
     {
     }
 
-    /**
-     * Add a route to the stack.
-     *
-     * @param  string $name
-     * @param  mixed  $route
-     * @param  int    $priority
-     * @return RouteStackInterface
-     */
+    /** @inheritDoc */
     public function addRoute($name, $route, $priority = null)
     {
+        return $this;
     }
 
-    /**
-     * Add multiple routes to the stack.
-     *
-     * @param array|Traversable $routes
-     * @return RouteStackInterface
-     */
+    /** @inheritDoc */
     public function addRoutes($routes)
     {
+        return $this;
     }
 
-    /**
-     * Remove a route from the stack.
-     *
-     * @param  string $name
-     * @return RouteStackInterface
-     */
+    /** @inheritDoc */
     public function removeRoute($name)
     {
+        return $this;
     }
 
-    /**
-     * Remove all routes from the stack and set new ones.
-     *
-     * @param array|Traversable $routes
-     * @return RouteStackInterface
-     */
+    /** @inheritDoc */
     public function setRoutes($routes)
     {
+        return $this;
     }
 }

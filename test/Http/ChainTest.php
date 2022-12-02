@@ -6,6 +6,7 @@ namespace LaminasTest\Router\Http;
 
 use Laminas\Http\Request;
 use Laminas\Router\Http\Chain;
+use Laminas\Router\Http\RouteInterface;
 use Laminas\Router\Http\RouteMatch;
 use Laminas\Router\Http\Segment;
 use Laminas\Router\Http\Wildcard;
@@ -21,6 +22,7 @@ class ChainTest extends TestCase
 {
     public static function getRoute(): Chain
     {
+        /** @var RoutePluginManager<RouteInterface> $routePlugins */
         $routePlugins = new RoutePluginManager(new ServiceManager());
 
         return new Chain(
@@ -53,6 +55,7 @@ class ChainTest extends TestCase
 
     public static function getRouteWithOptionalParam(): Chain
     {
+        /** @var RoutePluginManager<RouteInterface> $routePlugins */
         $routePlugins = new RoutePluginManager(new ServiceManager());
 
         return new Chain(

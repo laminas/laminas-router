@@ -43,7 +43,7 @@ class DummyRoute implements RouteInterface
     /**
      * factory(): defined by RouteInterface interface
      *
-     * @param  array|Traversable $options
+     * @param  iterable $options
      * @return DummyRoute
      */
     public static function factory($options = [])
