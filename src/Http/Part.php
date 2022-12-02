@@ -77,7 +77,7 @@ class Part extends TreeRouteStack implements RouteInterface
         $this->mayTerminate = $mayTerminate;
         $this->childRoutes  = $childRoutes;
         $this->prototypes   = $prototypes;
-        /** @var PriorityList<string, TRoute> routes */
+        /** @var PriorityList<string, TRoute> $this->routes */
         $this->routes = new PriorityList();
     }
 
