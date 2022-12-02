@@ -627,9 +627,6 @@
     <PossiblyNullArgument occurrences="1">
       <code>$priority</code>
     </PossiblyNullArgument>
-    <TypeDoesNotContainType occurrences="1">
-      <code>! is_array($routes) &amp;&amp; ! $routes instanceof Traversable</code>
-    </TypeDoesNotContainType>
     <UnsafeInstantiation occurrences="1">
       <code>new static($routePluginManager)</code>
     </UnsafeInstantiation>
@@ -858,15 +855,9 @@
     </PossiblyNullReference>
   </file>
   <file src="test/Http/TestAsset/DummyRoute.php">
-    <ImplementedParamTypeMismatch occurrences="1">
-      <code>$options</code>
-    </ImplementedParamTypeMismatch>
-    <MixedInferredReturnType occurrences="1">
-      <code>DummyRoute</code>
-    </MixedInferredReturnType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>array|Traversable</code>
-    </UndefinedDocblockClass>
+    <UnsafeInstantiation occurrences="1">
+      <code>new static()</code>
+    </UnsafeInstantiation>
   </file>
   <file src="test/Http/TreeRouteStackTest.php">
     <MissingReturnType occurrences="33">

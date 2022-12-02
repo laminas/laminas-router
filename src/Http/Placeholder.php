@@ -37,7 +37,7 @@ class Placeholder implements RouteInterface
      *
      * @see    \Laminas\Router\RouteInterface::factory()
      *
-     * @param  array|Traversable $options
+     * @param  iterable $options
      * @return Placeholder
      * @throws Exception\InvalidArgumentException
      */

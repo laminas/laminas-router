@@ -8,7 +8,6 @@ namespace LaminasTest\Router\TestAsset;
 use Laminas\Router\RouteInterface;
 use Laminas\Router\RouteStackInterface;
 use Laminas\Stdlib\RequestInterface as Request;
-use Traversable;
 
 /**
  * @template TRoute of RouteInterface
@@ -19,7 +18,7 @@ class Router implements RouteStackInterface
     /**
      * Create a new route with given options.
      *
-     * @param array|Traversable $options
+     * @param iterable $options
      * @return self
      */
     public static function factory($options = [])

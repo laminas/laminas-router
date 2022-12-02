@@ -68,7 +68,7 @@ class TreeRouteStack extends SimpleRouteStack
      *
      * @see    \Laminas\Router\RouteInterface::factory()
      *
-     * @param  array|Traversable $options
+     * @param  iterable $options
      * @return SimpleRouteStack
      * @throws Exception\InvalidArgumentException
      */
@@ -157,9 +157,9 @@ class TreeRouteStack extends SimpleRouteStack
     /**
      * addRoute(): defined by RouteStackInterface interface.
      *
-     * @param string                          $name
-     * @param string|array|Traversable|TRoute $route
-     * @param int                             $priority
+     * @param string                 $name
+     * @param string|iterable|TRoute $route
+     * @param int                    $priority
      * @return $this
      */
     public function addRoute($name, $route, $priority = null)
@@ -241,7 +241,7 @@ class TreeRouteStack extends SimpleRouteStack
     /**
      * Add multiple prototypes at once.
      *
-     * @param array<string|array|Traversable|TRoute>|Traversable<string|array|Traversable|TRoute> $routes
+     * @param iterable<string|iterable|TRoute> $routes
      * @return $this
      * @throws Exception\InvalidArgumentException
      */
@@ -261,8 +261,8 @@ class TreeRouteStack extends SimpleRouteStack
     /**
      * Add a prototype.
      *
-     * @param string                          $name
-     * @param string|array|Traversable|TRoute $route
+     * @param string                 $name
+     * @param string|iterable|TRoute $route
      * @return $this
      */
     public function addPrototype($name, $route)

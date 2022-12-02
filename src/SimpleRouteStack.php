@@ -60,7 +60,7 @@ class SimpleRouteStack implements RouteStackInterface
      *
      * @see    \Laminas\Router\RouteInterface::factory()
      *
-     * @param  array|Traversable $options
+     * @param  iterable $options
      * @return SimpleRouteStack
      * @throws Exception\InvalidArgumentException
      */
@@ -227,7 +227,7 @@ class SimpleRouteStack implements RouteStackInterface
     /**
      * Create a route from array specifications.
      *
-     * @param  array|Traversable $specs
+     * @param  iterable $specs
      * @return TRoute
      * @throws Exception\InvalidArgumentException
      */

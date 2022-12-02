@@ -136,7 +136,7 @@ class Segment implements RouteInterface
      *
      * @see    \Laminas\Router\RouteInterface::factory()
      *
-     * @param  array|Traversable $options
+     * @param  iterable $options
      * @return Segment
      * @throws Exception\InvalidArgumentException
      */

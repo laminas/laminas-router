@@ -57,7 +57,7 @@ class Scheme implements RouteInterface
      *
      * @see    \Laminas\Router\RouteInterface::factory()
      *
-     * @param  array|Traversable $options
+     * @param  iterable $options
      * @return Scheme
      * @throws Exception\InvalidArgumentException
      */
