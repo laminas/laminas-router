@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.0.0@4e177bf0c9f03c17d2fbfd83b7cc9c47605274d8">
+<files psalm-version="5.4.0@62db5d4f6a7ae0a20f7cc5a4952d730272fc0863">
   <file src="src/Http/Chain.php">
     <InvalidReturnStatement occurrences="1"/>
     <InvalidReturnType occurrences="1">
@@ -51,7 +51,8 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$this-&gt;assembledParams</code>
     </InvalidPropertyAssignmentValue>
-    <MixedArgument occurrences="3">
+    <MixedArgument occurrences="4">
+      <code>$levelParts[$level]</code>
       <code>$options['constraints']</code>
       <code>$options['defaults']</code>
       <code>$options['route']</code>
@@ -59,6 +60,15 @@
     <MixedArgumentTypeCoercion occurrences="1">
       <code>array_merge($this-&gt;defaults, $params)</code>
     </MixedArgumentTypeCoercion>
+    <MixedArrayAccess occurrences="2">
+      <code>$levelParts[$level][count($levelParts[$level]) - 1]</code>
+      <code>$levelParts[$level][count($levelParts[$level]) - 1][1]</code>
+    </MixedArrayAccess>
+    <MixedArrayAssignment occurrences="3">
+      <code>$levelParts[$level][]</code>
+      <code>$levelParts[$level][]</code>
+      <code>$levelParts[$level][]</code>
+    </MixedArrayAssignment>
     <MixedArrayOffset occurrences="1">
       <code>$params[$name]</code>
     </MixedArrayOffset>
@@ -78,14 +88,13 @@
     <MixedReturnStatement occurrences="1">
       <code>$parts</code>
     </MixedReturnStatement>
-    <PossiblyInvalidArgument occurrences="3">
-      <code>$levelParts[$level]</code>
+    <PossiblyInvalidArgument occurrences="2">
       <code>$part[1]</code>
       <code>$part[1]</code>
     </PossiblyInvalidArgument>
     <PossiblyInvalidArrayOffset occurrences="5">
       <code>$constraints[$part[1]]</code>
-      <code>$levelParts[$level][count($levelParts[$level]) - 1][1]</code>
+      <code>$levelParts[$level][count($levelParts[$level]) - 1]</code>
       <code>$mergedParams[$part[1]]</code>
       <code>$mergedParams[$part[1]]</code>
       <code>$this-&gt;defaults[$part[1]]</code>
@@ -267,8 +276,9 @@
     <InvalidArgument occurrences="1">
       <code>$pathOffset</code>
     </InvalidArgument>
-    <MixedArgument occurrences="13">
+    <MixedArgument occurrences="14">
       <code>$key</code>
+      <code>$levelParts[$level]</code>
       <code>$locale</code>
       <code>$options['constraints']</code>
       <code>$options['defaults']</code>
@@ -282,7 +292,9 @@
       <code>$path</code>
       <code>$textDomain</code>
     </MixedArgument>
-    <MixedArrayAccess occurrences="18">
+    <MixedArrayAccess occurrences="20">
+      <code>$levelParts[$level][count($levelParts[$level]) - 1]</code>
+      <code>$levelParts[$level][count($levelParts[$level]) - 1][1]</code>
       <code>$part[0]</code>
       <code>$part[0]</code>
       <code>$part[1]</code>
@@ -302,6 +314,12 @@
       <code>$part[2]</code>
       <code>$part[2]</code>
     </MixedArrayAccess>
+    <MixedArrayAssignment occurrences="4">
+      <code>$levelParts[$level][]</code>
+      <code>$levelParts[$level][]</code>
+      <code>$levelParts[$level][]</code>
+      <code>$levelParts[$level][]</code>
+    </MixedArrayAssignment>
     <MixedArrayOffset occurrences="8">
       <code>$constraints[$part[1]]</code>
       <code>$constraints[$part[1]]</code>
@@ -343,11 +361,8 @@
     <MixedReturnStatement occurrences="1">
       <code>$parts</code>
     </MixedReturnStatement>
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$levelParts[$level]</code>
-    </PossiblyInvalidArgument>
     <PossiblyInvalidArrayOffset occurrences="1">
-      <code>$levelParts[$level][count($levelParts[$level]) - 1][1]</code>
+      <code>$levelParts[$level][count($levelParts[$level]) - 1]</code>
     </PossiblyInvalidArrayOffset>
     <PossiblyUndefinedVariable occurrences="3">
       <code>$locale</code>
