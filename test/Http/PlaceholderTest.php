@@ -99,7 +99,7 @@ class PlaceholderTest extends TestCase
      *     2: string
      * }>
      */
-    public function placeholderProvider(): array
+    public static function placeholderProvider(): array
     {
         $home = [
             'home' => [

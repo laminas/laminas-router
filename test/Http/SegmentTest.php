@@ -30,7 +30,7 @@ class SegmentTest extends TestCase
      *     3: null|array<string, string>
      * }>
      */
-    public function routeProvider(): array
+    public static function routeProvider(): array
     {
         return [
             'simple-match'                                             => [
@@ -180,16 +180,7 @@ class SegmentTest extends TestCase
         ];
     }
 
-    /**
-     * @psalm-return array<string, array{
-     *     0: Segment,
-     *     1: string,
-     *     2: null,
-     *     3: array,
-     *     4: array{translator: Translator, locale?: string, text_domain?: string}
-     * }>
-     */
-    public function l10nRouteProvider(): array
+    public function testL10nRoute(): void
     {
         $translator = new Translator();
         $translator->setLocale('en-US');
@@ -209,36 +200,63 @@ class SegmentTest extends TestCase
         $translator->addTranslationFile('test-de', null, 'default', 'de-DE');
         $translator->addTranslationFile('test-domain', null, 'alternative', 'en-US');
 
-        return [
-            'translate-with-default-locale'         => [
-                new Segment('/{fw}', [], []),
-                '/framework',
-                null,
-                [],
-                ['translator' => $translator],
-            ],
-            'translate-with-specific-locale'        => [
-                new Segment('/{fw}', [], []),
-                '/baukasten',
-                null,
-                [],
-                ['translator' => $translator, 'locale' => 'de-DE'],
-            ],
-            'translate-uses-message-id-as-fallback' => [
-                new Segment('/{fw}', [], []),
-                '/fw',
-                null,
-                [],
-                ['translator' => $translator, 'locale' => 'fr-FR'],
-            ],
-            'translate-with-specific-text-domain'   => [
-                new Segment('/{fw}', [], []),
-                '/fw-alternative',
-                null,
-                [],
-                ['translator' => $translator, 'text_domain' => 'alternative'],
-            ],
-        ];
+        $this->matchingWithL10n(
+            new Segment('/{fw}', [], []),
+            '/framework',
+            null,
+            [],
+            ['translator' => $translator]
+        );
+        $this->matchingWithL10n(
+            new Segment('/{fw}', [], []),
+            '/baukasten',
+            null,
+            [],
+            ['translator' => $translator, 'locale' => 'de-DE']
+        );
+        $this->matchingWithL10n(
+            new Segment('/{fw}', [], []),
+            '/fw',
+            null,
+            [],
+            ['translator' => $translator, 'locale' => 'fr-FR']
+        );
+        $this->matchingWithL10n(
+            new Segment('/{fw}', [], []),
+            '/fw-alternative',
+            null,
+            [],
+            ['translator' => $translator, 'text_domain' => 'alternative']
+        );
+
+        $this->assemblingWithL10n(
+            new Segment('/{fw}', [], []),
+            '/framework',
+            null,
+            [],
+            ['translator' => $translator]
+        );
+        $this->assemblingWithL10n(
+            new Segment('/{fw}', [], []),
+            '/baukasten',
+            null,
+            [],
+            ['translator' => $translator, 'locale' => 'de-DE']
+        );
+        $this->assemblingWithL10n(
+            new Segment('/{fw}', [], []),
+            '/fw',
+            null,
+            [],
+            ['translator' => $translator, 'locale' => 'fr-FR']
+        );
+        $this->assemblingWithL10n(
+            new Segment('/{fw}', [], []),
+            '/fw-alternative',
+            null,
+            [],
+            ['translator' => $translator, 'text_domain' => 'alternative']
+        );
     }
 
     /** @psalm-return array<string, array{0: string, 1: class-string, 2: string}> */
@@ -325,11 +343,10 @@ class SegmentTest extends TestCase
     }
 
     /**
-     * @dataProvider l10nRouteProvider
      * @param        string   $path
      * @param        int|null $offset
      */
-    public function testMatchingWithL10n(Segment $route, $path, $offset, ?array $params = null, array $options = [])
+    private function matchingWithL10n(Segment $route, $path, $offset, ?array $params = null, array $options = [])
     {
         $request = new Request();
         $request->setUri('http://example.com' . $path);
@@ -351,11 +368,10 @@ class SegmentTest extends TestCase
     }
 
     /**
-     * @dataProvider l10nRouteProvider
      * @param        string   $path
      * @param        int|null $offset
      */
-    public function testAssemblingWithL10n(Segment $route, $path, $offset, ?array $params = null, array $options = [])
+    private function assemblingWithL10n(Segment $route, $path, $offset, ?array $params = null, array $options = [])
     {
         if ($params === null) {
             // Data which will not match are not tested for assembling.

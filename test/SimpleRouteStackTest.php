@@ -291,7 +291,7 @@ class SimpleRouteStackTest extends TestCase
     }
 
     /** @return array<class-string, array{0: array, 1: int}> */
-    public function routeTypeProvider(): array
+    public static function routeTypeProvider(): array
     {
         $routePlugins = new RoutePluginManager(new ServiceManager());
         return [
