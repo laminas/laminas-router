@@ -119,6 +119,9 @@
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$part[2]]]></code>
     </PossiblyUndefinedArrayOffset>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$priority]]></code>
+    </PossiblyUnusedProperty>
     <UnsafeInstantiation>
       <code><![CDATA[new static($options['route'], $options['constraints'], $options['defaults'])]]></code>
     </UnsafeInstantiation>
@@ -163,6 +166,9 @@
     <MixedMethodCall>
       <code><![CDATA[getPath]]></code>
     </MixedMethodCall>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$priority]]></code>
+    </PossiblyUnusedProperty>
     <UnsafeInstantiation>
       <code><![CDATA[new static($options['route'], $options['defaults'])]]></code>
     </UnsafeInstantiation>
@@ -176,6 +182,9 @@
       <code><![CDATA[$options['verb']]]></code>
       <code><![CDATA[$request->getMethod()]]></code>
     </MixedArgument>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$priority]]></code>
+    </PossiblyUnusedProperty>
     <UnsafeInstantiation>
       <code><![CDATA[new static($options['verb'], $options['defaults'])]]></code>
     </UnsafeInstantiation>
@@ -232,6 +241,9 @@
     <DocblockTypeContradiction>
       <code><![CDATA[is_array($options)]]></code>
     </DocblockTypeContradiction>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$priority]]></code>
+    </PossiblyUnusedProperty>
     <UnsafeInstantiation>
       <code><![CDATA[new static($options['defaults'])]]></code>
     </UnsafeInstantiation>
@@ -255,6 +267,9 @@
     <MixedMethodCall>
       <code><![CDATA[getPath]]></code>
     </MixedMethodCall>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$priority]]></code>
+    </PossiblyUnusedProperty>
     <TypeDoesNotContainType>
       <code><![CDATA[is_int($key)]]></code>
       <code><![CDATA[is_numeric($key) || is_int($key)]]></code>
@@ -287,6 +302,9 @@
       <code><![CDATA[getScheme]]></code>
       <code><![CDATA[setScheme]]></code>
     </MixedMethodCall>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$priority]]></code>
+    </PossiblyUnusedProperty>
     <UnsafeInstantiation>
       <code><![CDATA[new static($options['scheme'], $options['defaults'])]]></code>
     </UnsafeInstantiation>
@@ -391,6 +409,9 @@
       <code><![CDATA[$textDomain]]></code>
       <code><![CDATA[$translator]]></code>
     </PossiblyUndefinedVariable>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$priority]]></code>
+    </PossiblyUnusedProperty>
     <UnsafeInstantiation>
       <code><![CDATA[new static($options['route'], $options['constraints'], $options['defaults'])]]></code>
     </UnsafeInstantiation>
@@ -533,6 +554,15 @@
     <PossiblyNullOperand>
       <code><![CDATA[$baseUrlLength]]></code>
     </PossiblyNullOperand>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[addPrototypes]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$priority]]></code>
+    </PossiblyUnusedProperty>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[$this]]></code>
+    </PossiblyUnusedReturnValue>
     <PropertyNotSetInConstructor>
       <code><![CDATA[$baseUrl]]></code>
       <code><![CDATA[$requestUri]]></code>
@@ -576,6 +606,11 @@
       <code><![CDATA[new static($options['key_value_delimiter'], $options['param_delimiter'], $options['defaults'])]]></code>
     </UnsafeInstantiation>
   </file>
+  <file src="src/Module.php">
+    <UnusedClass>
+      <code><![CDATA[Module]]></code>
+    </UnusedClass>
+  </file>
   <file src="src/RouteInvokableFactory.php">
     <DeprecatedInterface>
       <code><![CDATA[RouteInvokableFactory]]></code>
@@ -594,6 +629,9 @@
       <code><![CDATA[$routeName]]></code>
       <code><![CDATA[$routeName]]></code>
     </ParamNameMismatch>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[setCreationOptions]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="src/RouteMatch.php">
     <PropertyNotSetInConstructor>
@@ -618,6 +656,12 @@
     <NonInvariantDocblockPropertyType>
       <code><![CDATA[$instanceOf]]></code>
     </NonInvariantDocblockPropertyType>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[validatePlugin]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$shareByDefault]]></code>
+    </PossiblyUnusedProperty>
   </file>
   <file src="src/RoutePluginManagerFactory.php">
     <ArgumentTypeCoercion>
@@ -626,6 +670,12 @@
     <DeprecatedInterface>
       <code><![CDATA[RoutePluginManagerFactory]]></code>
     </DeprecatedInterface>
+  </file>
+  <file src="src/RouteStackInterface.php">
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[static]]></code>
+      <code><![CDATA[static]]></code>
+    </PossiblyUnusedReturnValue>
   </file>
   <file src="src/RouterConfigTrait.php">
     <MixedArgument>
@@ -1315,6 +1365,9 @@
     </PossiblyNullReference>
   </file>
   <file src="test/TestAsset/DummyRoute.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$priority]]></code>
+    </PossiblyUnusedProperty>
     <UnsafeInstantiation>
       <code><![CDATA[new static()]]></code>
     </UnsafeInstantiation>
