@@ -83,7 +83,7 @@ class RouteInvokableFactory implements
      */
     public function __invoke(ContainerInterface $container, $routeName, ?array $options = null)
     {
-        $options = $options ?: [];
+        $options = $options ?? [];
 
         if (! class_exists($routeName)) {
             throw new ServiceNotCreatedException(sprintf(
@@ -134,7 +134,7 @@ class RouteInvokableFactory implements
      */
     public function createService(ServiceLocatorInterface $container, $normalizedName = null, $routeName = null)
     {
-        $routeName = $routeName ?: RouteInterface::class;
+        $routeName = $routeName ?? RouteInterface::class;
         return $this($container, $routeName, $this->creationOptions);
     }
 

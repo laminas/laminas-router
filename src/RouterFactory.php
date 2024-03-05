@@ -38,7 +38,7 @@ class RouterFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $container, $normalizedName = null, $requestedName = null)
     {
-        $requestedName = $requestedName ?: 'Router';
+        $requestedName = $requestedName ?? 'Router';
         return $this($container, $requestedName);
     }
 }
