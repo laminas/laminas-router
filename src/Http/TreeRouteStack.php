@@ -387,7 +387,7 @@ class TreeRouteStack extends SimpleRouteStack
             return $this->baseUrl . $route->assemble(array_merge($this->defaultParams, $params), $options);
         }
 
-        if (! isset($options['uri'])) {
+        if (! isset($options['uri']) || ! $options['uri'] instanceof HttpUri) {
             $uri = new HttpUri();
 
             if (isset($options['force_canonical']) && $options['force_canonical']) {

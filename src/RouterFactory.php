@@ -8,7 +8,6 @@ use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerInterface;
 
-/** @psalm-suppress DeprecatedInterface */
 class RouterFactory implements FactoryInterface
 {
     /**
@@ -38,7 +37,7 @@ class RouterFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $container, $normalizedName = null, $requestedName = null)
     {
-        $requestedName = $requestedName ?: 'Router';
+        $requestedName = $requestedName ?? 'Router';
         return $this($container, $requestedName);
     }
 }

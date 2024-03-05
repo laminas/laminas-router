@@ -8,7 +8,6 @@ use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerInterface;
 
-/** @psalm-suppress DeprecatedInterface */
 class RoutePluginManagerFactory implements FactoryInterface
 {
     /**
@@ -20,7 +19,7 @@ class RoutePluginManagerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $name, ?array $options = null)
     {
-        $options = $options ?: [];
+        $options = $options ?? [];
         return new RoutePluginManager($container, $options);
     }
 
