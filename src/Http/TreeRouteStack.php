@@ -440,7 +440,7 @@ class TreeRouteStack extends SimpleRouteStack
             }
 
             return $uri->toString();
-        } elseif ($uri->isAbsolute() === false && $uri->isValidRelative() === true) {
+        } elseif (! $uri->isAbsolute() && $uri->isValidRelative()) {
             $uri->setPath($path);
 
             if (! isset($options['normalize_path']) || $options['normalize_path']) {
