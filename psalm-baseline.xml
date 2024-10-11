@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.22.2@d768d914152dbbf3486c36398802f74e80cfde48">
+<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="src/Http/Chain.php">
     <InvalidReturnStatement>
       <code><![CDATA[new static(
@@ -351,6 +351,9 @@
       <code><![CDATA[$part[1]]]></code>
       <code><![CDATA[$part[1]]]></code>
       <code><![CDATA[$part[1]]]></code>
+      <code><![CDATA[$part[1]]]></code>
+      <code><![CDATA[$part[1]]]></code>
+      <code><![CDATA[$part[1]]]></code>
       <code><![CDATA[$part[2]]]></code>
       <code><![CDATA[$part[2]]]></code>
     </MixedArrayAccess>
@@ -420,6 +423,11 @@
     </UnsupportedReferenceUsage>
   </file>
   <file src="src/Http/TranslatorAwareTreeRouteStack.php">
+    <DeprecatedInterface>
+      <code><![CDATA[?Translator]]></code>
+      <code><![CDATA[Translator]]></code>
+      <code><![CDATA[Translator]]></code>
+    </DeprecatedInterface>
     <LessSpecificImplementedReturnType>
       <code><![CDATA[TreeRouteStack]]></code>
       <code><![CDATA[TreeRouteStack]]></code>
