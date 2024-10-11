@@ -159,8 +159,8 @@ The `Hostname` route attempts to match the hostname registered in the request
 against specific criteria. Typically, this will be in one of the following
 forms:
 
-* `subdomain.domain.tld`
-* `:subdomain.domain.tld`
+- `subdomain.domain.tld`
+- `:subdomain.domain.tld`
 
 In the above, the second route would return a "subdomain" key as part of the
 route match.
@@ -356,7 +356,7 @@ You may use any route type as a child route of a `Part` route.
 
 - **Since 3.2.0**
 
-A `Placeholder` route is provided for use by reusable modules. The idea is that a 
+A `Placeholder` route is provided for use by reusable modules. The idea is that a
 module can provide a set of routes anchored by a placeholder route type. The end
 consumer can replace this placeholder route with a different route type of their
 choosing to customise how the module's routes act within the application as a
@@ -408,7 +408,7 @@ auth module sit at the route of their domain. If they wish to change the
 resource location, they can provide an alternative route type to replace the
 `Placeholder` route as part of their own router configuration. As an example:
 
-```php 
+```php
 return [
     'auth' => [
         'type' => \Laminas\Mvc\Router\Http\Literal::class,
