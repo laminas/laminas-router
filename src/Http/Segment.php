@@ -186,7 +186,7 @@ class Segment implements RouteInterface
 
             $currentPos += strlen($matches[0]);
 
-            if (! empty($matches['literal'])) {
+            if (isset($matches['literal']) && $matches['literal'] !== '') {
                 $levelParts[$level][] = ['literal', $matches['literal']];
             }
 
