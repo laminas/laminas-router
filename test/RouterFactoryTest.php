@@ -7,25 +7,18 @@ namespace LaminasTest\Router;
 use Laminas\Router\Http\HttpRouterFactory;
 use Laminas\Router\RoutePluginManager;
 use Laminas\Router\RouterFactory;
-use Laminas\ServiceManager\Config;
-use Laminas\ServiceManager\ConfigInterface;
 use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 use function array_merge_recursive;
 
-/**
- * @see ConfigInterface
- *
- * @psalm-import-type ServiceManagerConfigurationType from ConfigInterface
- */
 class RouterFactoryTest extends TestCase
 {
-    /** @psalm-var ServiceManagerConfigurationType */
-    protected $defaultServiceConfig;
+    protected array $defaultServiceConfig;
 
-    /** @var HttpRouterFactory|RouterFactory */
-    protected $factory;
+    protected RouterFactory|HttpRouterFactory $factory;
 
     public function setUp(): void
     {
@@ -39,9 +32,13 @@ class RouterFactoryTest extends TestCase
         $this->factory = new RouterFactory();
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testFactoryCanCreateRouterBasedOnConfiguredName(): void
     {
-        $config   = new Config(array_merge_recursive($this->defaultServiceConfig, [
+        $config   = array_merge_recursive($this->defaultServiceConfig, [
             'services' => [
                 'config' => [
                     'router' => [
@@ -49,17 +46,20 @@ class RouterFactoryTest extends TestCase
                     ],
                 ],
             ],
-        ]));
-        $services = new ServiceManager();
-        $config->configureServiceManager($services);
+        ]);
+        $services = new ServiceManager($config);
 
         $router = $this->factory->__invoke($services, 'router');
         $this->assertInstanceOf(TestAsset\Router::class, $router);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function testFactoryCanCreateRouterWhenOnlyHttpRouterConfigPresent(): void
     {
-        $config   = new Config(array_merge_recursive($this->defaultServiceConfig, [
+        $config   = array_merge_recursive($this->defaultServiceConfig, [
             'services' => [
                 'config' => [
                     'router' => [
@@ -67,9 +67,8 @@ class RouterFactoryTest extends TestCase
                     ],
                 ],
             ],
-        ]));
-        $services = new ServiceManager();
-        $config->configureServiceManager($services);
+        ]);
+        $services = new ServiceManager($config);
 
         $router = $this->factory->__invoke($services, 'router');
         $this->assertInstanceOf(TestAsset\Router::class, $router);

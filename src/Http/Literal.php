@@ -5,102 +5,58 @@ declare(strict_types=1);
 namespace Laminas\Router\Http;
 
 use Laminas\Router\Exception;
-use Laminas\Router\RouteInterface;
-use Laminas\Stdlib\ArrayUtils;
-use Laminas\Stdlib\RequestInterface as Request;
-use Traversable;
+use Laminas\Router\RouteConfigTrait;
+use Laminas\Router\RoutePriorityTrait;
+use Psr\Http\Message\ServerRequestInterface;
 
-use function is_array;
-use function method_exists;
-use function sprintf;
 use function strlen;
 use function strpos;
 
 /**
  * Literal route.
  */
-class Literal implements HttpRouteInterface
+final class Literal implements HttpRouteInterface
 {
-    /**
-     * Default values.
-     *
-     * @var array
-     */
-    protected $defaults;
-
-    /**
-     * @internal
-     * @deprecated Since 3.9.0 This property will be removed or made private in version 4.0
-     *
-     * @var int|null
-     */
-    public $priority;
+    use RouteConfigTrait;
+    use RoutePriorityTrait;
 
     /**
      * Create a new literal route.
-     *
-     * @param  string $route
      */
     public function __construct(
-        /**
-         * RouteInterface to match.
-         */
-        protected $route,
-        array $defaults = []
+        private readonly string $route,
+        private readonly array $defaults = []
     ) {
-        $this->defaults = $defaults;
     }
 
     /**
-     * factory(): defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::factory()
-     *
-     * @param  iterable $options
-     * @return Literal
+     * @inheritDoc
      * @throws Exception\InvalidArgumentException
      */
-    public static function factory($options = [])
+    public static function factory(iterable $options = []): Literal
     {
-        if ($options instanceof Traversable) {
-            $options = ArrayUtils::iteratorToArray($options);
-        } elseif (! is_array($options)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects an array or Traversable set of options',
-                __METHOD__
-            ));
-        }
+        $options = self::processRouteOptions(
+            $options,
+            ['route'],
+            ['defaults' => []],
+        );
 
-        if (! isset($options['route'])) {
-            throw new Exception\InvalidArgumentException('Missing "route" in options array');
-        }
-
-        if (! isset($options['defaults'])) {
-            $options['defaults'] = [];
-        }
-
-        return new static($options['route'], $options['defaults']);
+        return new Literal(
+            $options['route'],
+            $options['defaults']
+        );
     }
 
-    /**
-     * match(): defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::match()
-     *
-     * @param  integer|null $pathOffset
-     * @return RouteMatch|null
-     */
-    public function match(Request $request, $pathOffset = null)
-    {
-        if (! method_exists($request, 'getUri')) {
-            return null;
-        }
-
-        $uri  = $request->getUri();
-        $path = $uri->getPath();
+    /** @inheritDoc */
+    public function match(
+        ServerRequestInterface $request,
+        ?int $pathOffset = null,
+        array $options = []
+    ): ?RouteMatch {
+        $path = $request->getUri()->getPath();
 
         if ($pathOffset !== null) {
-            if ($pathOffset >= 0 && strlen((string) $path) >= $pathOffset && ! empty($this->route)) {
+            if ($pathOffset >= 0 && strlen($path) >= $pathOffset && ! empty($this->route)) {
                 if (strpos($path, $this->route, $pathOffset) === $pathOffset) {
                     return new RouteMatch($this->defaults, strlen($this->route));
                 }
@@ -116,26 +72,14 @@ class Literal implements HttpRouteInterface
         return null;
     }
 
-    /**
-     * assemble(): Defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::assemble()
-     *
-     * @return mixed
-     */
-    public function assemble(array $params = [], array $options = [])
+    /** @inheritDoc */
+    public function assemble(array $params = [], array $options = []): string
     {
         return $this->route;
     }
 
-    /**
-     * getAssembledParams(): defined by HttpRouteInterface interface.
-     *
-     * @see    HttpRouteInterface::getAssembledParams
-     *
-     * @return array
-     */
-    public function getAssembledParams()
+    /** @inheritDoc */
+    public function getAssembledParams(): array
     {
         return [];
     }

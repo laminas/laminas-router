@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
 
-use Laminas\Http\Request;
 use Laminas\Router\Http\Regex;
 use Laminas\Router\Http\RouteMatch;
-use Laminas\Stdlib\Request as BaseRequest;
 use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\TestAsset\MockServerRequest;
+use LaminasTest\Router\TestAsset\MockUri;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -79,16 +79,11 @@ final class RegexTest extends TestCase
         ];
     }
 
-    /**
-     * @param        string   $path
-     * @param        int|null $offset
-     */
     #[DataProvider('routeProvider')]
-    public function testMatching(Regex $route, $path, $offset, ?array $params = null)
+    public function testMatching(Regex $route, string $path, ?int $offset, ?array $params = null): void
     {
-        $request = new Request();
-        $request->setUri('http://example.com' . $path);
-        $match = $route->match($request, $offset);
+        $request = new MockServerRequest(new MockUri('http://example.com' . $path));
+        $match   = $route->match($request, $offset);
 
         if ($params === null) {
             $this->assertNull($match);
@@ -105,12 +100,8 @@ final class RegexTest extends TestCase
         }
     }
 
-    /**
-     * @param        string   $path
-     * @param        int|null $offset
-     */
     #[DataProvider('routeProvider')]
-    public function testAssembling(Regex $route, $path, $offset, ?array $params = null)
+    public function testAssembling(Regex $route, string $path, ?int $offset, ?array $params = null): void
     {
         if ($params === null) {
             // Data which will not match are not tested for assembling.
@@ -127,15 +118,7 @@ final class RegexTest extends TestCase
         }
     }
 
-    public function testNoMatchWithoutUriMethod()
-    {
-        $route   = new Regex('/foo', '/foo');
-        $request = new BaseRequest();
-
-        $this->assertNull($route->match($request));
-    }
-
-    public function testGetAssembledParams()
+    public function testGetAssembledParams(): void
     {
         $route = new Regex('/(?<foo>.+)', '/%foo%');
         $route->assemble(['foo' => 'bar', 'baz' => 'bat']);
@@ -143,14 +126,14 @@ final class RegexTest extends TestCase
         $this->assertEquals(['foo'], $route->getAssembledParams());
     }
 
-    public function testFactory()
+    public function testFactory(): void
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
             Regex::class,
             [
-                'regex' => 'Missing "regex" in options array',
-                'spec'  => 'Missing "spec" in options array',
+                'regex' => 'Missing "regex" option',
+                'spec'  => 'Missing "spec" option',
             ],
             [
                 'regex' => '/foo',
@@ -159,20 +142,19 @@ final class RegexTest extends TestCase
         );
     }
 
-    public function testRawDecode()
+    public function testRawDecode(): void
     {
         // verify all characters which don't absolutely require encoding pass through match unchanged
         // this includes every character other than #, %, / and ?
         $raw     = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`-=[]\\;\',.~!@$^&*()_+{}|:"<>';
-        $request = new Request();
-        $request->setUri('http://example.com/' . $raw);
-        $route = new Regex('/(?<foo>[^/]+)', '/%foo%');
-        $match = $route->match($request);
+        $request = new MockServerRequest(new MockUri('http://example.com/' . $raw));
+        $route   = new Regex('/(?<foo>[^/]+)', '/%foo%');
+        $match   = $route->match($request);
 
         $this->assertSame($raw, $match->getParam('foo'));
     }
 
-    public function testEncodedDecode()
+    public function testEncodedDecode(): void
     {
         // @codingStandardsIgnoreStart
         // every character
@@ -180,10 +162,9 @@ final class RegexTest extends TestCase
         $out = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`-=[]\\;\',./~!@#$%^&*()_+{}|:"<>?';
         // @codingStandardsIgnoreEnd
 
-        $request = new Request();
-        $request->setUri('http://example.com/' . $in);
-        $route = new Regex('/(?<foo>[^/]+)', '/%foo%');
-        $match = $route->match($request);
+        $request = new MockServerRequest(new MockUri('http://example.com/' . $in));
+        $route   = new Regex('/(?<foo>[^/]+)', '/%foo%');
+        $match   = $route->match($request);
 
         $this->assertSame($out, $match->getParam('foo'));
     }

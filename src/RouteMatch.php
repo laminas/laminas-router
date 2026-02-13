@@ -9,21 +9,17 @@ use function array_key_exists;
 /**
  * RouteInterface match.
  */
-class RouteMatch
+class RouteMatch implements RouteMatchInterface
 {
     /**
      * Match parameters.
-     *
-     * @var array
      */
-    protected $params = [];
+    protected array $params = [];
 
     /**
      * Matched route name.
-     *
-     * @var string
      */
-    protected $matchedRouteName;
+    protected ?string $matchedRouteName = null;
 
     /**
      * Create a RouteMatch with given parameters.
@@ -35,11 +31,8 @@ class RouteMatch
 
     /**
      * Set name of matched route.
-     *
-     * @param  string $name
-     * @return RouteMatch
      */
-    public function setMatchedRouteName($name)
+    public function setMatchedRouteName(string $name): RouteMatchInterface
     {
         $this->matchedRouteName = $name;
         return $this;
@@ -47,22 +40,16 @@ class RouteMatch
 
     /**
      * Get name of matched route.
-     *
-     * @return string
      */
-    public function getMatchedRouteName()
+    public function getMatchedRouteName(): ?string
     {
         return $this->matchedRouteName;
     }
 
     /**
      * Set a parameter.
-     *
-     * @param  string $name
-     * @param  mixed  $value
-     * @return RouteMatch
      */
-    public function setParam($name, $value)
+    public function setParam(string $name, mixed $value): RouteMatchInterface
     {
         $this->params[$name] = $value;
         return $this;
@@ -71,21 +58,17 @@ class RouteMatch
     /**
      * Get all parameters.
      *
-     * @return array
+     * @return array<array-key, mixed>
      */
-    public function getParams()
+    public function getParams(): array
     {
         return $this->params;
     }
 
     /**
      * Get a specific parameter.
-     *
-     * @param  string $name
-     * @param  mixed  $default
-     * @return mixed
      */
-    public function getParam($name, $default = null)
+    public function getParam(string $name, mixed $default = null): mixed
     {
         if (array_key_exists($name, $this->params)) {
             return $this->params[$name];

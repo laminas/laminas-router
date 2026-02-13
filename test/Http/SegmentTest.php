@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
 
-use Laminas\Http\Request;
 use Laminas\I18n\Translator\Loader\FileLoaderInterface;
 use Laminas\I18n\Translator\TextDomain;
 use Laminas\I18n\Translator\Translator;
@@ -12,11 +11,14 @@ use Laminas\Router\Exception\InvalidArgumentException;
 use Laminas\Router\Exception\RuntimeException;
 use Laminas\Router\Http\RouteMatch;
 use Laminas\Router\Http\Segment;
-use Laminas\Stdlib\Request as BaseRequest;
+use Laminas\Validator\Translator\TranslatorAwareInterface;
 use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\TestAsset\MockServerRequest;
+use LaminasTest\Router\TestAsset\MockUri;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+use function class_exists;
 use function implode;
 use function strlen;
 use function strpos;
@@ -183,6 +185,10 @@ final class SegmentTest extends TestCase
 
     public function testL10nRoute(): void
     {
+        if (! class_exists(TranslatorAwareInterface::class)) {
+            $this->markTestSkipped('laminas-i18n is not installed');
+        }
+
         $translator = new Translator();
         $translator->setLocale('en-US');
 
@@ -204,28 +210,24 @@ final class SegmentTest extends TestCase
         $this->matchingWithL10n(
             new Segment('/{fw}', [], []),
             '/framework',
-            null,
             [],
             ['translator' => $translator]
         );
         $this->matchingWithL10n(
             new Segment('/{fw}', [], []),
             '/baukasten',
-            null,
             [],
             ['translator' => $translator, 'locale' => 'de-DE']
         );
         $this->matchingWithL10n(
             new Segment('/{fw}', [], []),
             '/fw',
-            null,
             [],
             ['translator' => $translator, 'locale' => 'fr-FR']
         );
         $this->matchingWithL10n(
             new Segment('/{fw}', [], []),
             '/fw-alternative',
-            null,
             [],
             ['translator' => $translator, 'text_domain' => 'alternative']
         );
@@ -233,28 +235,24 @@ final class SegmentTest extends TestCase
         $this->assemblingWithL10n(
             new Segment('/{fw}', [], []),
             '/framework',
-            null,
             [],
             ['translator' => $translator]
         );
         $this->assemblingWithL10n(
             new Segment('/{fw}', [], []),
             '/baukasten',
-            null,
             [],
             ['translator' => $translator, 'locale' => 'de-DE']
         );
         $this->assemblingWithL10n(
             new Segment('/{fw}', [], []),
             '/fw',
-            null,
             [],
             ['translator' => $translator, 'locale' => 'fr-FR']
         );
         $this->assemblingWithL10n(
             new Segment('/{fw}', [], []),
             '/fw-alternative',
-            null,
             [],
             ['translator' => $translator, 'text_domain' => 'alternative']
         );
@@ -287,9 +285,6 @@ final class SegmentTest extends TestCase
         ];
     }
 
-    /**
-     * @param array|null $params
-     */
     #[DataProvider('routeProvider')]
     public function testMatching(
         Segment $route,
@@ -298,9 +293,8 @@ final class SegmentTest extends TestCase
         ?array $params = null,
         array $options = []
     ): void {
-        $request = new Request();
-        $request->setUri('http://example.com' . $path);
-        $match = $route->match($request, $offset, $options);
+        $request = new MockServerRequest(new MockUri('http://example.com' . $path));
+        $match   = $route->match($request, $offset, $options);
 
         if ($params === null) {
             $this->assertNull($match);
@@ -334,28 +328,27 @@ final class SegmentTest extends TestCase
         $result = $route->assemble($params, $options);
 
         if ($offset !== null) {
-            $this->assertEquals($offset, strpos($path, (string) $result, $offset));
+            $this->assertEquals($offset, strpos($path, $result, $offset));
         } else {
             $this->assertEquals($path, $result);
         }
     }
 
-    /**
-     * @param        string   $path
-     * @param        int|null $offset
-     */
-    private function matchingWithL10n(Segment $route, $path, $offset, ?array $params = null, array $options = [])
-    {
-        $request = new Request();
-        $request->setUri('http://example.com' . $path);
-        $match = $route->match($request, $offset, $options);
+    private function matchingWithL10n(
+        Segment $route,
+        string $path,
+        ?array $params = null,
+        array $options = []
+    ): void {
+        $request = new MockServerRequest(new MockUri('http://example.com' . $path));
+        $match   = $route->match($request, null, $options);
 
         if ($params === null) {
             $this->assertNull($match);
         } else {
             $this->assertInstanceOf(RouteMatch::class, $match);
 
-            if ($offset === null) {
+            if (null === null) {
                 $this->assertEquals(strlen($path), $match->getLength());
             }
 
@@ -365,40 +358,30 @@ final class SegmentTest extends TestCase
         }
     }
 
-    /**
-     * @param        string   $path
-     * @param        int|null $offset
-     */
-    private function assemblingWithL10n(Segment $route, $path, $offset, ?array $params = null, array $options = [])
-    {
+    private function assemblingWithL10n(
+        Segment $route,
+        string $path,
+        ?array $params = null,
+        array $options = []
+    ): void {
         if ($params === null) {
             // Data which will not match are not tested for assembling.
             return;
         }
 
         $result = $route->assemble($params, $options);
-
-        if ($offset !== null) {
-            $this->assertEquals($offset, strpos($path, (string) $result, $offset));
-        } else {
-            $this->assertEquals($path, $result);
-        }
+        $this->assertEquals($path, $result);
     }
 
-    /**
-     * @param        string $route
-     * @param        string $exceptionName
-     * @param        string $exceptionMessage
-     */
     #[DataProvider('parseExceptionsProvider')]
-    public function testParseExceptions($route, $exceptionName, $exceptionMessage)
+    public function testParseExceptions(string $route, string $exceptionName, string $exceptionMessage): void
     {
         $this->expectException($exceptionName);
         $this->expectExceptionMessage($exceptionMessage);
         new Segment($route);
     }
 
-    public function testAssemblingWithMissingParameterInRoot()
+    public function testAssemblingWithMissingParameterInRoot(): void
     {
         $route = new Segment('/:foo');
 
@@ -407,7 +390,7 @@ final class SegmentTest extends TestCase
         $route->assemble();
     }
 
-    public function testTranslatedAssemblingThrowsExceptionWithoutTranslator()
+    public function testTranslatedAssemblingThrowsExceptionWithoutTranslator(): void
     {
         $route = new Segment('/{foo}');
 
@@ -416,24 +399,16 @@ final class SegmentTest extends TestCase
         $route->assemble();
     }
 
-    public function testTranslatedMatchingThrowsExceptionWithoutTranslator()
+    public function testTranslatedMatchingThrowsExceptionWithoutTranslator(): void
     {
         $route = new Segment('/{foo}');
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('No translator provided');
-        $route->match(new Request());
+        $route->match(new MockServerRequest());
     }
 
-    public function testNoMatchWithoutUriMethod()
-    {
-        $route   = new Segment('/foo');
-        $request = new BaseRequest();
-
-        $this->assertNull($route->match($request));
-    }
-
-    public function testAssemblingWithExistingChild()
+    public function testAssemblingWithExistingChild(): void
     {
         $route = new Segment('/[:foo]', [], ['foo' => 'bar']);
         $path  = $route->assemble([], ['has_child' => true]);
@@ -441,13 +416,13 @@ final class SegmentTest extends TestCase
         $this->assertEquals('/bar', $path);
     }
 
-    public function testFactory()
+    public function testFactory(): void
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
             Segment::class,
             [
-                'route' => 'Missing "route" in options array',
+                'route' => 'Missing "route" option',
             ],
             [
                 'route'       => '/:foo[/:bar{-}]',
@@ -456,20 +431,19 @@ final class SegmentTest extends TestCase
         );
     }
 
-    public function testRawDecode()
+    public function testRawDecode(): void
     {
         // verify all characters which don't absolutely require encoding pass through match unchanged
         // this includes every character other than #, %, / and ?
         $raw     = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`-=[]\\;\',.~!@$^&*()_+{}|:"<>';
-        $request = new Request();
-        $request->setUri('http://example.com/' . $raw);
-        $route = new Segment('/:foo');
-        $match = $route->match($request);
+        $request = new MockServerRequest(new MockUri('http://example.com/' . $raw));
+        $route   = new Segment('/:foo');
+        $match   = $route->match($request);
 
         $this->assertSame($raw, $match->getParam('foo'));
     }
 
-    public function testEncodedDecode()
+    public function testEncodedDecode(): void
     {
         // @codingStandardsIgnoreStart
         // every character
@@ -477,29 +451,27 @@ final class SegmentTest extends TestCase
         $out = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`-=[]\\;\',./~!@#$%^&*()_+{}|:"<>?';
         // @codingStandardsIgnoreEnd
 
-        $request = new Request();
-        $request->setUri('http://example.com/' . $in);
-        $route = new Segment('/:foo');
-        $match = $route->match($request);
+        $request = new MockServerRequest(new MockUri('http://example.com/' . $in));
+        $route   = new Segment('/:foo');
+        $match   = $route->match($request);
 
         $this->assertSame($out, $match->getParam('foo'));
     }
 
-    public function testEncodeCache()
+    public function testEncodeCache(): void
     {
         $params1 = ['p1' => 6.123, 'p2' => 7];
         $uri1    = 'example.com/' . implode('/', $params1);
         $params2 = ['p1' => 6, 'p2' => 'test'];
         $uri2    = 'example.com/' . implode('/', $params2);
 
-        $route   = new Segment('example.com/:p1/:p2');
-        $request = new Request();
+        $route = new Segment('example.com/:p1/:p2');
 
-        $request->setUri($uri1);
+        $request = new MockServerRequest(new MockUri($uri1));
         $route->match($request);
         $this->assertSame($uri1, $route->assemble($params1));
 
-        $request->setUri($uri2);
+        $request = new MockServerRequest(new MockUri($uri2));
         $route->match($request);
         $this->assertSame($uri2, $route->assemble($params2));
     }

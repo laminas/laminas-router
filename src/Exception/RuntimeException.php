@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Laminas\Router\Exception;
 
-class RuntimeException extends \RuntimeException implements ExceptionInterface
+final class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
 }

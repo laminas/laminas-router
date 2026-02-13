@@ -5,112 +5,57 @@ declare(strict_types=1);
 namespace Laminas\Router\Http;
 
 use Laminas\Router\Exception;
-use Laminas\Router\RouteInterface;
-use Laminas\Stdlib\ArrayUtils;
-use Laminas\Stdlib\RequestInterface as Request;
-use Traversable;
-
-use function is_array;
-use function method_exists;
-use function sprintf;
+use Laminas\Router\RouteConfigTrait;
+use Laminas\Router\RoutePriorityTrait;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Scheme route.
  */
-class Scheme implements HttpRouteInterface
+final class Scheme implements HttpRouteInterface
 {
-    /**
-     * Default values.
-     *
-     * @var array
-     */
-    protected $defaults;
+    use RouteConfigTrait;
+    use RoutePriorityTrait;
 
-    /**
-     * @internal
-     * @deprecated Since 3.9.0 This property will be removed or made private in version 4.0
-     *
-     * @var int|null
-     */
-    public $priority;
-
-    /**
-     * Create a new scheme route.
-     *
-     * @param  string $scheme
-     */
     public function __construct(
-        /**
-         * Scheme to match.
-         */
-        protected $scheme,
-        array $defaults = []
+        private readonly string $scheme,
+        private readonly array $defaults = []
     ) {
-        $this->defaults = $defaults;
     }
 
     /**
-     * factory(): defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::factory()
-     *
-     * @param  iterable $options
-     * @return Scheme
+     * @inheritDoc
      * @throws Exception\InvalidArgumentException
      */
-    public static function factory($options = [])
+    public static function factory(iterable $options = []): Scheme
     {
-        if ($options instanceof Traversable) {
-            $options = ArrayUtils::iteratorToArray($options);
-        } elseif (! is_array($options)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects an array or Traversable set of options',
-                __METHOD__
-            ));
-        }
+        $options = self::processRouteOptions(
+            $options,
+            ['scheme'],
+            ['defaults' => []],
+        );
 
-        if (! isset($options['scheme'])) {
-            throw new Exception\InvalidArgumentException('Missing "scheme" in options array');
-        }
-
-        if (! isset($options['defaults'])) {
-            $options['defaults'] = [];
-        }
-
-        return new static($options['scheme'], $options['defaults']);
+        return new Scheme(
+            $options['scheme'],
+            $options['defaults']
+        );
     }
 
-    /**
-     * match(): defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::match()
-     *
-     * @return RouteMatch|null
-     */
-    public function match(Request $request)
-    {
-        if (! method_exists($request, 'getUri')) {
-            return;
-        }
-
-        $uri    = $request->getUri();
-        $scheme = $uri->getScheme();
-
-        if ($scheme !== $this->scheme) {
-            return;
+    /** @inheritDoc */
+    public function match(
+        ServerRequestInterface $request,
+        ?int $pathOffset = null,
+        array $options = []
+    ): ?RouteMatch {
+        if ($request->getUri()->getScheme() !== $this->scheme) {
+            return null;
         }
 
         return new RouteMatch($this->defaults);
     }
 
-    /**
-     * assemble(): Defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::assemble()
-     *
-     * @return mixed
-     */
-    public function assemble(array $params = [], array $options = [])
+    /** @inheritDoc */
+    public function assemble(array $params = [], array $options = []): string
     {
         if (isset($options['uri'])) {
             $options['uri']->setScheme($this->scheme);
@@ -120,14 +65,8 @@ class Scheme implements HttpRouteInterface
         return '';
     }
 
-    /**
-     * getAssembledParams(): defined by HttpRouteInterface interface.
-     *
-     * @see    HttpRouteInterface::getAssembledParams
-     *
-     * @return array
-     */
-    public function getAssembledParams()
+    /** @inheritDoc */
+    public function getAssembledParams(): array
     {
         return [];
     }

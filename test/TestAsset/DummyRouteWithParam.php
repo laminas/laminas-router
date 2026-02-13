@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LaminasTest\Router\TestAsset;
 
 use Laminas\Router\RouteMatch;
-use Laminas\Stdlib\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Dummy route.
@@ -16,10 +16,8 @@ final class DummyRouteWithParam extends DummyRoute
      * match(): defined by RouteInterface interface.
      *
      * @see    Route::match()
-     *
-     * @return RouteMatch
      */
-    public function match(RequestInterface $request)
+    public function match(ServerRequestInterface $request): ?RouteMatch
     {
         return new RouteMatch(['foo' => 'bar']);
     }
@@ -31,7 +29,7 @@ final class DummyRouteWithParam extends DummyRoute
      *
      * @return mixed
      */
-    public function assemble(?array $params = null, ?array $options = null)
+    public function assemble(?array $params = null, ?array $options = null): string
     {
         return $params['foo'] ?? '';
     }

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
 
-use Laminas\Http\Request;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\RouteMatch;
-use Laminas\Stdlib\Request as BaseRequest;
 use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\TestAsset\MockServerRequest;
+use LaminasTest\Router\TestAsset\MockUri;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -62,17 +62,11 @@ final class LiteralTest extends TestCase
         ];
     }
 
-    /**
-     * @param        string   $path
-     * @param        int|null $offset
-     * @param        bool     $shouldMatch
-     */
     #[DataProvider('routeProvider')]
-    public function testMatching(Literal $route, $path, $offset, $shouldMatch)
+    public function testMatching(Literal $route, string $path, ?int $offset, bool $shouldMatch): void
     {
-        $request = new Request();
-        $request->setUri('http://example.com' . $path);
-        $match = $route->match($request, $offset);
+        $request = new MockServerRequest(new MockUri('http://example.com' . $path));
+        $match   = $route->match($request, $offset);
 
         if (! $shouldMatch) {
             $this->assertNull($match);
@@ -85,16 +79,10 @@ final class LiteralTest extends TestCase
         }
     }
 
-    /**
-     * @param        string   $path
-     * @param        int|null $offset
-     * @param        bool     $shouldMatch
-     */
     #[DataProvider('routeProvider')]
-    public function testAssembling(Literal $route, $path, $offset, $shouldMatch)
+    public function testAssembling(Literal $route, string $path, ?int $offset, bool $shouldMatch): void
     {
         if (! $shouldMatch) {
-            // Data which will not match are not tested for assembling.
             $this->expectNotToPerformAssertions();
             return;
         }
@@ -102,35 +90,28 @@ final class LiteralTest extends TestCase
         $result = $route->assemble();
 
         if ($offset !== null) {
-            $this->assertEquals($offset, strpos($path, (string) $result, $offset));
+            $this->assertEquals($offset, strpos($path, $result, $offset));
         } else {
             $this->assertEquals($path, $result);
         }
     }
 
-    public function testNoMatchWithoutUriMethod()
+    public function testGetAssembledParams(): void
     {
-        $route   = new Literal('/foo');
-        $request = new BaseRequest();
+        $route  = new Literal('/foo');
+        $result = $route->assemble(['foo' => 'bar']);
 
-        $this->assertNull($route->match($request));
-    }
-
-    public function testGetAssembledParams()
-    {
-        $route = new Literal('/foo');
-        $route->assemble(['foo' => 'bar']);
-
+        $this->assertEquals('/foo', $result);
         $this->assertEquals([], $route->getAssembledParams());
     }
 
-    public function testFactory()
+    public function testFactory(): void
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
             Literal::class,
             [
-                'route' => 'Missing "route" in options array',
+                'route' => 'Missing "route" option',
             ],
             [
                 'route' => '/foo',
@@ -139,9 +120,9 @@ final class LiteralTest extends TestCase
     }
 
     #[Group('Laminas-436')]
-    public function testEmptyLiteral()
+    public function testEmptyLiteral(): void
     {
-        $request = new Request();
+        $request = new MockServerRequest();
         $route   = new Literal('');
         $this->assertNull($route->match($request, 0));
     }

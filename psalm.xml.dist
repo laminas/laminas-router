@@ -26,11 +26,6 @@
                 <directory name="test" />
             </errorLevel>
         </MissingOverrideAttribute>
-        <ClassMustBeFinal>
-            <errorLevel type="suppress">
-                <directory name="src" />
-            </errorLevel>
-        </ClassMustBeFinal>
     </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>

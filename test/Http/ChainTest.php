@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
 
-use Laminas\Http\Request;
 use Laminas\Router\Http\Chain;
 use Laminas\Router\Http\HttpRouteInterface;
 use Laminas\Router\Http\RouteMatch;
 use Laminas\Router\Http\Segment;
-use Laminas\Router\Http\Wildcard;
 use Laminas\Router\RoutePluginManager;
 use Laminas\ServiceManager\ServiceManager;
 use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\TestAsset\MockServerRequest;
+use LaminasTest\Router\TestAsset\MockUri;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
 
 use function strlen;
 use function strpos;
@@ -45,9 +46,6 @@ final class ChainTest extends TestCase
                             'bar' => 'bar',
                         ],
                     ],
-                ],
-                [
-                    'type' => Wildcard::class,
                 ],
             ],
             $routePlugins
@@ -144,15 +142,13 @@ final class ChainTest extends TestCase
     }
 
     /**
-     * @param        string   $path
-     * @param        int|null $offset
+     * @throws ContainerExceptionInterface
      */
     #[DataProvider('routeProvider')]
-    public function testMatching(Chain $route, $path, $offset, ?array $params = null)
+    public function testMatching(Chain $route, string $path, ?int $offset, ?array $params = null): void
     {
-        $request = new Request();
-        $request->setUri('http://example.com' . $path);
-        $match = $route->match($request, $offset);
+        $request = new MockServerRequest(new MockUri('https://example.com' . $path));
+        $match   = $route->match($request, $offset);
 
         if ($params === null) {
             $this->assertNull($match);
@@ -169,12 +165,8 @@ final class ChainTest extends TestCase
         }
     }
 
-    /**
-     * @param        string   $path
-     * @param        int|null $offset
-     */
     #[DataProvider('routeProvider')]
-    public function testAssembling(Chain $route, $path, $offset, ?array $params = null)
+    public function testAssembling(Chain $route, string $path, ?int $offset, ?array $params = null): void
     {
         if ($params === null) {
             // Data which will not match are not tested for assembling.
@@ -184,20 +176,20 @@ final class ChainTest extends TestCase
         $result = $route->assemble($params);
 
         if ($offset !== null) {
-            $this->assertEquals($offset, strpos($path, (string) $result, $offset));
+            $this->assertEquals($offset, strpos($path, $result, $offset));
         } else {
             $this->assertEquals($path, $result);
         }
     }
 
-    public function testFactory()
+    public function testFactory(): void
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
             Chain::class,
             [
-                'routes'        => 'Missing "routes" in options array',
-                'route_plugins' => 'Missing "route_plugins" in options array',
+                'routes'        => 'Missing "routes" option',
+                'route_plugins' => 'Missing "route_plugins" option',
             ],
             [
                 'routes'        => [],

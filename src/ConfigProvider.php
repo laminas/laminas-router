@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Laminas\Router;
 
-use Laminas\ServiceManager\ConfigInterface;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Provide base configuration for using the component.
@@ -16,16 +16,20 @@ use Laminas\ServiceManager\ConfigInterface;
  *
  * @see ConfigInterface
  *
- * @psalm-import-type ServiceManagerConfigurationType from ConfigInterface
+ * @psalm-import-type ServiceManagerConfiguration from ServiceManager
+ * @psalm-type RouterConfigShape = array{
+ *     dependencies: ServiceManagerConfiguration,
+ *     route_manager: array
+ * }
  */
-class ConfigProvider
+final readonly class ConfigProvider
 {
     /**
      * Provide default configuration.
      *
-     * @return array<string, array>
+     * @return RouterConfigShape
      */
-    public function __invoke()
+    public function __invoke(): array
     {
         return [
             'dependencies'  => $this->getDependencyConfig(),
@@ -36,7 +40,7 @@ class ConfigProvider
     /**
      * Provide default container dependency configuration.
      *
-     * @return ServiceManagerConfigurationType
+     * @return ServiceManagerConfiguration
      */
     public function getDependencyConfig()
     {
@@ -46,11 +50,6 @@ class ConfigProvider
                 'router'             => RouteStackInterface::class,
                 'Router'             => RouteStackInterface::class,
                 'RoutePluginManager' => RoutePluginManager::class,
-
-                // Legacy Zend Framework aliases
-                'Zend\Router\Http\TreeRouteStack' => Http\TreeRouteStack::class,
-                'Zend\Router\RoutePluginManager'  => RoutePluginManager::class,
-                'Zend\Router\RouteStackInterface' => RouteStackInterface::class,
             ],
             'factories' => [
                 Http\TreeRouteStack::class => Http\HttpRouterFactory::class,
@@ -62,10 +61,8 @@ class ConfigProvider
 
     /**
      * Provide default route plugin manager configuration.
-     *
-     * @return array
      */
-    public function getRouteManagerConfig()
+    public function getRouteManagerConfig(): array
     {
         return [];
     }

@@ -6,6 +6,7 @@ namespace LaminasTest\Router;
 
 use ArrayIterator;
 use Laminas\Router\Exception\InvalidArgumentException;
+use Laminas\Router\RouteInterface;
 use PHPUnit\Framework\TestCase;
 
 use function sprintf;
@@ -17,10 +18,8 @@ final class FactoryTester
 {
     /**
      * Test case to call assertions to.
-     *
-     * @var TestCase
      */
-    protected $testCase;
+    protected TestCase $testCase;
 
     /**
      * Create a new factory tester.
@@ -32,24 +31,10 @@ final class FactoryTester
 
     /**
      * Test a factory.
-     *
-     * @param  string $classname
-     * @return void
      */
-    public function testFactory($classname, array $requiredOptions, array $options)
+    public function testFactory(string $classname, array $requiredOptions, array $options): void
     {
         $factory = sprintf('%s::factory', $classname);
-
-        // Test that the factory does not allow a scalar option.
-        try {
-            $factory(0);
-            $this->testCase->fail('An expected exception was not thrown');
-        } catch (InvalidArgumentException $e) {
-            $this->testCase->assertStringContainsString(
-                'factory expects an array or Traversable set of options',
-                $e->getMessage()
-            );
-        }
 
         // Test required options.
         foreach ($requiredOptions as $option => $exceptionMessage) {
@@ -66,9 +51,11 @@ final class FactoryTester
         }
 
         // Create the route, will throw an exception if something goes wrong.
-        $factory($options);
+        $route = $factory($options);
+        $this->testCase->assertInstanceOf(RouteInterface::class, $route);
 
         // Try the same with an iterator.
-        $factory(new ArrayIterator($options));
+        $route = $factory(new ArrayIterator($options));
+        $this->testCase->assertInstanceOf(RouteInterface::class, $route);
     }
 }

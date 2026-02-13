@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace LaminasTest\Router\Http;
 
 use ArrayObject;
-use Laminas\Http\Request;
 use Laminas\Router\Exception\InvalidArgumentException;
 use Laminas\Router\Exception\RuntimeException;
 use Laminas\Router\Http\HttpRouteInterface;
@@ -13,16 +12,16 @@ use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Part;
 use Laminas\Router\Http\RouteMatch;
 use Laminas\Router\Http\Segment;
-use Laminas\Router\Http\Wildcard;
 use Laminas\Router\RouteInvokableFactory;
 use Laminas\Router\RoutePluginManager;
 use Laminas\ServiceManager\ServiceManager;
-use Laminas\Stdlib\Parameters;
-use Laminas\Stdlib\Request as BaseRequest;
 use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\TestAsset\MockServerRequest;
+use LaminasTest\Router\TestAsset\MockUri;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
 
 use function strlen;
 use function strpos;
@@ -34,32 +33,24 @@ final class PartTest extends TestCase
     {
         return new RoutePluginManager(new ServiceManager(), [
             'aliases'   => [
-                'literal'  => Literal::class,
-                'Literal'  => Literal::class,
-                'part'     => Part::class,
-                'Part'     => Part::class,
-                'segment'  => Segment::class,
-                'Segment'  => Segment::class,
-                'wildcard' => Wildcard::class,
-                'Wildcard' => Wildcard::class,
-                'wildCard' => Wildcard::class,
-                'WildCard' => Wildcard::class,
+                'literal' => Literal::class,
+                'Literal' => Literal::class,
+                'part'    => Part::class,
+                'Part'    => Part::class,
+                'segment' => Segment::class,
+                'Segment' => Segment::class,
             ],
             'factories' => [
-                Literal::class  => RouteInvokableFactory::class,
-                Part::class     => RouteInvokableFactory::class,
-                Segment::class  => RouteInvokableFactory::class,
-                Wildcard::class => RouteInvokableFactory::class,
-
-                // v2 normalized names
-                'laminasmvcrouterhttpliteral'  => RouteInvokableFactory::class,
-                'laminasmvcrouterhttppart'     => RouteInvokableFactory::class,
-                'laminasmvcrouterhttpsegment'  => RouteInvokableFactory::class,
-                'laminasmvcrouterhttpwildcard' => RouteInvokableFactory::class,
+                Literal::class => RouteInvokableFactory::class,
+                Part::class    => RouteInvokableFactory::class,
+                Segment::class => RouteInvokableFactory::class,
             ],
         ]);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     */
     public static function getRoute(): Part
     {
         return new Part(
@@ -96,11 +87,6 @@ final class PartTest extends TestCase
                                 'route' => '/:controller',
                             ],
                             'may_terminate' => true,
-                            'child_routes'  => [
-                                'wildcard' => [
-                                    'type' => Wildcard::class,
-                                ],
-                            ],
                         ],
                     ],
                 ],
@@ -126,33 +112,6 @@ final class PartTest extends TestCase
                                 'route' => '/bat[/:bar]',
                             ],
                         ],
-                    ],
-                ],
-            ]
-        );
-    }
-
-    public static function getRouteAlternative(): Part
-    {
-        return new Part(
-            [
-                'type'    => Segment::class,
-                'options' => [
-                    'route'    => '/[:controller[/:action]]',
-                    'defaults' => [
-                        'controller' => 'fo-fo',
-                        'action'     => 'index',
-                    ],
-                ],
-            ],
-            true,
-            self::getRoutePlugins(),
-            [
-                'wildcard' => [
-                    'type'    => Wildcard::class,
-                    'options' => [
-                        'key_value_delimiter' => '/',
-                        'param_delimiter'     => '/',
                     ],
                 ],
             ]
@@ -220,13 +179,6 @@ final class PartTest extends TestCase
                 'baz/bat',
                 ['controller' => 'bat'],
             ],
-            'parameters-are-used-only-once'                    => [
-                self::getRoute(),
-                '/foo/baz/wildcard/foo/bar',
-                null,
-                'baz/bat/wildcard',
-                ['controller' => 'wildcard', 'foo' => 'bar'],
-            ],
             'optional-parameters-are-dropped-without-child'    => [
                 self::getRoute(),
                 '/foo/bat',
@@ -248,53 +200,19 @@ final class PartTest extends TestCase
                 'bat/optional',
                 ['foo' => 'bar'],
             ],
-            'simple-match'                                     => [
-                self::getRouteAlternative(),
-                '/',
-                null,
-                null,
-                [
-                    'controller' => 'fo-fo',
-                    'action'     => 'index',
-                ],
-            ],
-            'match-wildcard'                                   => [
-                self::getRouteAlternative(),
-                '/fo-fo/index/param1/value1',
-                null,
-                'wildcard',
-                [
-                    'controller' => 'fo-fo',
-                    'action'     => 'index',
-                    'param1'     => 'value1',
-                ],
-            ],
-            /*
-            'match-query' => array(
-                self::getRouteAlternative(),
-                '/fo-fo/index?param1=value1',
-                0,
-                'query',
-                array(
-                    'controller' => 'fo-fo',
-                    'action' => 'index'
-                )
-            )
-            */
         ];
     }
 
-    /**
-     * @param        string   $path
-     * @param        int|null $offset
-     * @param        string   $routeName
-     */
     #[DataProvider('routeProvider')]
-    public function testMatching(Part $route, $path, $offset, $routeName, ?array $params = null)
-    {
-        $request = new Request();
-        $request->setUri('http://example.com' . $path);
-        $match = $route->match($request, $offset);
+    public function testMatching(
+        Part $route,
+        string $path,
+        ?int $offset,
+        ?string $routeName,
+        ?array $params = null
+    ): void {
+        $request = new MockServerRequest(new MockUri('http://example.com' . $path));
+        $match   = $route->match($request, $offset);
 
         if ($params === null) {
             $this->assertNull($match);
@@ -313,17 +231,13 @@ final class PartTest extends TestCase
         }
     }
 
-    /**
-     * @param        string   $path
-     * @param        int|null $offset
-     * @param        string   $routeName
-     */
     #[DataProvider('routeProvider')]
-    public function testAssembling(Part $route, $path, $offset, $routeName, ?array $params = null)
+    public function testAssembling(Part $route, string $path, ?int $offset, ?string $routeName, ?array $params = null)
     {
         if ($params === null) {
             // Data which will not match are not tested for assembling.
             $this->expectNotToPerformAssertions();
+
             return;
         }
 
@@ -336,14 +250,17 @@ final class PartTest extends TestCase
         }
     }
 
-    public function testAssembleNonTerminatedRoute()
+    public function testAssembleNonTerminatedRoute(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Part route may not terminate');
         self::getRoute()->assemble([], ['name' => 'baz']);
     }
 
-    public function testBaseRouteMayNotBePartRoute()
+    /**
+     * @throws ContainerExceptionInterface
+     */
+    public function testBaseRouteMayNotBePartRoute(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Base route may not be a part route');
@@ -351,15 +268,7 @@ final class PartTest extends TestCase
         new Part(self::getRoute(), true, new RoutePluginManager(new ServiceManager()));
     }
 
-    public function testNoMatchWithoutUriMethod()
-    {
-        $route   = self::getRoute();
-        $request = new BaseRequest();
-
-        $this->assertNull($route->match($request));
-    }
-
-    public function testGetAssembledParams()
+    public function testGetAssembledParams(): void
     {
         $route = self::getRoute();
         $route->assemble(['controller' => 'foo'], ['name' => 'baz/bat']);
@@ -367,14 +276,14 @@ final class PartTest extends TestCase
         $this->assertEquals([], $route->getAssembledParams());
     }
 
-    public function testFactory()
+    public function testFactory(): void
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
             Part::class,
             [
-                'route'         => 'Missing "route" in options array',
-                'route_plugins' => 'Missing "route_plugins" in options array',
+                'route'         => 'Missing "route" option',
+                'route_plugins' => 'Missing "route_plugins" option',
             ],
             [
                 'route'         => new Literal('/foo'),
@@ -384,7 +293,7 @@ final class PartTest extends TestCase
     }
 
     #[Group('Laminas-105')]
-    public function testFactoryShouldAcceptTraversableChildRoutes()
+    public function testFactoryShouldAcceptTraversableChildRoutes(): void
     {
         $children = new ArrayObject([
             'create' => [
@@ -404,7 +313,7 @@ final class PartTest extends TestCase
                 'options' => [
                     'route'    => '/admin/users',
                     'defaults' => [
-                        'controller' => 'Admin\UserController',
+                        'controller' => 'Admin\\UserController',
                         'action'     => 'index',
                     ],
                 ],
@@ -419,7 +328,7 @@ final class PartTest extends TestCase
     }
 
     #[Group('3711')]
-    public function testPartRouteMarkedAsMayTerminateCanMatchWhenQueryStringPresent()
+    public function testPartRouteMarkedAsMayTerminateCanMatchWhenQueryStringPresent(): void
     {
         $options = [
             'route'         => [
@@ -448,49 +357,10 @@ final class PartTest extends TestCase
         ];
 
         $route   = Part::factory($options);
-        $request = new Request();
-        $request->setUri('http://example.com/resource?foo=bar');
-        $query = new Parameters(['foo' => 'bar']);
-        $request->setQuery($query);
-        $query = $request->getQuery();
+        $request = new MockServerRequest(new MockUri('http://example.com/resource?foo=bar'));
 
         $match = $route->match($request);
         $this->assertInstanceOf(\Laminas\Router\RouteMatch::class, $match);
         $this->assertEquals('resource', $match->getParam('action'));
-    }
-
-    #[Group('3711')]
-    public function testPartRouteMarkedAsMayTerminateButWithQueryRouteChildWillMatchChildRoute()
-    {
-        $options = [
-            'route'         => [
-                'type'    => Literal::class,
-                'options' => [
-                    'route'    => '/resource',
-                    'defaults' => [
-                        'controller' => 'ResourceController',
-                        'action'     => 'resource',
-                    ],
-                ],
-            ],
-            'route_plugins' => self::getRoutePlugins(),
-            'may_terminate' => true,
-        ];
-
-        $route   = Part::factory($options);
-        $request = new Request();
-        $request->setUri('http://example.com/resource?foo=bar');
-        $query = new Parameters(['foo' => 'bar']);
-        $request->setQuery($query);
-        $query = $request->getQuery();
-
-        /** @link https://github.com/laminas/laminas-router/commit/66ebd439067d9e25a6f7941de4b9ebc9c52524f5 */
-        $this->markTestSkipped('This test fails and has been skipped because the Query route has been deprecated (?)');
-
-        /*
-        $match = $route->match($request);
-        $this->assertInstanceOf(\Laminas\Router\RouteMatch::class, $match);
-        $this->assertEquals('string', $match->getParam('query'));
-        */
     }
 }

@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
 
-use Laminas\Http\Request;
 use Laminas\Router\Http\RouteMatch;
 use Laminas\Router\Http\Scheme;
-use Laminas\Stdlib\Request as BaseRequest;
 use Laminas\Uri\Http as HttpUri;
 use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\TestAsset\MockServerRequest;
+use LaminasTest\Router\TestAsset\MockUri;
 use PHPUnit\Framework\TestCase;
 
 final class SchemeTest extends TestCase
 {
-    public function testMatching()
+    public function testMatching(): void
     {
-        $request = new Request();
-        $request->setUri('https://example.com/');
+        $request = new MockServerRequest(new MockUri('https://example.com/'));
 
         $route = new Scheme('https');
         $match = $route->match($request);
@@ -25,10 +24,9 @@ final class SchemeTest extends TestCase
         $this->assertInstanceOf(RouteMatch::class, $match);
     }
 
-    public function testNoMatchingOnDifferentScheme()
+    public function testNoMatchingOnDifferentScheme(): void
     {
-        $request = new Request();
-        $request->setUri('http://example.com/');
+        $request = new MockServerRequest(new MockUri('http://example.com/'));
 
         $route = new Scheme('https');
         $match = $route->match($request);
@@ -46,15 +44,7 @@ final class SchemeTest extends TestCase
         $this->assertEquals('https', $uri->getScheme());
     }
 
-    public function testNoMatchWithoutUriMethod()
-    {
-        $route   = new Scheme('https');
-        $request = new BaseRequest();
-
-        $this->assertNull($route->match($request));
-    }
-
-    public function testGetAssembledParams()
+    public function testGetAssembledParams(): void
     {
         $route = new Scheme('https');
         $route->assemble(['foo' => 'bar']);
@@ -62,13 +52,13 @@ final class SchemeTest extends TestCase
         $this->assertEquals([], $route->getAssembledParams());
     }
 
-    public function testFactory()
+    public function testFactory(): void
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(
             Scheme::class,
             [
-                'scheme' => 'Missing "scheme" in options array',
+                'scheme' => 'Missing "scheme" option',
             ],
             [
                 'scheme' => 'http',

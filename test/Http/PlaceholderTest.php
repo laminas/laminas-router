@@ -4,19 +4,33 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
 
-use Laminas\Http\Request;
 use Laminas\Router\Http\Hostname;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Placeholder;
 use Laminas\Router\Http\RouteMatch;
 use Laminas\Router\Http\TreeRouteStack;
+use Laminas\Router\RouteInterface;
+use Laminas\Router\RoutePluginManager;
+use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\ArrayUtils;
 use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\TestAsset\MockServerRequest;
+use LaminasTest\Router\TestAsset\MockUri;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
 
 final class PlaceholderTest extends TestCase
 {
+    private function createRoutePluginManager(): RoutePluginManager
+    {
+        return new RoutePluginManager(new ServiceManager(), [
+            'invokables' => [
+                Placeholder::class => Placeholder::class,
+            ],
+        ]);
+    }
+
     /** @var array<string, array<string, mixed>> */
     private static array $routeConfig = [
         'auth' => [
@@ -45,49 +59,47 @@ final class PlaceholderTest extends TestCase
             ],
         ],
     ];
-    public function testMatch()
+    public function testMatch(): void
     {
         $route = new Placeholder([]);
 
-        $request = new Request();
-        $request->setUri('http://example.com/');
-        $match = $route->match($request);
+        $request = new MockServerRequest(new MockUri('https://example.com/'));
+        $match   = $route->match($request);
 
         $this->assertInstanceOf(RouteMatch::class, $match);
     }
 
-    public function testAssembling()
+    public function testAssembling(): void
     {
         $route = new Placeholder([]);
         $this->assertEquals('', $route->assemble());
     }
 
-    public function testGetAssembledParams()
+    public function testGetAssembledParams(): void
     {
         $route = new Placeholder([]);
         $this->assertEquals([], $route->getAssembledParams());
     }
 
-    public function testFactory()
+    public function testFactory(): void
     {
         $tester = new FactoryTester($this);
         $tester->testFactory(Placeholder::class, [], []);
     }
 
     /**
-     * @param array $additionalConfig
-     * @param string $uri
-     * @param string $expectedRouteName
+     * @throws ContainerExceptionInterface
      */
     #[DataProvider('placeholderProvider')]
-    public function testPlaceholderDefault($additionalConfig, $uri, $expectedRouteName)
+    public function testPlaceholderDefault(array $additionalConfig, string $uri, string $expectedRouteName): void
     {
+        /** @var iterable<string, RouteInterface|iterable> $routeConfig */
         $routeConfig = ArrayUtils::merge(self::$routeConfig, $additionalConfig);
-        $router      = TreeRouteStack::factory(['routes' => $routeConfig]);
+        $router      = new TreeRouteStack($this->createRoutePluginManager());
+        $router->addRoutes($routeConfig);
 
-        $request = new Request();
-        $request->setUri($uri);
-        $match = $router->match($request);
+        $request = new MockServerRequest(new MockUri($uri));
+        $match   = $router->match($request);
 
         $this->assertInstanceOf(RouteMatch::class, $match);
         $this->assertEquals($expectedRouteName, $match->getMatchedRouteName());

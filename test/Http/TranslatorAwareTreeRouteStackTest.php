@@ -4,27 +4,33 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
 
-use Laminas\Http\Request;
 use Laminas\I18n\Translator\Translator;
 use Laminas\I18n\Translator\TranslatorAwareInterface;
 use Laminas\Router\Http\HttpRouteInterface;
 use Laminas\Router\Http\TranslatorAwareTreeRouteStack;
+use Laminas\Translator\TranslatorInterface;
 use Laminas\Uri\Http as HttpUri;
+use LaminasTest\Router\TestAsset\MockServerRequest;
+use LaminasTest\Router\TestAsset\MockUri;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
+
+use function class_exists;
 
 final class TranslatorAwareTreeRouteStackTest extends TestCase
 {
-    /** @var string */
-    protected $testFilesDir;
+    protected string $testFilesDir;
 
-    /** @var Translator */
-    protected $translator;
+    protected TranslatorInterface $translator;
 
-    /** @var array */
-    protected $fooRoute;
+    protected array $fooRoute;
 
     public function setUp(): void
     {
+        if (! class_exists(TranslatorAwareInterface::class)) {
+            $this->markTestSkipped('laminas-i18n is not installed');
+        }
+
         $this->testFilesDir = __DIR__ . '/_files';
 
         $this->translator = new Translator();
@@ -84,10 +90,13 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
         $this->assertFalse($stack->isTranslatorEnabled());
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     */
     public function testTranslatorIsPassedThroughMatchMethod(): void
     {
         $translator = new Translator();
-        $request    = new Request();
+        $request    = new MockServerRequest(new MockUri('http://example.com/'));
 
         $route = $this->createMock(HttpRouteInterface::class);
         $route->expects($this->once())
@@ -104,6 +113,9 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
         $stack->match($request, null, ['translator' => $translator]);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     */
     public function testTranslatorIsPassedThroughAssembleMethod(): void
     {
         $translator = new Translator();
@@ -123,6 +135,9 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
         $stack->assemble([], ['name' => 'test', 'translator' => $translator, 'uri' => $uri]);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     */
     public function testAssembleRouteWithParameterLocale(): void
     {
         $stack = new TranslatorAwareTreeRouteStack();
@@ -136,6 +151,9 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
         $this->assertEquals('/en/homepage', $stack->assemble(['locale' => 'en'], ['name' => 'foo/index']));
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     */
     public function testMatchRouteWithParameterLocale(): void
     {
         $stack = new TranslatorAwareTreeRouteStack();
@@ -145,8 +163,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
             $this->fooRoute
         );
 
-        $request = new Request();
-        $request->setUri('http://example.com/de/hauptseite');
+        $request = new MockServerRequest(new MockUri('https://example.com/de/hauptseite'));
 
         $match = $stack->match($request);
         $this->assertNotNull($match);

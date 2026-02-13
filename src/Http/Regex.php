@@ -4,22 +4,17 @@ declare(strict_types=1);
 
 namespace Laminas\Router\Http;
 
-use Laminas\Router\Exception;
 use Laminas\Router\Exception\InvalidArgumentException;
-use Laminas\Router\RouteInterface;
-use Laminas\Stdlib\ArrayUtils;
-use Laminas\Stdlib\RequestInterface as Request;
-use Traversable;
+use Laminas\Router\RouteConfigTrait;
+use Laminas\Router\RoutePriorityTrait;
+use Psr\Http\Message\ServerRequestInterface;
 
 use function array_merge;
-use function is_array;
 use function is_int;
 use function is_numeric;
-use function method_exists;
 use function preg_match;
 use function rawurldecode;
 use function rawurlencode;
-use function sprintf;
 use function str_contains;
 use function str_replace;
 use function strlen;
@@ -27,101 +22,55 @@ use function strlen;
 /**
  * Regex route.
  */
-class Regex implements HttpRouteInterface
+final class Regex implements HttpRouteInterface
 {
-    /**
-     * Default values.
-     *
-     * @var array
-     */
-    protected $defaults;
+    use RouteConfigTrait;
+    use RoutePriorityTrait;
 
     /**
      * List of assembled parameters.
-     *
-     * @var array
      */
-    protected $assembledParams = [];
-
-    /**
-     * @internal
-     * @deprecated Since 3.9.0 This property will be removed or made private in version 4.0
-     *
-     * @var int|null
-     */
-    public $priority;
+    private array $assembledParams = [];
 
     /**
      * Create a new regex route.
      *
-     * @param  string $regex
-     * @param  string $spec
+     * @param string $regex Regex to match
+     * @param string $spec Specification for URL assembly. Parameters with substitutions should be denoted as "%key%"
      */
     public function __construct(
-        /**
-         * Regex to match.
-         */
-        protected $regex,
-        /**
-         * Specification for URL assembly.
-         *
-         * Parameters accepting substitutions should be denoted as "%key%"
-         */
-        protected $spec,
-        array $defaults = []
+        private readonly string $regex,
+        private readonly string $spec,
+        private readonly array $defaults = []
     ) {
-        $this->defaults = $defaults;
     }
 
     /**
-     * factory(): defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::factory()
-     *
-     * @param  iterable $options
-     * @return Regex
+     * @inheritDoc
      * @throws InvalidArgumentException
      */
-    public static function factory($options = [])
+    public static function factory(iterable $options = []): Regex
     {
-        if ($options instanceof Traversable) {
-            $options = ArrayUtils::iteratorToArray($options);
-        } elseif (! is_array($options)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects an array or Traversable set of options',
-                __METHOD__
-            ));
-        }
+        $options = self::processRouteOptions(
+            $options,
+            ['regex', 'spec'],
+            ['defaults' => []],
+        );
 
-        if (! isset($options['regex'])) {
-            throw new Exception\InvalidArgumentException('Missing "regex" in options array');
-        }
-
-        if (! isset($options['spec'])) {
-            throw new Exception\InvalidArgumentException('Missing "spec" in options array');
-        }
-
-        if (! isset($options['defaults'])) {
-            $options['defaults'] = [];
-        }
-
-        return new static($options['regex'], $options['spec'], $options['defaults']);
+        return new Regex(
+            $options['regex'],
+            $options['spec'],
+            $options['defaults']
+        );
     }
 
-    /**
-     * match(): defined by RouteInterface interface.
-     *
-     * @param  int $pathOffset
-     * @return RouteMatch|null
-     */
-    public function match(Request $request, $pathOffset = null)
-    {
-        if (! method_exists($request, 'getUri')) {
-            return;
-        }
-
-        $uri  = $request->getUri();
-        $path = $uri->getPath();
+    /** @inheritDoc */
+    public function match(
+        ServerRequestInterface $request,
+        ?int $pathOffset = null,
+        array $options = []
+    ): ?RouteMatch {
+        $path = $request->getUri()->getPath();
 
         if ($pathOffset !== null) {
             $result = preg_match('(\G' . $this->regex . ')', $path, $matches, 0, $pathOffset);
@@ -130,7 +79,7 @@ class Regex implements HttpRouteInterface
         }
 
         if (! $result) {
-            return;
+            return null;
         }
 
         $matchedLength = strlen($matches[0]);
@@ -146,14 +95,8 @@ class Regex implements HttpRouteInterface
         return new RouteMatch(array_merge($this->defaults, $matches), $matchedLength);
     }
 
-    /**
-     * assemble(): Defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::assemble()
-     *
-     * @return mixed
-     */
-    public function assemble(array $params = [], array $options = [])
+    /** @inheritDoc */
+    public function assemble(array $params = [], array $options = []): string|array
     {
         $url                   = $this->spec;
         $mergedParams          = array_merge($this->defaults, $params);
@@ -172,14 +115,8 @@ class Regex implements HttpRouteInterface
         return $url;
     }
 
-    /**
-     * getAssembledParams(): defined by HttpRouteInterface interface.
-     *
-     * @see    HttpRouteInterface::getAssembledParams
-     *
-     * @return array
-     */
-    public function getAssembledParams()
+    /** @inheritDoc */
+    public function getAssembledParams(): array
     {
         return $this->assembledParams;
     }

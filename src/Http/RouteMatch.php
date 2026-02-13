@@ -11,19 +11,14 @@ use function array_merge;
 /**
  * Part route match.
  */
-class RouteMatch extends BaseRouteMatch
+final class RouteMatch extends BaseRouteMatch
 {
     /**
      * Create a part RouteMatch with given parameters and length.
-     *
-     * @param  int $length
      */
     public function __construct(
-        array $params,
-        /**
-         * Length of the matched path.
-         */
-        protected $length = 0
+        protected array $params,
+        protected int $length = 0
     ) {
         parent::__construct($params);
     }
@@ -32,11 +27,8 @@ class RouteMatch extends BaseRouteMatch
      * setMatchedRouteName(): defined by BaseRouteMatch.
      *
      * @see    BaseRouteMatch::setMatchedRouteName()
-     *
-     * @param  string $name
-     * @return RouteMatch
      */
-    public function setMatchedRouteName($name)
+    public function setMatchedRouteName(string $name): RouteMatch
     {
         if ($this->matchedRouteName === null) {
             $this->matchedRouteName = $name;
@@ -49,10 +41,8 @@ class RouteMatch extends BaseRouteMatch
 
     /**
      * Merge parameters from another match.
-     *
-     * @return RouteMatch
      */
-    public function merge(RouteMatch $match)
+    public function merge(RouteMatch $match): RouteMatch
     {
         $this->params  = array_merge($this->params, $match->getParams());
         $this->length += $match->getLength();
@@ -64,10 +54,8 @@ class RouteMatch extends BaseRouteMatch
 
     /**
      * Get the matched path length.
-     *
-     * @return int
      */
-    public function getLength()
+    public function getLength(): int
     {
         return $this->length;
     }

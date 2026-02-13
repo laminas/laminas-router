@@ -5,130 +5,75 @@ declare(strict_types=1);
 namespace Laminas\Router\Http;
 
 use Laminas\Router\Exception;
-use Laminas\Router\RouteInterface;
-use Laminas\Stdlib\ArrayUtils;
-use Laminas\Stdlib\RequestInterface as Request;
-use Traversable;
+use Laminas\Router\RouteConfigTrait;
+use Laminas\Router\RoutePriorityTrait;
+use Psr\Http\Message\ServerRequestInterface;
 
 use function array_map;
 use function explode;
 use function in_array;
-use function is_array;
-use function method_exists;
-use function sprintf;
 use function strtoupper;
 
 /**
  * Method route.
  */
-class Method implements HttpRouteInterface
+final class Method implements HttpRouteInterface
 {
-    /**
-     * Default values.
-     *
-     * @var array
-     */
-    protected $defaults;
+    use RouteConfigTrait;
+    use RoutePriorityTrait;
 
-    /**
-     * @internal
-     * @deprecated Since 3.9.0 This property will be removed or made private in version 4.0
-     *
-     * @var int|null
-     */
-    public $priority;
+    /** @var list<string> */
+    private readonly array $verbs;
 
     /**
      * Create a new method route.
-     *
-     * @param  string $verb
      */
     public function __construct(
-        /**
-         * Verb to match.
-         */
-        protected $verb,
-        array $defaults = []
+        string $verb,
+        private readonly array $defaults = []
     ) {
-        $this->defaults = $defaults;
+        $this->verbs = array_map('trim', explode(',', strtoupper($verb)));
     }
 
     /**
-     * factory(): defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::factory()
-     *
-     * @param  iterable $options
-     * @return Method
+     * @inheritDoc
      * @throws Exception\InvalidArgumentException
      */
-    public static function factory($options = [])
+    public static function factory(iterable $options = []): Method
     {
-        if ($options instanceof Traversable) {
-            $options = ArrayUtils::iteratorToArray($options);
-        } elseif (! is_array($options)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects an array or Traversable set of options',
-                __METHOD__
-            ));
-        }
+        $options = self::processRouteOptions(
+            $options,
+            ['verb'],
+            ['defaults' => []],
+        );
 
-        if (! isset($options['verb'])) {
-            throw new Exception\InvalidArgumentException('Missing "verb" in options array');
-        }
-
-        if (! isset($options['defaults'])) {
-            $options['defaults'] = [];
-        }
-
-        return new static($options['verb'], $options['defaults']);
+        return new Method(
+            $options['verb'],
+            $options['defaults']
+        );
     }
 
-    /**
-     * match(): defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::match()
-     *
-     * @return RouteMatch|null
-     */
-    public function match(Request $request)
-    {
-        if (! method_exists($request, 'getMethod')) {
-            return null;
-        }
-
-        $requestVerb = strtoupper($request->getMethod());
-        $matchVerbs  = explode(',', strtoupper($this->verb));
-        $matchVerbs  = array_map('trim', $matchVerbs);
-
-        if (in_array($requestVerb, $matchVerbs)) {
+    /** @inheritDoc */
+    public function match(
+        ServerRequestInterface $request,
+        ?int $pathOffset = null,
+        array $options = []
+    ): ?RouteMatch {
+        if (in_array(strtoupper($request->getMethod()), $this->verbs, true)) {
             return new RouteMatch($this->defaults);
         }
 
         return null;
     }
 
-    /**
-     * assemble(): Defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::assemble()
-     *
-     * @return mixed
-     */
-    public function assemble(array $params = [], array $options = [])
+    /** @inheritDoc */
+    public function assemble(array $params = [], array $options = []): string
     {
-        // The request method does not contribute to the path, thus nothing is returned.
         return '';
     }
 
-    /**
-     * getAssembledParams(): defined by HttpRouteInterface interface.
-     *
-     * @see    HttpRouteInterface::getAssembledParams
-     *
-     * @return array
-     */
-    public function getAssembledParams()
+    /** @inheritDoc */
+    public function getAssembledParams(): array
     {
         return [];
     }

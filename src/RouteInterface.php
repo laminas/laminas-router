@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Laminas\Router;
 
-use Laminas\Stdlib\RequestInterface as Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * RouteInterface interface.
@@ -12,31 +12,27 @@ use Laminas\Stdlib\RequestInterface as Request;
 interface RouteInterface
 {
     /**
-     * Priority used for route stacks.
-     *
-     * @var int
-     * public $priority;
-     */
-
-    /**
      * Create a new route with given options.
-     *
-     * @param iterable $options
-     * @return RouteInterface
      */
-    public static function factory($options = []);
+    public static function factory(iterable $options = []): RouteInterface;
 
     /**
      * Match a given request.
-     *
-     * @return RouteMatch|null
      */
-    public function match(Request $request);
+    public function match(ServerRequestInterface $request): ?RouteMatch;
 
     /**
      * Assemble the route.
-     *
-     * @return mixed
      */
-    public function assemble(array $params = [], array $options = []);
+    public function assemble(array $params = [], array $options = []): mixed;
+
+    /**
+     * Set the route priority.
+     */
+    public function setPriority(?int $priority): void;
+
+    /**
+     * Get the route priority.
+     */
+    public function getPriority(): int;
 }

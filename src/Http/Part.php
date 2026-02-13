@@ -6,147 +6,100 @@ namespace Laminas\Router\Http;
 
 use ArrayObject;
 use Laminas\Router\Exception;
-use Laminas\Router\PriorityList;
-use Laminas\Router\RouteInterface;
+use Laminas\Router\RouteConfigTrait;
 use Laminas\Router\RoutePluginManager;
-use Laminas\Stdlib\ArrayUtils;
-use Laminas\Stdlib\RequestInterface as Request;
-use Traversable;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 use function array_diff_key;
 use function array_flip;
 use function is_array;
-use function method_exists;
-use function sprintf;
+use function is_iterable;
 use function strlen;
 
-/**
- * @template TRoute of HttpRouteInterface
- * @template-extends TreeRouteStack<TRoute>
- */
-class Part extends TreeRouteStack implements HttpRouteInterface
+final class Part extends TreeRouteStack implements HttpRouteInterface
 {
-    /**
-     * RouteInterface to match.
-     *
-     * @var TRoute
-     */
-    protected $route;
-
-    /**
-     * Child routes.
-     *
-     * @var mixed
-     */
-    protected $childRoutes;
+    use RouteConfigTrait;
 
     /**
      * Create a new part route.
      *
-     * @param TRoute|iterable|string           $route
-     * @param bool                             $mayTerminate
-     * @param array|null                       $childRoutes
-     * @param RoutePluginManager<TRoute>       $routePlugins
-     * @param ArrayObject<string, TRoute>|null $prototypes
-     * @throws Exception\InvalidArgumentException
+     * @param ?iterable<string, HttpRouteInterface|iterable> $childRoutes
+     * @param ?ArrayObject<string, HttpRouteInterface> $prototypes
+     * @throws ContainerExceptionInterface
      */
     public function __construct(
-        $route,
-        /**
-         * Whether the route may terminate.
-         */
-        protected $mayTerminate,
-        RoutePluginManager $routePlugins,
-        ?array $childRoutes = null,
+        protected iterable|HttpRouteInterface $route,
+        private readonly bool $mayTerminate,
+        RoutePluginManager $routePluginManager,
+        protected ?array $childRoutes = null,
         ?ArrayObject $prototypes = null
     ) {
-        $this->routePluginManager = $routePlugins;
+        parent::__construct($routePluginManager);
 
         if (! $route instanceof HttpRouteInterface) {
-            $route = $this->routeFromArray($route);
+            $this->route = $this->routeFromSpec($route);
         }
 
-        if ($route instanceof self) {
+        if ($this->route instanceof self) {
             throw new Exception\InvalidArgumentException('Base route may not be a part route');
         }
 
-        $this->route       = $route;
-        $this->childRoutes = $childRoutes;
-        $this->prototypes  = $prototypes;
-        /** @var PriorityList<string, TRoute> $this->routes */
-        $this->routes = new PriorityList();
+        if ($prototypes !== null) {
+            $this->prototypes = $prototypes;
+        }
     }
 
     /**
-     * factory(): defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::factory()
-     *
-     * @param  mixed $options
-     * @return Part
+     * @inheritDoc
      * @throws Exception\InvalidArgumentException
+     * @throws ContainerExceptionInterface
      */
-    public static function factory($options = [])
+    public static function factory(iterable $options = []): Part
     {
-        if ($options instanceof Traversable) {
-            $options = ArrayUtils::iteratorToArray($options);
-        } elseif (! is_array($options)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects an array or Traversable set of options',
-                __METHOD__
-            ));
+        $options = self::processRouteOptions(
+            $options,
+            ['route', 'route_plugins'],
+            ['prototypes' => null, 'may_terminate' => false, 'child_routes' => null],
+        );
+
+        $childRoutes = null;
+        if (is_iterable($options['child_routes'] ?? null)) {
+            /** @var iterable<string, HttpRouteInterface|iterable> $childRoutes */
+            $childRoutes = self::iteratorToArray($options['child_routes']);
         }
 
-        if (! isset($options['route'])) {
-            throw new Exception\InvalidArgumentException('Missing "route" in options array');
+        // Ensure prototypes is ArrayObject or null
+        $prototypes = $options['prototypes'];
+        if (is_array($prototypes)) {
+            $prototypes = new ArrayObject($prototypes);
         }
 
-        if (! isset($options['route_plugins'])) {
-            throw new Exception\InvalidArgumentException('Missing "route_plugins" in options array');
-        }
-
-        if (! isset($options['prototypes'])) {
-            $options['prototypes'] = null;
-        }
-
-        if (! isset($options['may_terminate'])) {
-            $options['may_terminate'] = false;
-        }
-
-        if (! isset($options['child_routes']) || ! $options['child_routes']) {
-            $options['child_routes'] = null;
-        }
-
-        if ($options['child_routes'] instanceof Traversable) {
-            $options['child_routes'] = ArrayUtils::iteratorToArray($options['child_routes']);
-        }
-
-        return new static(
+        return new Part(
             $options['route'],
             $options['may_terminate'],
             $options['route_plugins'],
-            $options['child_routes'],
-            $options['prototypes']
+            $childRoutes,
+            $prototypes
         );
     }
 
     /**
-     * match(): defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::match()
-     *
-     * @param  integer|null $pathOffset
-     * @return RouteMatch|null
+     * @inheritDoc
+     * @throws ContainerExceptionInterface
      */
-    public function match(Request $request, $pathOffset = null, array $options = [])
-    {
+    public function match(
+        ServerRequestInterface $request,
+        ?int $pathOffset = null,
+        array $options = []
+    ): ?RouteMatch {
         if ($pathOffset === null) {
             $pathOffset = 0;
         }
 
         $match = $this->route->match($request, $pathOffset, $options);
 
-        if ($match !== null && method_exists($request, 'getUri')) {
+        if ($match !== null) {
             if ($this->childRoutes !== null) {
                 $this->addRoutes($this->childRoutes);
                 $this->childRoutes = null;
@@ -154,8 +107,7 @@ class Part extends TreeRouteStack implements HttpRouteInterface
 
             $nextOffset = $pathOffset + $match->getLength();
 
-            $uri        = $request->getUri();
-            $pathLength = strlen($uri->getPath());
+            $pathLength = strlen($request->getUri()->getPath());
 
             if ($this->mayTerminate && $nextOffset === $pathLength) {
                 return $match;
@@ -164,7 +116,7 @@ class Part extends TreeRouteStack implements HttpRouteInterface
             if (
                 isset($options['translator'])
                 && ! isset($options['locale'])
-                && null !== ($locale = $match->getParam('locale', null))
+                && null !== ($locale = $match->getParam('locale'))
             ) {
                 $options['locale'] = $locale;
             }
@@ -182,14 +134,11 @@ class Part extends TreeRouteStack implements HttpRouteInterface
     }
 
     /**
-     * assemble(): Defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::assemble()
-     *
-     * @return mixed
+     * @inheritDoc
      * @throws Exception\RuntimeException
+     * @throws ContainerExceptionInterface
      */
-    public function assemble(array $params = [], array $options = [])
+    public function assemble(array $params = [], array $options = []): mixed
     {
         if ($this->childRoutes !== null) {
             $this->addRoutes($this->childRoutes);
@@ -215,17 +164,12 @@ class Part extends TreeRouteStack implements HttpRouteInterface
 
         unset($options['has_child']);
         $options['only_return_path'] = true;
+
         return $path . parent::assemble($params, $options);
     }
 
-    /**
-     * getAssembledParams(): defined by HttpRouteInterface interface.
-     *
-     * @see    HttpRouteInterface::getAssembledParams
-     *
-     * @return array
-     */
-    public function getAssembledParams()
+    /** @inheritDoc */
+    public function getAssembledParams(): array
     {
         // Part routes may not occur as base route of other part routes, so we
         // don't have to return anything here.

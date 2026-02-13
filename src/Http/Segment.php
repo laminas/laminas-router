@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace Laminas\Router\Http;
 
-use Laminas\I18n\Translator\TranslatorInterface as Translator;
+use Laminas\I18n\Translator\Translator;
 use Laminas\Router\Exception;
-use Laminas\Router\RouteInterface;
-use Laminas\Stdlib\ArrayUtils;
-use Laminas\Stdlib\RequestInterface as Request;
-use Traversable;
+use Laminas\Router\RouteConfigTrait;
+use Laminas\Router\RoutePriorityTrait;
+use Laminas\Translator\TranslatorInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 use function array_merge;
 use function count;
-use function is_array;
-use function method_exists;
 use function preg_match;
 use function preg_quote;
 use function rawurldecode;
@@ -27,14 +25,17 @@ use function strtr;
 /**
  * Segment route.
  */
-class Segment implements HttpRouteInterface
+final class Segment implements HttpRouteInterface
 {
+    use RouteConfigTrait;
+    use RoutePriorityTrait;
+
     /**
      * Cache for the encode output.
      *
      * @var array<string, string>
      */
-    protected static $cacheEncode = [];
+    protected static array $cacheEncode = [];
 
     /**
      * Map of allowed special chars in path segments.
@@ -48,7 +49,7 @@ class Segment implements HttpRouteInterface
      *
      * @var array<string, string>
      */
-    protected static $urlencodeCorrectionMap = [
+    protected static array $urlencodeCorrectionMap = [
         '%21' => "!", // sub-delims
         '%24' => "$", // sub-delims
         '%26' => "&", // sub-delims
@@ -70,60 +71,38 @@ class Segment implements HttpRouteInterface
 
     /**
      * Parts of the route.
-     *
-     * @var array
      */
-    protected $parts;
+    private readonly array $parts;
 
     /**
      * Regex used for matching the route.
-     *
-     * @var string
      */
-    protected $regex;
+    private readonly string $regex;
 
     /**
      * Map from regex groups to parameter names.
-     *
-     * @var array
      */
-    protected $paramMap = [];
+    private array $paramMap = [];
 
     /**
      * Default values.
-     *
-     * @var array
      */
-    protected $defaults;
+    private readonly array $defaults;
 
     /**
      * List of assembled parameters.
-     *
-     * @var array
      */
-    protected $assembledParams = [];
+    private array $assembledParams = [];
 
     /**
      * Translation keys used in the regex.
-     *
-     * @var array
      */
-    protected $translationKeys = [];
-
-    /**
-     * @internal
-     * @deprecated Since 3.9.0 This property will be removed or made private in version 4.0
-     *
-     * @var int|null
-     */
-    public $priority;
+    private array $translationKeys = [];
 
     /**
      * Create a new regex route.
-     *
-     * @param  string $route
      */
-    public function __construct($route, array $constraints = [], array $defaults = [])
+    public function __construct(string $route, array $constraints = [], array $defaults = [])
     {
         $this->defaults = $defaults;
         $this->parts    = $this->parseRouteDefinition($route);
@@ -131,48 +110,30 @@ class Segment implements HttpRouteInterface
     }
 
     /**
-     * factory(): defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::factory()
-     *
-     * @param  iterable $options
-     * @return Segment
+     * @inheritDoc
      * @throws Exception\InvalidArgumentException
      */
-    public static function factory($options = [])
+    public static function factory(iterable $options = []): Segment
     {
-        if ($options instanceof Traversable) {
-            $options = ArrayUtils::iteratorToArray($options);
-        } elseif (! is_array($options)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects an array or Traversable set of options',
-                __METHOD__
-            ));
-        }
+        $options = self::processRouteOptions(
+            $options,
+            ['route'],
+            ['constraints' => [], 'defaults' => []],
+        );
 
-        if (! isset($options['route'])) {
-            throw new Exception\InvalidArgumentException('Missing "route" in options array');
-        }
-
-        if (! isset($options['constraints'])) {
-            $options['constraints'] = [];
-        }
-
-        if (! isset($options['defaults'])) {
-            $options['defaults'] = [];
-        }
-
-        return new static($options['route'], $options['constraints'], $options['defaults']);
+        return new Segment(
+            $options['route'],
+            $options['constraints'],
+            $options['defaults']
+        );
     }
 
     /**
      * Parse a route definition.
      *
-     * @param  string $def
-     * @return array
      * @throws Exception\RuntimeException
      */
-    protected function parseRouteDefinition($def)
+    protected function parseRouteDefinition(string $def): array
     {
         $currentPos = 0;
         $length     = strlen($def);
@@ -243,11 +204,8 @@ class Segment implements HttpRouteInterface
 
     /**
      * Build the matching regex from parsed parts.
-     *
-     * @param  int $groupIndex
-     * @return string
      */
-    protected function buildRegex(array $parts, array $constraints, &$groupIndex = 1)
+    protected function buildRegex(array $parts, array $constraints, int &$groupIndex = 1): string
     {
         $regex = '';
 
@@ -288,16 +246,18 @@ class Segment implements HttpRouteInterface
     /**
      * Build a path.
      *
-     * @param  bool    $isOptional
-     * @param  bool    $hasChild
-     * @return string
      * @throws Exception\InvalidArgumentException
      * @throws Exception\RuntimeException
      */
-    protected function buildPath(array $parts, array $mergedParams, $isOptional, $hasChild, array $options)
-    {
+    protected function buildPath(
+        array $parts,
+        array $mergedParams,
+        bool $isOptional,
+        bool $hasChild,
+        array $options
+    ): string {
         if ($this->translationKeys) {
-            if (! isset($options['translator']) || ! $options['translator'] instanceof Translator) {
+            if (! isset($options['translator']) || ! $options['translator'] instanceof TranslatorInterface) {
                 throw new Exception\RuntimeException('No translator provided');
             }
 
@@ -363,22 +323,15 @@ class Segment implements HttpRouteInterface
     }
 
     /**
-     * match(): defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::match()
-     *
-     * @param  string|null $pathOffset
-     * @return RouteMatch|null
+     * @inheritDoc
      * @throws Exception\RuntimeException
      */
-    public function match(Request $request, $pathOffset = null, array $options = [])
-    {
-        if (! method_exists($request, 'getUri')) {
-            return;
-        }
-
-        $uri  = $request->getUri();
-        $path = $uri->getPath();
+    public function match(
+        ServerRequestInterface $request,
+        ?int $pathOffset = null,
+        array $options = []
+    ): ?RouteMatch {
+        $path = $request->getUri()->getPath();
 
         $regex = $this->regex;
 
@@ -403,7 +356,7 @@ class Segment implements HttpRouteInterface
         }
 
         if (! $result) {
-            return;
+            return null;
         }
 
         $matchedLength = strlen($matches[0]);
@@ -418,14 +371,8 @@ class Segment implements HttpRouteInterface
         return new RouteMatch(array_merge($this->defaults, $params), $matchedLength);
     }
 
-    /**
-     * assemble(): Defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::assemble()
-     *
-     * @return mixed
-     */
-    public function assemble(array $params = [], array $options = [])
+    /** @inheritDoc */
+    public function assemble(array $params = [], array $options = []): string
     {
         $this->assembledParams = [];
 
@@ -438,24 +385,16 @@ class Segment implements HttpRouteInterface
         );
     }
 
-    /**
-     * getAssembledParams(): defined by HttpRouteInterface interface.
-     *
-     * @see    HttpRouteInterface::getAssembledParams
-     *
-     * @return array
-     */
-    public function getAssembledParams()
+    /** @inheritDoc */
+    public function getAssembledParams(): array
     {
         return $this->assembledParams;
     }
 
     /**
      * Encode a path segment.
-     *
-     * @return string
      */
-    protected function encode(string $value)
+    protected function encode(string $value): string
     {
         if (! isset(static::$cacheEncode[$value])) {
             static::$cacheEncode[$value] = rawurlencode($value);
@@ -466,11 +405,8 @@ class Segment implements HttpRouteInterface
 
     /**
      * Decode a path segment.
-     *
-     * @param  string $value
-     * @return string
      */
-    protected function decode($value)
+    protected function decode(string $value): string
     {
         return rawurldecode($value);
     }

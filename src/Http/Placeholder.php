@@ -5,97 +5,60 @@ declare(strict_types=1);
 namespace Laminas\Router\Http;
 
 use Laminas\Router\Exception;
-use Laminas\Router\RouteInterface;
-use Laminas\Stdlib\ArrayUtils;
-use Laminas\Stdlib\RequestInterface as Request;
-use Traversable;
+use Laminas\Router\RouteConfigTrait;
+use Laminas\Router\RoutePriorityTrait;
+use Psr\Http\Message\ServerRequestInterface;
 
 use function is_array;
-use function sprintf;
 
 /**
  * Placeholder route.
  */
-class Placeholder implements HttpRouteInterface
+final class Placeholder implements HttpRouteInterface
 {
-    /**
-     * @internal
-     * @deprecated Since 3.9.0 This property will be removed or made private in version 4.0
-     *
-     * @var int|null
-     */
-    public $priority;
+    use RouteConfigTrait;
+    use RoutePriorityTrait;
 
     public function __construct(private readonly array $defaults)
     {
     }
 
     /**
-     * factory(): defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::factory()
-     *
-     * @param  iterable $options
-     * @return Placeholder
+     * @inheritDoc
      * @throws Exception\InvalidArgumentException
      */
-    public static function factory($options = [])
+    public static function factory(iterable $options = []): Placeholder
     {
-        if ($options instanceof Traversable) {
-            $options = ArrayUtils::iteratorToArray($options);
-        }
-
-        if (! is_array($options)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects an array or Traversable set of options',
-                __METHOD__
-            ));
-        }
-
-        if (! isset($options['defaults'])) {
-            $options['defaults'] = [];
-        }
+        $options = self::processRouteOptions(
+            $options,
+            [],
+            ['defaults' => []],
+        );
 
         if (! is_array($options['defaults'])) {
             throw new Exception\InvalidArgumentException('options[defaults] expected to be an array if set');
         }
 
-        return new static($options['defaults']);
+        return new Placeholder($options['defaults']);
     }
 
-    /**
-     * match(): defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::match()
-     *
-     * @param  integer|null $pathOffset
-     * @return RouteMatch|null
-     */
-    public function match(Request $request, $pathOffset = null)
-    {
+    /** @inheritDoc */
+    public function match(
+        ServerRequestInterface $request,
+        ?int $pathOffset = null,
+        array $options = []
+    ): ?RouteMatch {
         return new RouteMatch($this->defaults);
     }
 
-    /**
-     * assemble(): Defined by RouteInterface interface.
-     *
-     * @see    RouteInterface::assemble()
-     *
-     * @return mixed
-     */
-    public function assemble(array $params = [], array $options = [])
+    /** @inheritDoc */
+    public function assemble(array $params = [], array $options = []): string
     {
         return '';
     }
 
-    /**
-     * getAssembledParams(): defined by RouteInterface interface.
-     *
-     * @see    HttpRouteInterface::getAssembledParams
-     *
-     * @return array
-     */
-    public function getAssembledParams()
+    /** @inheritDoc */
+    public function getAssembledParams(): array
     {
         return [];
     }

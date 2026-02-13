@@ -4,23 +4,25 @@ declare(strict_types=1);
 
 namespace Laminas\Router\Http;
 
-use Laminas\Router\RouteInterface;
-use Laminas\Stdlib\RequestInterface as Request;
+use Laminas\Router\RouteInterface as BaseRoute;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Tree specific route interface.
- *
- * Note: the additional {@see self::match()} annotation is only here for documentation purposes, because we cannot
- *       change the signature of {@see self::match()} in the interface definition without breaking BC.
- *
- * @method RouteMatch|null match(Request $request, int|null $pathOffset = null, array $options = [])
+ * HTTP route interface.
  */
-interface HttpRouteInterface extends RouteInterface
+interface HttpRouteInterface extends BaseRoute
 {
     /**
-     * Get a list of parameters used while assembling.
-     *
-     * @return array
+     * Match a given server request.
      */
-    public function getAssembledParams();
+    public function match(
+        ServerRequestInterface $request,
+        ?int $pathOffset = null,
+        array $options = []
+    ): ?RouteMatch;
+
+    /**
+     * Get a list of parameters used while assembling.
+     */
+    public function getAssembledParams(): array;
 }
