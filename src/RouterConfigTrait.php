@@ -26,8 +26,8 @@ trait RouterConfigTrait
         }
 
         // Inject the route plugins
-        if (! isset($config['route_plugins']) && $container->has('RoutePluginManager')) {
-            $routePluginManager = $container->get('RoutePluginManager');
+        if (! isset($config['route_plugins']) && $container->has(RoutePluginManager::class)) {
+            $routePluginManager = $container->get(RoutePluginManager::class);
             if ($routePluginManager instanceof RoutePluginManager) {
                 $config['route_plugins'] = $routePluginManager;
             }

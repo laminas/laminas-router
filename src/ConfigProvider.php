@@ -46,15 +46,15 @@ final readonly class ConfigProvider
     {
         return [
             'aliases'   => [
-                'HttpRouter'         => Http\TreeRouteStack::class,
-                'router'             => RouteStackInterface::class,
-                'Router'             => RouteStackInterface::class,
-                'RoutePluginManager' => RoutePluginManager::class,
+                'HttpRouter'               => Http\TreeRouteStack::class,
+                'router'                   => RouteStackInterface::class,
+                'Router'                   => RouteStackInterface::class,
+                'RoutePluginManager'       => RoutePluginManager::class,
+                RouteStackInterface::class => Http\TreeRouteStack::class,
             ],
             'factories' => [
                 Http\TreeRouteStack::class => Http\HttpRouterFactory::class,
                 RoutePluginManager::class  => RoutePluginManagerFactory::class,
-                RouteStackInterface::class => RouterFactory::class,
             ],
         ];
     }

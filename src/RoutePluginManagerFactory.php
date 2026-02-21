@@ -12,7 +12,8 @@ use function is_array;
 
 /**
  * @psalm-import-type ServiceManagerConfiguration from ServiceManager
- */final class RoutePluginManagerFactory implements FactoryInterface
+ */
+final class RoutePluginManagerFactory implements FactoryInterface
 {
     /**
      * Create and return a route plugin manager.
@@ -22,12 +23,6 @@ use function is_array;
         string $requestedName,
         ?array $options = null
     ): RoutePluginManager {
-        // If this is in a laminas-mvc application, the ServiceListener will inject
-        // merged configuration during bootstrap.
-        if ($container->has('ServiceListener')) {
-            return new RoutePluginManager($container);
-        }
-
         // If we do not have a config service, nothing more to do
         if (! $container->has('config')) {
             return new RoutePluginManager($container, $options ?? []);

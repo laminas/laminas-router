@@ -331,11 +331,6 @@
       <code><![CDATA[$routePluginManager]]></code>
     </MixedAssignment>
   </file>
-  <file src="src/RouterFactory.php">
-    <MixedReturnStatement>
-      <code><![CDATA[$container->get('HttpRouter')]]></code>
-    </MixedReturnStatement>
-  </file>
   <file src="src/SimpleRouteStack.php">
     <ClassMustBeFinal>
       <code><![CDATA[SimpleRouteStack]]></code>
@@ -396,6 +391,10 @@
     <MixedArgument>
       <code><![CDATA[$services]]></code>
     </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$config]]></code>
+      <code><![CDATA[$config]]></code>
+    </MixedArgumentTypeCoercion>
   </file>
   <file src="test/Http/PartTest.php">
     <InvalidArgument>
@@ -592,21 +591,6 @@
       <code><![CDATA[testCanLoadAnyRoute]]></code>
       <code><![CDATA[testLoadNonExistentRoute]]></code>
     </MissingReturnType>
-  </file>
-  <file src="test/RouterFactoryTest.php">
-    <MissingClosureParamType>
-      <code><![CDATA[$services]]></code>
-    </MissingClosureParamType>
-    <MissingClosureReturnType>
-      <code><![CDATA[static fn($services) => new RoutePluginManager($services)]]></code>
-    </MissingClosureReturnType>
-    <MixedArgument>
-      <code><![CDATA[$services]]></code>
-    </MixedArgument>
-    <MixedArgumentTypeCoercion>
-      <code><![CDATA[$config]]></code>
-      <code><![CDATA[$config]]></code>
-    </MixedArgumentTypeCoercion>
   </file>
   <file src="test/SimpleRouteStackTest.php">
     <ArgumentTypeCoercion>
