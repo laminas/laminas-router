@@ -145,6 +145,17 @@
       <code><![CDATA[is_int($key)]]></code>
       <code><![CDATA[is_numeric($key) || is_int($key)]]></code>
     </TypeDoesNotContainType>
+    <UnsafeInstantiation>
+      <code><![CDATA[new static($options['regex'], $options['spec'], $options['defaults'])]]></code>
+    </UnsafeInstantiation>
+  </file>
+  <file src="src/Http/RouteMatch.php">
+    <DocblockTypeContradiction>
+      <code><![CDATA[$this->matchedRouteName === null]]></code>
+    </DocblockTypeContradiction>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[RouteMatch]]></code>
+    </PropertyNotSetInConstructor>
   </file>
   <file src="src/Http/Scheme.php">
     <MixedArgument>
@@ -246,9 +257,50 @@
     </UnsupportedReferenceUsage>
   </file>
   <file src="src/Http/TreeRouteStack.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$route]]></code>
-    </LessSpecificReturnStatement>
+    <DeprecatedClass>
+      <code><![CDATA[new Config([
+            'aliases'   => [
+                'chain'    => Chain::class,
+                'Chain'    => Chain::class,
+                'hostname' => Hostname::class,
+                'Hostname' => Hostname::class,
+                'hostName' => Hostname::class,
+                'HostName' => Hostname::class,
+                'literal'  => Literal::class,
+                'Literal'  => Literal::class,
+                'method'   => Method::class,
+                'Method'   => Method::class,
+                'part'     => Part::class,
+                'Part'     => Part::class,
+                'regex'    => Regex::class,
+                'Regex'    => Regex::class,
+                'scheme'   => Scheme::class,
+                'Scheme'   => Scheme::class,
+                'segment'  => Segment::class,
+                'Segment'  => Segment::class,
+            ],
+            'factories' => [
+                Chain::class    => RouteInvokableFactory::class,
+                Hostname::class => RouteInvokableFactory::class,
+                Literal::class  => RouteInvokableFactory::class,
+                Method::class   => RouteInvokableFactory::class,
+                Part::class     => RouteInvokableFactory::class,
+                Regex::class    => RouteInvokableFactory::class,
+                Scheme::class   => RouteInvokableFactory::class,
+                Segment::class  => RouteInvokableFactory::class,
+            ],
+        ])]]></code>
+    </DeprecatedClass>
+    <DocblockTypeContradiction>
+      <code><![CDATA[! is_array($routes) && ! $routes instanceof Traversable]]></code>
+      <code><![CDATA[$this->baseUrl === null]]></code>
+      <code><![CDATA[$this->requestUri === null]]></code>
+      <code><![CDATA[$this->requestUri === null]]></code>
+      <code><![CDATA[$this->requestUri === null]]></code>
+      <code><![CDATA[($uri->getHost() === null || $uri->getScheme() === null) && $this->requestUri === null]]></code>
+      <code><![CDATA[is_array($options)]]></code>
+      <code><![CDATA[is_array($specs)]]></code>
+    </DocblockTypeContradiction>
     <MixedArgument>
       <code><![CDATA[$options['fragment']]]></code>
       <code><![CDATA[$options['name']]]></code>
@@ -281,15 +333,33 @@
       <code><![CDATA[getHost]]></code>
       <code><![CDATA[getScheme]]></code>
     </PossiblyNullReference>
-    <UnsafeInstantiation>
-      <code><![CDATA[new static($routePluginManager)]]></code>
-    </UnsafeInstantiation>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[addPrototypes]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$priority]]></code>
+    </PossiblyUnusedProperty>
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[$this]]></code>
+    </PossiblyUnusedReturnValue>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$baseUrl]]></code>
+      <code><![CDATA[$requestUri]]></code>
+    </PropertyNotSetInConstructor>
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(string) $this->baseUrl]]></code>
+    </RedundantCastGivenDocblockType>
+    <TooManyArguments>
+      <code><![CDATA[match]]></code>
+    </TooManyArguments>
+    <UndefinedMethod>
+      <code><![CDATA[addPrototypes]]></code>
+    </UndefinedMethod>
   </file>
-  <file src="src/RouteConfigTrait.php">
-    <MixedAssignment>
-      <code><![CDATA[$defaultValue]]></code>
-      <code><![CDATA[$options[$defaultOption]]]></code>
-    </MixedAssignment>
+  <file src="src/Module.php">
+    <UnusedClass>
+      <code><![CDATA[Module]]></code>
+    </UnusedClass>
   </file>
   <file src="src/RouteMatchInterface.php">
     <PossiblyUnusedReturnValue>
@@ -362,10 +432,11 @@
     </MixedAssignment>
   </file>
   <file src="test/Http/ChainTest.php">
-    <InvalidArgument>
-      <code><![CDATA[$routePlugins]]></code>
-      <code><![CDATA[$routePlugins]]></code>
-    </InvalidArgument>
+    <MissingReturnType>
+      <code><![CDATA[testAssembling]]></code>
+      <code><![CDATA[testFactory]]></code>
+      <code><![CDATA[testMatching]]></code>
+    </MissingReturnType>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$key]]></code>
     </MixedArgumentTypeCoercion>
@@ -397,9 +468,9 @@
     </MixedArgumentTypeCoercion>
   </file>
   <file src="test/Http/PartTest.php">
-    <InvalidArgument>
-      <code><![CDATA[self::getRoutePlugins()]]></code>
-    </InvalidArgument>
+    <ArgumentTypeCoercion>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+    </ArgumentTypeCoercion>
     <LessSpecificReturnStatement>
       <code><![CDATA[new RoutePluginManager(new ServiceManager(), [
             'aliases'   => [
@@ -419,17 +490,41 @@
     </LessSpecificReturnStatement>
     <MissingReturnType>
       <code><![CDATA[testAssembling]]></code>
+      <code><![CDATA[testBaseRouteMayNotBePartRoute]]></code>
+      <code><![CDATA[testFactory]]></code>
+      <code><![CDATA[testFactoryShouldAcceptTraversableChildRoutes]]></code>
+      <code><![CDATA[testGetAssembledParams]]></code>
+      <code><![CDATA[testMatching]]></code>
+      <code><![CDATA[testNoMatchWithoutUriMethod]]></code>
+      <code><![CDATA[testPartRouteMarkedAsMayTerminateCanMatchWhenQueryStringPresent]]></code>
     </MissingReturnType>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$key]]></code>
     </MixedArgumentTypeCoercion>
     <MixedAssignment>
+      <code><![CDATA[$query]]></code>
       <code><![CDATA[$result]]></code>
       <code><![CDATA[$value]]></code>
     </MixedAssignment>
     <MoreSpecificReturnType>
       <code><![CDATA[RoutePluginManager<HttpRouteInterface>]]></code>
     </MoreSpecificReturnType>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[testAssembling]]></code>
+      <code><![CDATA[testMatching]]></code>
+    </PossiblyInvalidArgument>
+    <UnusedVariable>
+      <code><![CDATA[$query]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="test/Http/PlaceholderTest.php">
+    <MissingReturnType>
+      <code><![CDATA[testAssembling]]></code>
+      <code><![CDATA[testFactory]]></code>
+      <code><![CDATA[testGetAssembledParams]]></code>
+      <code><![CDATA[testMatch]]></code>
+      <code><![CDATA[testPlaceholderDefault]]></code>
+    </MissingReturnType>
   </file>
   <file src="test/Http/RegexTest.php">
     <MixedArgumentTypeCoercion>
@@ -551,8 +646,11 @@
       <code><![CDATA[getParam]]></code>
       <code><![CDATA[getParam]]></code>
     </PossiblyNullReference>
+    <UnusedMethodCall>
+      <code><![CDATA[setAccessible]]></code>
+    </UnusedMethodCall>
   </file>
-  <file src="test/RouteContainerTest.php">
+  <file src="test/PriorityListTest.php">
     <InvalidArgument>
       <code><![CDATA[$list]]></code>
       <code><![CDATA[$list]]></code>
