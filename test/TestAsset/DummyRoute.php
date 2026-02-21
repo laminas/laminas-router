@@ -14,11 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class DummyRoute implements RouteInterface
 {
-    /**
-     * @internal
-     * @deprecated Since 3.9.0 This property will be removed or made private in version 4.0
-     */
-    public ?int $priority = null;
+    use RoutePriorityTrait;
 
     /**
      * match(): defined by RouteInterface interface.
