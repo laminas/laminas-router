@@ -295,12 +295,12 @@ more.</p>
 <p>The base unit of routing is a <code>Route</code>:</p>
 <pre class="highlight"><code class="language-php">namespace Laminas\Router;
 
-use Laminas\Stdlib\RequestInterface as Request;
+use Laminas\Stdlib\RequestInterface;
 
 interface RouteInterface
 {
     public static function factory(array $options = []);
-    public function match(Request $request);
+    public function match(RequestInterface $request);
     public function assemble(array $params = [], array $options = []);
 }</code></pre>
 <p>A <code>Route</code> accepts a <code>Request</code>, and determines if it matches. If so, it returns a
