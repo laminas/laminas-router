@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router;
 
+use Laminas\Diactoros\Request;
+use Laminas\Diactoros\UriFactory;
 use Laminas\Router\Exception\InvalidArgumentException;
 use Laminas\Router\Exception\RuntimeException;
 use Laminas\Router\Http\Chain;
@@ -20,7 +22,6 @@ use Laminas\Router\RouteMatch;
 use Laminas\Router\RoutePluginManager;
 use Laminas\Router\SimpleRouteStack;
 use Laminas\ServiceManager\ServiceManager;
-use Laminas\Stdlib\Request;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -39,7 +40,7 @@ final class SimpleRouteStackTest extends TestCase
     public function testAddRoutesAsArray(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), new UriFactory());
         $stack->addRoutes([
             'foo' => new TestAsset\DummyRoute(),
         ]);
@@ -50,7 +51,7 @@ final class SimpleRouteStackTest extends TestCase
     public function testSetRoutesAsArray(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), new UriFactory());
         $stack->setRoutes([
             'foo' => new TestAsset\DummyRoute(),
         ]);
@@ -65,7 +66,7 @@ final class SimpleRouteStackTest extends TestCase
     public function testRemoveRouteAsArray(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), new UriFactory());
         $stack->addRoutes([
             'foo' => new TestAsset\DummyRoute(),
         ]);
@@ -76,7 +77,7 @@ final class SimpleRouteStackTest extends TestCase
 
     public function testAddRouteAsArrayWithoutOptions(): void
     {
-        $stack = new SimpleRouteStack($this->createRoutePluginManager());
+        $stack = new SimpleRouteStack($this->createRoutePluginManager(), new UriFactory());
         $stack->addRoute('foo', [
             'type' => TestAsset\DummyRoute::class,
         ]);
@@ -86,7 +87,7 @@ final class SimpleRouteStackTest extends TestCase
 
     public function testAddRouteAsArrayWithOptions(): void
     {
-        $stack = new SimpleRouteStack($this->createRoutePluginManager());
+        $stack = new SimpleRouteStack($this->createRoutePluginManager(), new UriFactory());
         $stack->addRoute('foo', [
             'type'    => TestAsset\DummyRoute::class,
             'options' => [],
@@ -97,7 +98,7 @@ final class SimpleRouteStackTest extends TestCase
 
     public function testAddRouteAsArrayWithoutType(): void
     {
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), new UriFactory());
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Missing "type" option');
@@ -106,7 +107,7 @@ final class SimpleRouteStackTest extends TestCase
 
     public function testAddRouteAsArrayWithPriority(): void
     {
-        $stack = new SimpleRouteStack($this->createRoutePluginManager());
+        $stack = new SimpleRouteStack($this->createRoutePluginManager(), new UriFactory());
 
         $stack->addRoute('foo', [
             'type'     => TestAsset\DummyRouteWithParam::class,
@@ -126,7 +127,7 @@ final class SimpleRouteStackTest extends TestCase
     public function testAddRouteWithPriority(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack($this->createRoutePluginManager());
+        $stack = new SimpleRouteStack($this->createRoutePluginManager(), new UriFactory());
 
         $route           = new TestAsset\DummyRouteWithParam();
         $route->priority = 2;
@@ -146,23 +147,23 @@ final class SimpleRouteStackTest extends TestCase
     public function testAssemble(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), new UriFactory());
         $stack->addRoute('foo', new TestAsset\DummyRoute());
         $this->assertEquals('', $stack->assemble([], ['name' => 'foo']));
     }
 
     public function testAssembleWithoutNameOption(): void
     {
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), new UriFactory());
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Missing "name" option');
-        $stack->assemble();
+        $stack->assemble([], []);
     }
 
     public function testAssembleNonExistentRoute(): void
     {
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), new UriFactory());
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Route with name "foo" not found');
@@ -172,7 +173,7 @@ final class SimpleRouteStackTest extends TestCase
     public function testDefaultParamIsAddedToMatch(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), new UriFactory());
         $stack->addRoute('foo', new TestAsset\DummyRoute());
         $stack->setDefaultParam('foo', 'bar');
 
@@ -185,7 +186,7 @@ final class SimpleRouteStackTest extends TestCase
     public function testDefaultParamDoesNotOverrideParam(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), new UriFactory());
         $stack->addRoute('foo', new TestAsset\DummyRouteWithParam());
         $stack->setDefaultParam('foo', 'baz');
 
@@ -198,21 +199,21 @@ final class SimpleRouteStackTest extends TestCase
     public function testDefaultParamIsUsedForAssembling(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), new UriFactory());
         $stack->addRoute('foo', new TestAsset\DummyRouteWithParam());
         $stack->setDefaultParam('foo', 'bar');
 
-        $this->assertEquals('bar', $stack->assemble([], ['name' => 'foo']));
+        $this->assertEquals('bar', (string) $stack->assemble([], ['name' => 'foo']));
     }
 
     public function testDefaultParamDoesNotOverrideParamForAssembling(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), new UriFactory());
         $stack->addRoute('foo', new TestAsset\DummyRouteWithParam());
         $stack->setDefaultParam('foo', 'baz');
 
-        $this->assertEquals('bar', $stack->assemble(['foo' => 'bar'], ['name' => 'foo']));
+        $this->assertEquals('bar', (string) $stack->assemble(['foo' => 'bar'], ['name' => 'foo']));
     }
 
     public function testFactory(): void
@@ -231,14 +232,14 @@ final class SimpleRouteStackTest extends TestCase
 
     public function testGetRoutes(): void
     {
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), new UriFactory());
         $this->assertInstanceOf(PriorityList::class, $stack->getRoutes());
     }
 
     public function testGetRouteByName(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), new UriFactory());
         $route = new TestAsset\DummyRoute();
         $stack->addRoute('foo', $route);
 
@@ -248,7 +249,7 @@ final class SimpleRouteStackTest extends TestCase
     public function testHasRoute(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), new UriFactory());
         $this->assertFalse($stack->hasRoute('foo'));
 
         $stack->addRoute('foo', new TestAsset\DummyRoute());
@@ -356,7 +357,7 @@ final class SimpleRouteStackTest extends TestCase
     public function testSimpleRouteStackSetsPriorityForAllKnownRouteTypes(array $routeSpec, int $expectedPriority): void
     {
         /** @var SimpleRouteStack<RouteInterface> $router */
-        $router = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $router = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), new UriFactory());
         $router->addRoute('name', $routeSpec);
 
         $route = $router->getRoute('name');

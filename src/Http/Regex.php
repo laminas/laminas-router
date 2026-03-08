@@ -7,15 +7,14 @@ namespace Laminas\Router\Http;
 use Laminas\Router\Exception;
 use Laminas\Router\Exception\InvalidArgumentException;
 use Laminas\Router\Http\HttpRouteMatch;
-use Laminas\Stdlib\RequestInterface;
-use Laminas\Uri\Http;
+use Laminas\Router\ReturnOfAssemble;
 use Override;
+use Psr\Http\Message\RequestInterface;
 
 use function array_merge;
 use function assert;
 use function is_array;
 use function is_string;
-use function method_exists;
 use function preg_match;
 use function rawurldecode;
 use function rawurlencode;
@@ -96,18 +95,12 @@ final class Regex implements HttpRouteInterface
     #[Override]
     public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
     {
-        if (! method_exists($request, 'getUri')) {
-            return null;
-        }
-
-        /** @var Http $uri */
-        $uri  = $request->getUri();
-        $path = $uri->getPath();
+        $path = $request->getUri()->getPath();
 
         if ($pathOffset !== null) {
-            $result = preg_match('(\G' . $this->regex . ')', (string) $path, $matches, 0, $pathOffset);
+            $result = preg_match('(\G' . $this->regex . ')', $path, $matches, 0, $pathOffset);
         } else {
-            $result = preg_match('(^' . $this->regex . '$)', (string) $path, $matches);
+            $result = preg_match('(^' . $this->regex . '$)', $path, $matches);
         }
 
         if (! $result) {
@@ -129,7 +122,7 @@ final class Regex implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function assemble(array $params = [], array $options = []): string
+    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
     {
         $url                   = $this->spec;
         $mergedParams          = array_merge($this->defaults, $params);
@@ -145,7 +138,7 @@ final class Regex implements HttpRouteInterface
             }
         }
 
-        return $url;
+        return new ReturnOfAssemble(path:$url);
     }
 
     /** @inheritDoc */

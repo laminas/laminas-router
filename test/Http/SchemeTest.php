@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
 
-use Laminas\Http\Request;
+use Laminas\Diactoros\Request;
+use Laminas\Diactoros\Uri;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\Scheme;
-use Laminas\Stdlib\Request as BaseRequest;
-use Laminas\Uri\Http as HttpUri;
 use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\TestCase;
 
@@ -17,7 +16,7 @@ final class SchemeTest extends TestCase
     public function testMatching(): void
     {
         $request = new Request();
-        $request->setUri('https://example.com/');
+        $request = $request->withUri(new Uri('https://example.com/'));
 
         $route = new Scheme('https');
         $match = $route->match($request);
@@ -28,7 +27,7 @@ final class SchemeTest extends TestCase
     public function testNoMatchingOnDifferentScheme(): void
     {
         $request = new Request();
-        $request->setUri('http://example.com/');
+        $request = $request->withUri(new Uri('http://example.com/'));
 
         $route = new Scheme('https');
         $match = $route->match($request);
@@ -38,18 +37,18 @@ final class SchemeTest extends TestCase
 
     public function testAssembling(): void
     {
-        $uri   = new HttpUri();
+        $uri   = new Uri();
         $route = new Scheme('https');
         $path  = $route->assemble([], ['uri' => $uri]);
 
-        $this->assertEquals('', $path);
+        $this->assertEquals('', (string) $path);
         $this->assertEquals('https', $uri->getScheme());
     }
 
     public function testNoMatchWithoutUriMethod(): void
     {
         $route   = new Scheme('https');
-        $request = new BaseRequest();
+        $request = new Request();
 
         $this->assertNull($route->match($request));
     }

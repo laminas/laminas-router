@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
 
-use Laminas\Http\Request;
+use Laminas\Diactoros\Request;
+use Laminas\Diactoros\Uri;
 use Laminas\Router\Exception\InvalidArgumentException;
 use Laminas\Router\Exception\RuntimeException;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\Segment;
-use Laminas\Stdlib\Request as BaseRequest;
 use Laminas\Translator\TranslatorInterface;
 use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -318,8 +318,8 @@ final class SegmentTest extends TestCase
         array $options = []
     ): void {
         $request = new Request();
-        $request->setUri('http://example.com' . $path);
-        $match = $route->match($request, $offset, $options);
+        $request = $request->withUri(new Uri('http://example.com' . $path));
+        $match   = $route->match($request, $offset, $options);
 
         if ($params === null) {
             $this->assertNull($match);
@@ -356,9 +356,9 @@ final class SegmentTest extends TestCase
         $result = $route->assemble($params, $options);
 
         if ($offset !== null) {
-            $this->assertEquals($offset, strpos($path, $result, $offset));
+            $this->assertEquals($offset, strpos($path, (string) $result, $offset));
         } else {
-            $this->assertEquals($path, $result);
+            $this->assertEquals($path, (string) $result);
         }
     }
 
@@ -373,8 +373,8 @@ final class SegmentTest extends TestCase
         array $options = []
     ): void {
         $request = new Request();
-        $request->setUri('http://example.com' . $path);
-        $match = $route->match($request, $offset, $options);
+        $request = $request->withUri(new Uri('http://example.com' . $path));
+        $match   = $route->match($request, $offset, $options);
 
         if ($params === null) {
             $this->assertNull($match);
@@ -456,7 +456,7 @@ final class SegmentTest extends TestCase
     public function testNoMatchWithoutUriMethod(): void
     {
         $route   = new Segment('/foo');
-        $request = new BaseRequest();
+        $request = new Request();
 
         $this->assertNull($route->match($request));
     }
@@ -490,9 +490,9 @@ final class SegmentTest extends TestCase
         // this includes every character other than #, %, / and ?
         $raw     = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`-=[]\\;\',.~!@$^&*()_+{}|:"<>';
         $request = new Request();
-        $request->setUri('http://example.com/' . $raw);
-        $route = new Segment('/:foo');
-        $match = $route->match($request);
+        $request = $request->withUri(new Uri('http://example.com/' . $raw));
+        $route   = new Segment('/:foo');
+        $match   = $route->match($request);
 
         self::assertNotNull($match);
         $this->assertSame($raw, $match->getParam('foo'));
@@ -507,9 +507,9 @@ final class SegmentTest extends TestCase
         // @codingStandardsIgnoreEnd
 
         $request = new Request();
-        $request->setUri('http://example.com/' . $in);
-        $route = new Segment('/:foo');
-        $match = $route->match($request);
+        $request = $request->withUri(new Uri('http://example.com/' . $in));
+        $route   = new Segment('/:foo');
+        $match   = $route->match($request);
 
         self::assertNotNull($match);
         $this->assertSame($out, $match->getParam('foo'));
@@ -525,12 +525,12 @@ final class SegmentTest extends TestCase
         $route   = new Segment('example.com/:p1/:p2');
         $request = new Request();
 
-        $request->setUri($uri1);
+        $request = $request->withUri(new Uri($uri1));
         $route->match($request);
-        $this->assertSame($uri1, $route->assemble($params1));
+        $this->assertSame($uri1, (string) $route->assemble($params1));
 
-        $request->setUri($uri2);
+        $request = $request->withUri(new Uri($uri2));
         $route->match($request);
-        $this->assertSame($uri2, $route->assemble($params2));
+        $this->assertSame($uri2, (string) $route->assemble($params2));
     }
 }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
 
-use Laminas\Http\Request;
+use Laminas\Diactoros\Request;
+use Laminas\Diactoros\Uri;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\Method as HttpMethod;
-use Laminas\Stdlib\Request as BaseRequest;
 use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -46,8 +46,8 @@ final class MethodTest extends TestCase
     public function testMatching(HttpMethod $route, string $verb): void
     {
         $request = new Request();
-        $request->setUri('http://example.com');
-        $request->setMethod($verb);
+        $request = $request->withUri(new Uri('http://example.com'));
+        $request = $request->withMethod($verb);
 
         $match = $route->match($request);
         $this->assertInstanceOf(HttpRouteMatch::class, $match);
@@ -56,7 +56,7 @@ final class MethodTest extends TestCase
     public function testNoMatchWithoutVerb(): void
     {
         $route   = new HttpMethod('get');
-        $request = new BaseRequest();
+        $request = new Request();
 
         $this->assertNull($route->match($request));
     }

@@ -11,14 +11,12 @@ use Laminas\Router\Http\RouteDefinition\RouteDefinitionLiteral;
 use Laminas\Router\Http\RouteDefinition\RouteDefinitionOption;
 use Laminas\Router\Http\RouteDefinition\RouteDefinitionParameter;
 use Laminas\Router\Http\RouteDefinition\RouteDefinitionPartInterface;
-use Laminas\Stdlib\RequestInterface;
-use Laminas\Uri\Http;
-use Laminas\Uri\Http as HttpUri;
+use Laminas\Router\ReturnOfAssemble;
 use Override;
+use Psr\Http\Message\RequestInterface;
 
 use function array_merge;
 use function is_string;
-use function method_exists;
 use function preg_match;
 use function preg_quote;
 use function sprintf;
@@ -250,14 +248,7 @@ final class Hostname implements HttpRouteInterface
     #[Override]
     public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
     {
-        if (! method_exists($request, 'getUri')) {
-            return null;
-        }
-
-        /** @var Http $uri */
-        $uri  = $request->getUri();
-        $host = $uri->getHost() ?? '';
-
+        $host   = $request->getUri()->getHost();
         $result = preg_match('(^' . $this->regex . '$)', $host, $matches);
 
         if (! $result) {
@@ -277,22 +268,19 @@ final class Hostname implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function assemble(array $params = [], array $options = []): string
+    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
     {
         $this->assembledParams = [];
 
-        if (isset($options['uri']) && $options['uri'] instanceof HttpUri) {
-            $host = $this->buildHost(
-                $this->parts->getParts(),
-                array_merge($this->defaults, $params),
-                false
-            );
+        $host = $this->buildHost(
+            $this->parts->getParts(),
+            array_merge($this->defaults, $params),
+            false
+        );
 
-            $options['uri']->setHost($host);
-        }
-
-        // A hostname does not contribute to the path, thus nothing is returned.
-        return '';
+        return new ReturnOfAssemble(
+            host: $host,
+        );
     }
 
     /** @inheritDoc */

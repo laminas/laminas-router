@@ -6,6 +6,7 @@ namespace Laminas\Router;
 
 use Laminas\Router\Http\TreeRouteStack;
 use Laminas\ServiceManager\ServiceManager;
+use Psr\Http\Message\UriFactoryInterface;
 
 /**
  * Provide base configuration for using the component.
@@ -62,6 +63,7 @@ final class ConfigProvider
                 TreeRouteStack::class      => Http\HttpRouterFactory::class,
                 RoutePluginManager::class  => RoutePluginManagerFactory::class,
                 RouteStackInterface::class => RouterFactory::class,
+                UriFactoryInterface::class => UriFactory::class,
             ],
         ];
     }

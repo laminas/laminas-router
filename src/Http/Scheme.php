@@ -6,12 +6,11 @@ namespace Laminas\Router\Http;
 
 use Laminas\Router\Exception;
 use Laminas\Router\Http\HttpRouteMatch;
-use Laminas\Stdlib\RequestInterface;
-use Laminas\Uri\Http;
+use Laminas\Router\ReturnOfAssemble;
 use Override;
+use Psr\Http\Message\RequestInterface;
 
 use function is_string;
-use function method_exists;
 
 /**
  * Scheme route.
@@ -61,15 +60,7 @@ final class Scheme implements HttpRouteInterface
     #[Override]
     public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
     {
-        if (! method_exists($request, 'getUri')) {
-            return null;
-        }
-
-        /** @var Http $uri */
-        $uri    = $request->getUri();
-        $scheme = $uri->getScheme();
-
-        if ($scheme !== $this->scheme) {
+        if ($request->getUri()->getScheme() !== $this->scheme) {
             return null;
         }
 
@@ -78,14 +69,9 @@ final class Scheme implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function assemble(array $params = [], array $options = []): string
+    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
     {
-        if (isset($options['uri']) && $options['uri'] instanceof Http) {
-            $options['uri']->setScheme($this->scheme);
-        }
-
-        // A scheme does not contribute to the path, thus nothing is returned.
-        return '';
+        return new ReturnOfAssemble(scheme:$this->scheme);
     }
 
     /** @inheritDoc */

@@ -11,15 +11,14 @@ use Laminas\Router\Http\RouteDefinition\RouteDefinitionOption;
 use Laminas\Router\Http\RouteDefinition\RouteDefinitionParameter;
 use Laminas\Router\Http\RouteDefinition\RouteDefinitionPartInterface;
 use Laminas\Router\Http\RouteDefinition\RouteDefinitionTranslatedLiteral;
-use Laminas\Stdlib\RequestInterface;
+use Laminas\Router\ReturnOfAssemble;
 use Laminas\Translator\TranslatorInterface as Translator;
-use Laminas\Uri\Http;
 use Override;
+use Psr\Http\Message\RequestInterface;
 
 use function array_key_exists;
 use function array_merge;
 use function is_string;
-use function method_exists;
 use function preg_match;
 use function preg_quote;
 use function rawurldecode;
@@ -343,13 +342,7 @@ final class Segment implements HttpRouteInterface
     #[Override]
     public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
     {
-        if (! method_exists($request, 'getUri')) {
-            return null;
-        }
-
-        /** @var Http $uri */
-        $uri   = $request->getUri();
-        $path  = $uri->getPath();
+        $path  = $request->getUri()->getPath();
         $regex = $this->regex;
 
         if ($this->translationKeys) {
@@ -369,9 +362,9 @@ final class Segment implements HttpRouteInterface
         }
 
         if ($pathOffset !== null) {
-            $result = preg_match('(\G' . $regex . ')', (string) $path, $matches, 0, $pathOffset);
+            $result = preg_match('(\G' . $regex . ')', $path, $matches, 0, $pathOffset);
         } else {
-            $result = preg_match('(^' . $regex . '$)', (string) $path, $matches);
+            $result = preg_match('(^' . $regex . '$)', $path, $matches);
         }
 
         if (! $result) {
@@ -392,17 +385,17 @@ final class Segment implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function assemble(array $params = [], array $options = []): string
+    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
     {
         $this->assembledParams = [];
 
-        return $this->buildPath(
+        return new ReturnOfAssemble(path :$this->buildPath(
             $this->parts->getParts(),
             array_merge($this->defaults, $params),
             false,
             array_key_exists('has_child', $options) && $options['has_child'] === true,
             $options
-        );
+        ));
     }
 
     /** @inheritDoc */

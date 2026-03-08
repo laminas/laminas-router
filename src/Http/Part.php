@@ -6,11 +6,13 @@ namespace Laminas\Router\Http;
 
 use ArrayObject;
 use Laminas\Router\Exception;
+use Laminas\Router\Exception\RuntimeException;
+use Laminas\Router\ReturnOfAssemble;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RoutePluginManager;
-use Laminas\Stdlib\RequestInterface;
-use Laminas\Uri\Http;
 use Override;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\UriFactoryInterface;
 
 use function array_diff_key;
 use function array_flip;
@@ -48,14 +50,14 @@ final class Part extends TreeRouteStack implements HttpRouteInterface
         RoutePluginManager $routePluginManager,
         ArrayObject $prototypes,
         HttpRouteInterface|array|string $routes = [],
-        array $defaultParams = [],
         /**
          * Whether the route may terminate.
          */
-        private readonly bool $mayTerminate = false,
-        private array $childRoutes = [],
+        private readonly bool $mayTerminate,
+        private array $childRoutes,
+        UriFactoryInterface $uriFactory,
     ) {
-        parent::__construct($routePluginManager, $prototypes);
+        parent::__construct($routePluginManager, $prototypes, $uriFactory);
 
         if (! is_object($routes)) {
             $routes = $this->routeFromArray($routes);
@@ -82,6 +84,7 @@ final class Part extends TreeRouteStack implements HttpRouteInterface
         $mayTerminate = $options['may_terminate'] ?? false;
         /** @var array<non-empty-string, TRoute> $childRoutes */
         $childRoutes = $options['child_routes'] ?? [];
+        $uriFactory  = $options['uri_factory'] ?? null;
 
         if (! $routePlugins instanceof RoutePluginManager) {
             throw new Exception\InvalidArgumentException('Missing "route_plugins" in options array');
@@ -91,6 +94,10 @@ final class Part extends TreeRouteStack implements HttpRouteInterface
             throw new Exception\InvalidArgumentException('Missing "route" in options array');
         }
 
+        if (! $uriFactory instanceof UriFactoryInterface) {
+            throw new RuntimeException('Missing "uri_factory" in options array');
+        }
+
         assert(is_bool($mayTerminate));
         assert(is_array($route) || is_string($route) || $route instanceof HttpRouteInterface);
 
@@ -98,9 +105,9 @@ final class Part extends TreeRouteStack implements HttpRouteInterface
             $routePlugins,
             $prototypes,
             $route,
-            [],
             $mayTerminate,
             $childRoutes,
+            $uriFactory
         );
     }
 
@@ -124,9 +131,7 @@ final class Part extends TreeRouteStack implements HttpRouteInterface
 
             $nextOffset = $pathOffset + $match->getLength();
 
-            /** @var Http $uri */
-            $uri        = $request->getUri();
-            $pathLength = strlen((string) $uri->getPath());
+            $pathLength = strlen($request->getUri()->getPath());
 
             if ($this->mayTerminate && $nextOffset === $pathLength) {
                 return $match;
@@ -160,7 +165,7 @@ final class Part extends TreeRouteStack implements HttpRouteInterface
      * @throws Exception\RuntimeException
      */
     #[Override]
-    public function assemble(array $params = [], array $options = []): string
+    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
     {
         if (count($this->childRoutes) !== 0) {
             $this->addRoutes($this->childRoutes);
@@ -173,7 +178,7 @@ final class Part extends TreeRouteStack implements HttpRouteInterface
             $options['locale'] = $params['locale'];
         }
 
-        $path   = $this->route->assemble($params, $options);
+        $uri    = $this->route->assemble($params, $options);
         $params = array_diff_key($params, array_flip($this->route->getAssembledParams()));
 
         if (! isset($options['name'])) {
@@ -181,12 +186,13 @@ final class Part extends TreeRouteStack implements HttpRouteInterface
                 throw new Exception\RuntimeException('Part route may not terminate');
             }
 
-            return $path;
+            return $uri;
         }
 
         unset($options['has_child']);
         $options['only_return_path'] = true;
-        return $path . parent::assemble($params, $options);
+
+        return $uri->merge(parent::assemble($params, $options));
     }
 
     /** @inheritDoc */

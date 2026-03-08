@@ -6,8 +6,9 @@ namespace LaminasTest\Router\Http\TestAsset;
 
 use Laminas\Router\Http\HttpRouteInterface;
 use Laminas\Router\Http\HttpRouteMatch;
+use Laminas\Router\ReturnOfAssemble;
 use Laminas\Router\RouteMatch;
-use Laminas\Stdlib\RequestInterface;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Dummy route.
@@ -24,9 +25,9 @@ class DummyRoute implements HttpRouteInterface
     }
 
     /** @inheritDoc */
-    public function assemble(array $params = [], array $options = []): string
+    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
     {
-        return '';
+        return new ReturnOfAssemble();
     }
 
     /** @inheritDoc */

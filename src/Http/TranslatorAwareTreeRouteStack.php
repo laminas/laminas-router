@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Laminas\Router\Http;
 
 use Laminas\Router\Exception;
+use Laminas\Router\ReturnOfAssemble;
 use Laminas\Router\RouteMatch;
-use Laminas\Stdlib\RequestInterface;
 use Laminas\Translator\TranslatorInterface;
 use Override;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Translator aware tree route stack.
@@ -57,7 +58,7 @@ final class TranslatorAwareTreeRouteStack extends TreeRouteStack
      * @throws Exception\RuntimeException
      */
     #[Override]
-    public function assemble(array $params = [], array $options = []): string
+    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
     {
         if ($this->hasTranslator() && $this->isTranslatorEnabled() && ! isset($options['translator'])) {
             $options['translator'] = $this->getTranslator();

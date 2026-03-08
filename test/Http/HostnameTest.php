@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
 
-use Laminas\Http\Request;
+use Laminas\Diactoros\Request;
+use Laminas\Diactoros\Uri;
 use Laminas\Router\Exception\InvalidArgumentException;
 use Laminas\Router\Exception\RuntimeException;
 use Laminas\Router\Http\Hostname;
 use Laminas\Router\Http\HttpRouteMatch;
-use Laminas\Stdlib\Request as BaseRequest;
-use Laminas\Uri\Http as HttpUri;
 use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -172,8 +171,8 @@ final class HostnameTest extends TestCase
     public function testMatching(Hostname $route, string $hostname, ?array $params = null): void
     {
         $request = new Request();
-        $request->setUri('http://' . $hostname . '/');
-        $match = $route->match($request);
+        $request = $request->withUri(new Uri('http://' . $hostname . '/'));
+        $match   = $route->match($request);
 
         if ($params === null) {
             $this->assertNull($match);
@@ -198,17 +197,17 @@ final class HostnameTest extends TestCase
             return;
         }
 
-        $uri  = new HttpUri();
+        $uri  = new Uri();
         $path = $route->assemble($params, ['uri' => $uri]);
 
-        $this->assertEquals('', $path);
+        $this->assertEquals('', (string) $path);
         $this->assertEquals($hostname, $uri->getHost());
     }
 
     public function testNoMatchWithoutUriMethod(): void
     {
         $route   = new Hostname('example.com');
-        $request = new BaseRequest();
+        $request = new Request();
 
         $this->assertNull($route->match($request));
     }
@@ -217,7 +216,7 @@ final class HostnameTest extends TestCase
     {
         $route   = new Hostname('example.com');
         $request = new Request();
-        $request->setUri('/relative/path');
+        $request = $request->withUri(new Uri('/relative/path'));
 
         self::assertNull($route->match($request));
     }
@@ -226,7 +225,7 @@ final class HostnameTest extends TestCase
     {
         $route   = new Hostname(':domain');
         $request = new Request();
-        $request->setUri('/relative/path');
+        $request = $request->withUri(new Uri('/relative/path'));
 
         self::assertNull($route->match($request));
     }
@@ -235,7 +234,7 @@ final class HostnameTest extends TestCase
     {
         $route   = new Hostname('[:domain]');
         $request = new Request();
-        $request->setUri('/relative/path');
+        $request = $request->withUri(new Uri('/relative/path'));
 
         $match = $route->match($request);
         self::assertInstanceOf(HttpRouteMatch::class, $match);
@@ -245,7 +244,7 @@ final class HostnameTest extends TestCase
     public function testAssemblingWithMissingParameter(): void
     {
         $route = new Hostname(':foo.example.com');
-        $uri   = new HttpUri();
+        $uri   = new Uri();
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Missing parameter "foo"');
@@ -255,7 +254,7 @@ final class HostnameTest extends TestCase
     public function testGetAssembledParams(): void
     {
         $route = new Hostname(':foo.example.com');
-        $uri   = new HttpUri();
+        $uri   = new Uri();
         $route->assemble(['foo' => 'bar', 'baz' => 'bat'], ['uri' => $uri]);
 
         $this->assertEquals(['foo'], $route->getAssembledParams());

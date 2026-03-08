@@ -6,14 +6,14 @@ namespace Laminas\Router\Http;
 
 use Laminas\Router\Exception;
 use Laminas\Router\Http\HttpRouteMatch;
-use Laminas\Stdlib\RequestInterface;
+use Laminas\Router\ReturnOfAssemble;
 use Override;
+use Psr\Http\Message\RequestInterface;
 
 use function array_map;
 use function explode;
 use function in_array;
 use function is_string;
-use function method_exists;
 use function strtoupper;
 use function trim;
 
@@ -68,11 +68,7 @@ final class Method implements HttpRouteInterface
     #[Override]
     public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
     {
-        if (! method_exists($request, 'getMethod')) {
-            return null;
-        }
-
-        $requestVerb = strtoupper((string) $request->getMethod());
+        $requestVerb = strtoupper($request->getMethod());
         $matchVerbs  = explode(',', strtoupper($this->verb));
         $matchVerbs  = array_map(trim(...), $matchVerbs);
 
@@ -85,10 +81,10 @@ final class Method implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function assemble(array $params = [], array $options = []): string
+    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
     {
         // The request method does not contribute to the path, thus nothing is returned.
-        return '';
+        return new ReturnOfAssemble();
     }
 
     /** @inheritDoc */

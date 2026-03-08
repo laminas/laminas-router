@@ -6,8 +6,9 @@ namespace Laminas\Router\Http;
 
 use Laminas\Router\Exception;
 use Laminas\Router\Http\HttpRouteMatch;
-use Laminas\Stdlib\RequestInterface;
+use Laminas\Router\ReturnOfAssemble;
 use Override;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Placeholder route.
@@ -54,9 +55,9 @@ final class Placeholder implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function assemble(array $params = [], array $options = []): string
+    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
     {
-        return '';
+        return new ReturnOfAssemble();
     }
 
     /** @inheritDoc */

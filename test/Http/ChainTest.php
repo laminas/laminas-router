@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace LaminasTest\Router\Http;
 
 use ArrayObject;
-use Laminas\Http\Request;
+use Laminas\Diactoros\Request;
+use Laminas\Diactoros\Uri;
+use Laminas\Diactoros\UriFactory;
 use Laminas\Router\Http\Chain;
 use Laminas\Router\Http\HttpRouteInterface;
 use Laminas\Router\Http\HttpRouteMatch;
@@ -50,6 +52,7 @@ final class ChainTest extends TestCase
                     ],
                 ],
             ],
+            new UriFactory()
         );
     }
 
@@ -82,6 +85,7 @@ final class ChainTest extends TestCase
                     ],
                 ],
             ],
+            new UriFactory()
         );
     }
 
@@ -151,8 +155,8 @@ final class ChainTest extends TestCase
     public function testMatching(Chain $route, string $path, int|null $offset, ?array $params = null): void
     {
         $request = new Request();
-        $request->setUri('http://example.com' . $path);
-        $match = $route->match($request, $offset);
+        $request = $request->withUri(new Uri('http://example.com' . $path));
+        $match   = $route->match($request, $offset);
 
         if ($params === null) {
             $this->assertNull($match);
@@ -183,7 +187,7 @@ final class ChainTest extends TestCase
         $result = $route->assemble($params);
 
         if ($offset !== null) {
-            $this->assertEquals($offset, strpos($path, $result, $offset));
+            $this->assertEquals($offset, strpos($path, (string) $result, $offset));
         } else {
             $this->assertEquals($path, $result);
         }

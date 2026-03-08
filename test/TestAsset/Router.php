@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\TestAsset;
 
+use Laminas\Router\ReturnOfAssemble;
 use Laminas\Router\RouteInterface;
 use Laminas\Router\RouteStackInterface;
-use Laminas\Stdlib\RequestInterface;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * @template TRoute of RouteInterface
@@ -27,9 +28,9 @@ final class Router implements RouteStackInterface
     }
 
     /** @inheritDoc */
-    public function assemble(array $params = [], array $options = []): string
+    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
     {
-        return '';
+        return new ReturnOfAssemble();
     }
 
     /** @inheritDoc */

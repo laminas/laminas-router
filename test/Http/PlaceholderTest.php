@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
 
-use Laminas\Http\Request;
+use Laminas\Diactoros\Request;
+use Laminas\Diactoros\Uri;
+use Laminas\Diactoros\UriFactory;
 use Laminas\Router\Http\Hostname;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\Literal;
@@ -52,8 +54,8 @@ final class PlaceholderTest extends TestCase
         $route = new Placeholder([]);
 
         $request = new Request();
-        $request->setUri('http://example.com/');
-        $match = $route->match($request);
+        $request = $request->withUri(new Uri('http://example.com/'));
+        $match   = $route->match($request);
 
         $this->assertInstanceOf(HttpRouteMatch::class, $match);
     }
@@ -83,11 +85,12 @@ final class PlaceholderTest extends TestCase
         $router      = TreeRouteStack::factory([
             'routes'        => $routeConfig,
             'route_plugins' => new RoutePluginManager(new ServiceManager()),
+            'uri_factory'   => new UriFactory(),
         ]);
 
         $request = new Request();
-        $request->setUri($uri);
-        $match = $router->match($request);
+        $request = $request->withUri(new Uri($uri));
+        $match   = $router->match($request);
 
         $this->assertInstanceOf(HttpRouteMatch::class, $match);
         $this->assertEquals($expectedRouteName, $match->getMatchedRouteName());

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
 
-use Laminas\Http\Request;
+use Laminas\Diactoros\Request;
+use Laminas\Diactoros\Uri;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\Regex;
-use Laminas\Stdlib\Request as BaseRequest;
 use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -86,8 +86,8 @@ final class RegexTest extends TestCase
     public function testMatching(Regex $route, string $path, int|null $offset, ?array $params = null): void
     {
         $request = new Request();
-        $request->setUri('http://example.com' . $path);
-        $match = $route->match($request, $offset);
+        $request = $request->withUri(new Uri('http://example.com' . $path));
+        $match   = $route->match($request, $offset);
 
         if ($params === null) {
             $this->assertNull($match);
@@ -119,16 +119,16 @@ final class RegexTest extends TestCase
         $result = $route->assemble($params);
 
         if ($offset !== null) {
-            $this->assertEquals($offset, strpos($path, $result, $offset));
+            $this->assertEquals($offset, strpos($path, (string) $result, $offset));
         } else {
-            $this->assertEquals($path, $result);
+            $this->assertEquals($path, (string) $result);
         }
     }
 
     public function testNoMatchWithoutUriMethod(): void
     {
         $route   = new Regex('/foo', '/foo');
-        $request = new BaseRequest();
+        $request = new Request();
 
         $this->assertNull($route->match($request));
     }
@@ -163,9 +163,9 @@ final class RegexTest extends TestCase
         // this includes every character other than #, %, / and ?
         $raw     = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`-=[]\\;\',.~!@$^&*()_+{}|:"<>';
         $request = new Request();
-        $request->setUri('http://example.com/' . $raw);
-        $route = new Regex('/(?<foo>[^/]+)', '/%foo%');
-        $match = $route->match($request);
+        $request = $request->withUri(new Uri('http://example.com/' . $raw));
+        $route   = new Regex('/(?<foo>[^/]+)', '/%foo%');
+        $match   = $route->match($request);
 
         $this->assertNotNull($match);
         $this->assertSame($raw, $match->getParam('foo'));
@@ -180,9 +180,9 @@ final class RegexTest extends TestCase
         // @codingStandardsIgnoreEnd
 
         $request = new Request();
-        $request->setUri('http://example.com/' . $in);
-        $route = new Regex('/(?<foo>[^/]+)', '/%foo%');
-        $match = $route->match($request);
+        $request = $request->withUri(new Uri('http://example.com/' . $in));
+        $route   = new Regex('/(?<foo>[^/]+)', '/%foo%');
+        $match   = $route->match($request);
 
         $this->assertNotNull($match);
         $this->assertSame($out, $match->getParam('foo'));

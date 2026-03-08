@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace LaminasTest\Router\Http;
 
 use ArrayObject;
-use Laminas\Http\Request;
+use Laminas\Diactoros\Request;
+use Laminas\Diactoros\Uri;
+use Laminas\Diactoros\UriFactory;
 use Laminas\Router\Http\HttpRouteInterface;
 use Laminas\Router\Http\TranslatorAwareTreeRouteStack;
 use Laminas\Router\RoutePluginManager;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Translator\TranslatorInterface;
-use Laminas\Uri\Http as HttpUri;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use UnexpectedValueException;
@@ -69,7 +70,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
     {
         /** @var ArrayObject<string, HttpRouteInterface> $prototypes */
         $prototypes = new ArrayObject();
-        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes);
+        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes, new UriFactory());
 
         // Defaults
         $this->assertNull($stack->getTranslator());
@@ -119,7 +120,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
 
         /** @var ArrayObject<string, HttpRouteInterface> $prototypes */
         $prototypes = new ArrayObject();
-        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes);
+        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes, new UriFactory());
         $stack->addRoute('test', $route);
 
         $stack->match($request, null, ['translator' => $translator]);
@@ -128,7 +129,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
     public function testTranslatorIsPassedThroughAssembleMethod(): void
     {
         $translator = $this->createStub(TranslatorInterface::class);
-        $uri        = new HttpUri();
+        $uri        = new Uri();
 
         $route = $this->createMock(HttpRouteInterface::class);
         $route->expects($this->once())
@@ -140,7 +141,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
 
                 /** @var ArrayObject<string, HttpRouteInterface> $prototypes */
         $prototypes = new ArrayObject();
-        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes);
+        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes, new UriFactory());
         $stack->addRoute('test', $route);
 
         $stack->assemble([], ['name' => 'test', 'translator' => $translator, 'uri' => $uri]);
@@ -150,7 +151,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
     {
                 /** @var ArrayObject<string, HttpRouteInterface> $prototypes */
         $prototypes = new ArrayObject();
-        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes);
+        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes, new UriFactory());
         $stack->setTranslator($this->getTranslator(2), 'route');
         $stack->addRoute(
             'foo',
@@ -165,7 +166,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
     {
                 /** @var ArrayObject<string, HttpRouteInterface> $prototypes */
         $prototypes = new ArrayObject();
-        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes);
+        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes, new UriFactory());
         $stack->setTranslator($this->getTranslator(1), 'route');
         $stack->addRoute(
             'foo',
@@ -173,7 +174,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
         );
 
         $request = new Request();
-        $request->setUri('http://example.com/de/hauptseite');
+        $request = $request->withUri(new Uri('http://example.com/de/hauptseite'));
 
         $match = $stack->match($request);
         $this->assertNotNull($match);

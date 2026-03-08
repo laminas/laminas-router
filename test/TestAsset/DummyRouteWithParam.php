@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\TestAsset;
 
+use Laminas\Router\ReturnOfAssemble;
 use Laminas\Router\RouteMatch;
-use Laminas\Stdlib\RequestInterface;
+use Psr\Http\Message\RequestInterface;
 
 use function array_key_exists;
 
@@ -21,9 +22,9 @@ final class DummyRouteWithParam extends DummyRoute
     }
 
     /** @inheritDoc */
-    public function assemble(array $params = [], array $options = []): string
+    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
     {
-        return array_key_exists('foo', $params) ? (string) $params['foo'] : '';
+        return new ReturnOfAssemble(array_key_exists('foo', $params) ? (string) $params['foo'] : '');
     }
 
     /** @inheritDoc */

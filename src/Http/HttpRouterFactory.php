@@ -9,6 +9,7 @@ use Laminas\Router\RoutePluginManager;
 use Laminas\Router\RouteStackInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\UriFactoryInterface;
 
 /**
  * @internal
@@ -40,6 +41,7 @@ final class HttpRouterFactory implements FactoryInterface
 
         $class                   = $config['router']['router_class'];
         $config['route_plugins'] = $config['router']['route_plugins'];
+        $config['uri_factory']   = $container->get(UriFactoryInterface::class);
 
         return $class::factory($config);
     }

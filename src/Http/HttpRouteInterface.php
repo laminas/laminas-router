@@ -6,7 +6,7 @@ namespace Laminas\Router\Http;
 
 use Laminas\Router\RouteInterface;
 use Laminas\Router\RouteMatch;
-use Laminas\Stdlib\RequestInterface;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Tree specific route interface.

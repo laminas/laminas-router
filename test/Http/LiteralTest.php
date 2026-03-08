@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\Http;
 
-use Laminas\Http\Request;
+use Laminas\Diactoros\Request;
+use Laminas\Diactoros\Uri;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\Literal;
-use Laminas\Stdlib\Request as BaseRequest;
 use LaminasTest\Router\FactoryTester;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -66,8 +66,8 @@ final class LiteralTest extends TestCase
     public function testMatching(Literal $route, string $path, int|null $offset, bool $shouldMatch): void
     {
         $request = new Request();
-        $request->setUri('http://example.com' . $path);
-        $match = $route->match($request, $offset);
+        $request = $request->withUri(new Uri('http://example.com' . $path));
+        $match   = $route->match($request, $offset);
 
         if (! $shouldMatch) {
             $this->assertNull($match);
@@ -92,7 +92,7 @@ final class LiteralTest extends TestCase
         $result = $route->assemble();
 
         if ($offset !== null) {
-            $this->assertEquals($offset, strpos($path, $result, $offset));
+            $this->assertEquals($offset, strpos($path, (string) $result, $offset));
         } else {
             $this->assertEquals($path, $result);
         }
@@ -101,7 +101,7 @@ final class LiteralTest extends TestCase
     public function testNoMatchWithoutUriMethod(): void
     {
         $route   = new Literal('/foo');
-        $request = new BaseRequest();
+        $request = new Request();
 
         $this->assertNull($route->match($request));
     }

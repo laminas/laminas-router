@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router;
 
+use Http\Discovery\Psr17FactoryDiscovery;
 use Laminas\Router\ConfigProvider;
 use Laminas\Router\Exception\InvalidArgumentException;
 use Laminas\Router\RouteInterface;
@@ -42,6 +43,10 @@ final class FactoryTester
 
         if (! array_key_exists('route_plugins', $options)) {
             $options['route_plugins'] = new RoutePluginManager(new ServiceManager((new ConfigProvider())->__invoke()));
+        }
+
+        if (! array_key_exists('uri_factory', $options)) {
+            $options['uri_factory'] = Psr17FactoryDiscovery::findUriFactory();
         }
 
         // Create the route, will throw an exception if something goes wrong.

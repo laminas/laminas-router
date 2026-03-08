@@ -7,22 +7,22 @@ namespace Laminas\Router\Http;
 use ArrayObject;
 use Laminas\Router\Exception;
 use Laminas\Router\Exception\RuntimeException;
+use Laminas\Router\ReturnOfAssemble;
 use Laminas\Router\RouteInterface;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RoutePluginManager;
 use Laminas\Router\SimpleRouteStack;
-use Laminas\Stdlib\RequestInterface;
-use Laminas\Uri\Http as HttpUri;
 use Override;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\UriFactoryInterface;
+use Psr\Http\Message\UriInterface;
 
 use function array_merge;
 use function assert;
 use function explode;
 use function is_array;
 use function is_string;
-use function method_exists;
 use function property_exists;
-use function rtrim;
 use function sprintf;
 use function strlen;
 
@@ -36,14 +36,9 @@ use function strlen;
 class TreeRouteStack extends SimpleRouteStack
 {
     /**
-     * Base URL.
-     */
-    private string|null $baseUrl = null;
-
-    /**
      * Request URI.
      */
-    private HttpUri|null $requestUri = null;
+    private UriInterface|null $requestUri = null;
 
     /**
      * @internal
@@ -65,10 +60,11 @@ class TreeRouteStack extends SimpleRouteStack
          * by reference.
          */
         private readonly ArrayObject $prototypes,
+        private readonly UriFactoryInterface $uriFactory,
         array $routes = [],
-        array $defaultParams = []
+        array $defaultParams = [],
     ) {
-        parent::__construct($this->routePluginManager, $routes, $defaultParams);
+        parent::__construct($this->routePluginManager, $uriFactory, $routes, $defaultParams);
     }
 
     /**
@@ -85,16 +81,22 @@ class TreeRouteStack extends SimpleRouteStack
         $routePlugins = $options['route_plugins'] ?? null;
         /** @psalm-var array<non-empty-string, non-empty-string> $defaultParams */
         $defaultParams = $options['default_params'] ?? [];
+        $uriFactory    = $options['uri_factory'] ?? null;
 
         if (! $routePlugins instanceof RoutePluginManager) {
             throw new RuntimeException('Missing "route_plugins" in options array');
         }
 
+        if (! $uriFactory instanceof UriFactoryInterface) {
+            throw new RuntimeException('Missing "uri_factory" in options array');
+        }
+
         return new static(
             $routePlugins,
             $prototypes,
+            $uriFactory,
             $routes,
-            $defaultParams
+            $defaultParams,
         );
     }
 
@@ -146,6 +148,7 @@ class TreeRouteStack extends SimpleRouteStack
             $options = [
                 'routes'        => $chainRoutes,
                 'route_plugins' => $this->routePluginManager,
+                'uri_factory'   => $this->uriFactory,
                 'prototypes'    => $this->prototypes,
             ];
 
@@ -164,6 +167,7 @@ class TreeRouteStack extends SimpleRouteStack
                 'may_terminate' => isset($specs['may_terminate']) && $specs['may_terminate'] === true,
                 'child_routes'  => $specs['child_routes'],
                 'route_plugins' => $this->routePluginManager,
+                'uri_factory'   => $this->uriFactory,
                 'prototypes'    => $this->prototypes,
             ];
 
@@ -199,29 +203,19 @@ class TreeRouteStack extends SimpleRouteStack
         int|null $pathOffset = null,
         array $options = []
     ): ?RouteMatch {
-        if (! method_exists($request, 'getUri')) {
-            return null;
-        }
-
-        if ($this->baseUrl === null && method_exists($request, 'getBaseUrl')) {
-            $this->setBaseUrl((string) $request->getBaseUrl());
-        }
-
-        /** @var HttpUri $uri */
-        $uri           = $request->getUri();
-        $baseUrlLength = strlen((string) $this->baseUrl) ?: null;
+        $baseUrlLength = null;
 
         if ($pathOffset !== null) {
             $baseUrlLength = $baseUrlLength !== null ? $baseUrlLength + $pathOffset : $pathOffset;
         }
 
         if ($this->requestUri === null) {
-            $this->setRequestUri($uri);
+            $this->setRequestUri($request->getUri());
         }
 
         $pathLength = null;
         if ($baseUrlLength !== null) {
-            $pathLength = strlen((string) $uri->getPath()) - $baseUrlLength;
+            $pathLength = strlen($request->getUri()->getPath()) - $baseUrlLength;
         }
 
         foreach ($this->routes as $name => $route) {
@@ -249,7 +243,7 @@ class TreeRouteStack extends SimpleRouteStack
      * @throws Exception\RuntimeException
      */
     #[Override]
-    public function assemble(array $params = [], array $options = []): string
+    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
     {
         $name = $options['name'] ?? '';
         if (! is_string($name) || $name === '') {
@@ -281,95 +275,27 @@ class TreeRouteStack extends SimpleRouteStack
         }
 
         if (isset($options['only_return_path']) && $options['only_return_path'] === true) {
-            return ($this->baseUrl ?? '') . $route->assemble(array_merge($this->defaultParams, $params), $options);
+            return $route->assemble(array_merge($this->defaultParams, $params), $options);
         }
 
-        if (! isset($options['uri']) || ! $options['uri'] instanceof HttpUri) {
-            $uri = new HttpUri();
+        $returnOfAssemble = $route->assemble(array_merge($this->defaultParams, $params), $options);
 
-            if (isset($options['force_canonical']) && $options['force_canonical'] === true) {
-                if ($this->requestUri === null) {
-                    throw new Exception\RuntimeException('Request URI has not been set');
-                }
+        $forceCanonical = isset($options['force_canonical']) && $options['force_canonical'] === true;
 
-                $uri->setScheme($this->requestUri->getScheme())
-                    ->setHost($this->requestUri->getHost())
-                    ->setPort($this->requestUri->getPort());
-            }
-
-            $options['uri'] = $uri;
-        } else {
-            $uri = $options['uri'];
-        }
-
-        $path = ($this->baseUrl ?? '') . $route->assemble(array_merge($this->defaultParams, $params), $options);
-
-        if (isset($options['query']) && (is_string($options['query']) || is_array($options['query']))) {
-            $uri->setQuery($options['query']);
-        }
-
-        if (isset($options['fragment']) && is_string($options['fragment'])) {
-            $uri->setFragment($options['fragment']);
-        }
-
-        if (
-            (isset($options['force_canonical'])
-            && $options['force_canonical'] === true)
-            || $uri->getHost() !== null
-            || $uri->getScheme() !== null
-        ) {
-            if (($uri->getHost() === null || $uri->getScheme() === null) && $this->requestUri === null) {
-                throw new Exception\RuntimeException('Request URI has not been set');
-            }
-
-            if ($uri->getHost() === null && $this->requestUri !== null) {
-                $uri->setHost($this->requestUri->getHost());
-            }
-
-            if ($uri->getScheme() === null && $this->requestUri !== null) {
-                $uri->setScheme($this->requestUri->getScheme());
-            }
-
-            $uri->setPath($path);
-
-            if (! isset($options['normalize_path']) || $options['normalize_path'] === true) {
-                $uri->normalize();
-            }
-
-            return $uri->toString();
-        } elseif (! $uri->isAbsolute() && $uri->isValidRelative()) {
-            $uri->setPath($path);
-
-            if (! isset($options['normalize_path']) || $options['normalize_path'] === true) {
-                $uri->normalize();
-            }
-
-            return $uri->toString();
-        }
-
-        return $path;
-    }
-
-    /**
-     * Set the base URL.
-     */
-    public function setBaseUrl(string $baseUrl): void
-    {
-        $this->baseUrl = rtrim($baseUrl, '/');
-    }
-
-    /**
-     * Get the base URL.
-     */
-    public function getBaseUrl(): ?string
-    {
-        return $this->baseUrl;
+        return new ReturnOfAssemble(
+            path: $returnOfAssemble->path,
+            query: $options['query'] ?? $returnOfAssemble->query,
+            host: $returnOfAssemble->host === null && $this->requestUri !== null ? $this->requestUri->getHost() : $returnOfAssemble->host,
+            scheme: $returnOfAssemble->scheme === null && $this->requestUri !== null ? $this->requestUri->getScheme() : $returnOfAssemble->scheme,
+            fragment: $options['fragment'] ?? $returnOfAssemble->fragment,
+            forceCanonical: $forceCanonical || $returnOfAssemble->host !== null || $returnOfAssemble->scheme !== null,
+        );
     }
 
     /**
      * Set the request URI.
      */
-    public function setRequestUri(HttpUri $uri): void
+    public function setRequestUri(UriInterface $uri): void
     {
         $this->requestUri = $uri;
     }
@@ -377,7 +303,7 @@ class TreeRouteStack extends SimpleRouteStack
     /**
      * Get the request URI.
      */
-    public function getRequestUri(): ?HttpUri
+    public function getRequestUri(): ?UriInterface
     {
         return $this->requestUri;
     }

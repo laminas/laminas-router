@@ -6,14 +6,13 @@ namespace Laminas\Router\Http;
 
 use Laminas\Router\Exception;
 use Laminas\Router\Http\HttpRouteMatch;
-use Laminas\Stdlib\RequestInterface;
-use Laminas\Uri\Http;
+use Laminas\Router\ReturnOfAssemble;
 use Override;
+use Psr\Http\Message\RequestInterface;
 
 use function assert;
 use function is_array;
 use function is_string;
-use function method_exists;
 use function strlen;
 use function strpos;
 
@@ -70,13 +69,7 @@ final class Literal implements HttpRouteInterface
     #[Override]
     public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
     {
-        if (! method_exists($request, 'getUri')) {
-            return null;
-        }
-
-        /** @var Http $uri */
-        $uri  = $request->getUri();
-        $path = (string) $uri->getPath();
+        $path = $request->getUri()->getPath();
 
         if ($pathOffset !== null) {
             if ($pathOffset >= 0 && strlen($path) >= $pathOffset && ! empty($this->route)) {
@@ -97,9 +90,9 @@ final class Literal implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function assemble(array $params = [], array $options = []): string
+    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
     {
-        return $this->route;
+        return new ReturnOfAssemble(path:$this->route);
     }
 
     /** @inheritDoc */
