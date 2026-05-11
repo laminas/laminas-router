@@ -15,7 +15,7 @@
     "psr/container": "^1 || ^2.0.2"
   },
   "require-dev": {
-    "psalm/plugin-phpunit": "^0.19.5",
+    "psalm/plugin-phpunit": "^0.20.0",
     "roave/infection-static-analysis-plugin": "^1.39",
     "vimeo/psalm": "^6.13.1",
     "laminas/laminas-http": "^2.22",
