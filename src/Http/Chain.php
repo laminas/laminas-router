@@ -54,10 +54,11 @@ final class Chain extends TreeRouteStack implements HttpRouteInterface
         RoutePluginManager $routePlugins,
         ArrayObject $prototypes,
         array $routes,
+        array $defaultParams,
         UriFactoryInterface $uriFactory,
     ) {
         $this->chainRoutes = array_reverse($routes);
-        parent::__construct($routePlugins, $prototypes, $uriFactory);
+        parent::__construct($routePlugins, $prototypes, $uriFactory, [], $defaultParams);
     }
 
     /**
@@ -94,6 +95,7 @@ final class Chain extends TreeRouteStack implements HttpRouteInterface
             $routePlugins,
             $prototypes,
             $route,
+            [],
             $uriFactory
         );
     }
