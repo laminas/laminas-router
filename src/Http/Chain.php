@@ -92,7 +92,7 @@ final class Chain extends TreeRouteStack implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
+    public function match(RequestInterface $request, int|null $pathOffset = null): ?HttpRouteMatch
     {
         $mustTerminate = $pathOffset === null;
         $pathOffset  ??= 0;
@@ -107,7 +107,7 @@ final class Chain extends TreeRouteStack implements HttpRouteInterface
 
         foreach ($this->routes as $route) {
             assert($route instanceof HttpRouteInterface);
-            $subMatch = $route->match($request, $pathOffset, $options);
+            $subMatch = $route->match($request, $pathOffset);
 
             if ($subMatch === null) {
                 return null;

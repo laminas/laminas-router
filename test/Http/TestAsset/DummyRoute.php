@@ -18,8 +18,7 @@ class DummyRoute implements HttpRouteInterface
     /** @inheritDoc */
     public function match(
         RequestInterface $request,
-        int|null $pathOffset = null,
-        array $options = []
+        int|null $pathOffset = null
     ): RouteMatch {
         return new HttpRouteMatch(['offset' => $pathOffset], -4);
     }

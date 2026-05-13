@@ -117,8 +117,7 @@ final class Part extends TreeRouteStack implements HttpRouteInterface
     #[Override]
     public function match(
         RequestInterface $request,
-        int|null $pathOffset = null,
-        array $options = []
+        int|null $pathOffset = null
     ): RouteMatch|null {
         $pathOffset ??= 0;
         $match        = $this->route->match($request, $pathOffset, $options);

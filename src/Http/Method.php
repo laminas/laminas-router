@@ -67,7 +67,7 @@ final class Method implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
+    public function match(RequestInterface $request, int|null $pathOffset = null): ?HttpRouteMatch
     {
         if (
             $request instanceof DiactorosRequest

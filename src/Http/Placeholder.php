@@ -47,8 +47,7 @@ final class Placeholder implements HttpRouteInterface
     #[Override]
     public function match(
         RequestInterface $request,
-        int|null $pathOffset = null,
-        array $options = []
+        int|null $pathOffset = null
     ): HttpRouteMatch|null {
         return new HttpRouteMatch($this->defaults);
     }

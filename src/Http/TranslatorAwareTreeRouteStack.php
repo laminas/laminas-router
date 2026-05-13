@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Laminas\Router\Http;
 
+use ArrayObject;
 use Laminas\Router\Exception;
+use Laminas\Router\Exception\RuntimeException;
 use Laminas\Router\ReturnOfAssemble;
 use Laminas\Router\RouteMatch;
+use Laminas\Router\RoutePluginManager;
 use Laminas\Translator\TranslatorInterface;
 use Override;
 use Psr\Http\Message\RequestInterface;
@@ -35,11 +38,58 @@ final class TranslatorAwareTreeRouteStack extends TreeRouteStack
     private string $translatorTextDomain = 'default';
 
     /**
+     * @param ArrayObject<string, TRoute> $prototypes
+     * @param array<non-empty-string, array|TRoute> $routes
+     * @param array<non-empty-string, non-empty-string> $defaultParams
+     */
+    public function __construct(
+        private readonly RoutePluginManager $routePluginManager,
+        /**
+         * Prototype routes.
+         *
+         * We use an ArrayObject in this case so we can easily pass it down the tree
+         * by reference.
+         */
+        private readonly ArrayObject $prototypes,
+        array $routes = [],
+        array $defaultParams = [],
+    ) {
+        parent::__construct($this->routePluginManager, $prototypes, $routes, $defaultParams);
+    }
+
+    /**
+     * @inheritDoc
+     * @throws Exception\InvalidArgumentException
+     */
+    #[Override]
+    public static function factory(array $options = []): static
+    {
+        /** @psalm-var array<non-empty-string, array|TRoute>  $routes */
+        $routes = $options['routes'] ?? [];
+        /** @var ArrayObject<string, TRoute> $prototypes */
+        $prototypes   = $options['prototypes'] ?? new ArrayObject();
+        $routePlugins = $options['route_plugins'] ?? null;
+        /** @psalm-var array<non-empty-string, non-empty-string> $defaultParams */
+        $defaultParams = $options['default_params'] ?? [];
+
+        if (! $routePlugins instanceof RoutePluginManager) {
+            throw new RuntimeException('Missing "route_plugins" in options array');
+        }
+
+        return new static(
+            $routePlugins,
+            $prototypes,
+            $routes,
+            $defaultParams,
+        );
+    }
+
+    /**
      * @inheritDoc
      * @param int|null $pathOffset
      */
     #[Override]
-    public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?RouteMatch
+    public function match(RequestInterface $request, int|null $pathOffset = null): ?RouteMatch
     {
         if ($this->hasTranslator() && $this->isTranslatorEnabled() && ! isset($options['translator'])) {
             $options['translator'] = $this->getTranslator();
@@ -49,7 +99,7 @@ final class TranslatorAwareTreeRouteStack extends TreeRouteStack
             $options['text_domain'] = $this->getTranslatorTextDomain();
         }
 
-        return parent::match($request, $pathOffset, $options);
+        return parent::match($request, $pathOffset);
     }
 
     /**

@@ -192,8 +192,7 @@ class TreeRouteStack extends SimpleRouteStack
     #[Override]
     public function match(
         RequestInterface $request,
-        int|null $pathOffset = null,
-        array $options = []
+        int|null $pathOffset = null
     ): ?RouteMatch {
         $baseUrlLength = null;
 
@@ -212,7 +211,7 @@ class TreeRouteStack extends SimpleRouteStack
 
         foreach ($this->routes as $name => $route) {
             assert($route instanceof HttpRouteInterface);
-            $match = $route->match($request, $baseUrlLength, $options);
+            $match = $route->match($request, $baseUrlLength);
             if ($match instanceof HttpRouteMatch && ($pathLength === null || $match->getLength() === $pathLength)) {
                 $match->setMatchedRouteName((string) $name);
 

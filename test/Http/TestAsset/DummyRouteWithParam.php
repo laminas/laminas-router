@@ -18,8 +18,7 @@ final class DummyRouteWithParam extends DummyRoute
     /** @inheritDoc */
     public function match(
         RequestInterface $request,
-        int|null $pathOffset = null,
-        array $options = []
+        int|null $pathOffset = null
     ): HttpRouteMatch {
         return new HttpRouteMatch(['foo' => 'bar'], -4);
     }

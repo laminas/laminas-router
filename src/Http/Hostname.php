@@ -246,7 +246,7 @@ final class Hostname implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
+    public function match(RequestInterface $request, int|null $pathOffset = null): ?HttpRouteMatch
     {
         $host   = $request->getUri()->getHost();
         $result = preg_match('(^' . $this->regex . '$)', $host, $matches);

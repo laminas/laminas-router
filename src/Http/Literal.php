@@ -67,7 +67,7 @@ final class Literal implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
+    public function match(RequestInterface $request, int|null $pathOffset = null): ?HttpRouteMatch
     {
         $path = $request->getUri()->getPath();
 

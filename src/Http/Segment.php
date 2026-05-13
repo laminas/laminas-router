@@ -342,7 +342,7 @@ final class Segment implements HttpRouteInterface
      * @throws Exception\RuntimeException
      */
     #[Override]
-    public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
+    public function match(RequestInterface $request, int|null $pathOffset = null): ?HttpRouteMatch
     {
         $path  = $request->getUri()->getPath();
         $regex = $this->regex;
