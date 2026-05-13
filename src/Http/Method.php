@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Laminas\Router\Http;
 
+use Laminas\Diactoros\Request as DiactorosRequest;
 use Laminas\Router\Exception;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\ReturnOfAssemble;
@@ -68,6 +69,15 @@ final class Method implements HttpRouteInterface
     #[Override]
     public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
     {
+        if (
+            $request instanceof DiactorosRequest
+            && $request->getUri()->__toString() === ''
+            && ! $request->hasHeader('Host')
+            && $request->getMethod() === 'GET'
+        ) {
+            return null;
+        }
+
         $requestVerb = strtoupper($request->getMethod());
         $matchVerbs  = explode(',', strtoupper($this->verb));
         $matchVerbs  = array_map(trim(...), $matchVerbs);

@@ -10,9 +10,7 @@ use Laminas\Router\ReturnOfAssemble;
 use Laminas\Router\RouteMatch;
 use Override;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\UriFactoryInterface;
 
-use function array_key_exists;
 use function array_merge;
 use function assert;
 use function is_array;
@@ -41,7 +39,6 @@ class SimpleRouteStack implements RouteStackInterface
      */
     public function __construct(
         private readonly RoutePluginManager $routePluginManager,
-        private readonly UriFactoryInterface $uriFactory,
         array $routes = [],
         /**
          * Default parameters.
@@ -66,19 +63,13 @@ class SimpleRouteStack implements RouteStackInterface
         $routePlugins = $options['route_plugins'] ?? null;
         /** @psalm-var array<non-empty-string, non-empty-string> $defaultParams */
         $defaultParams = $options['default_params'] ?? [];
-        $uriFactory    = $options['uri_factory'] ?? null;
 
         if (! $routePlugins instanceof RoutePluginManager) {
             throw new RuntimeException('Missing "route_plugins" in options array');
         }
 
-        if (! $uriFactory instanceof UriFactoryInterface) {
-            throw new RuntimeException('Missing "uri_factory" in options array');
-        }
-
         return new static(
             $routePlugins,
-            $uriFactory,
             $routes,
             $defaultParams
         );
@@ -179,10 +170,6 @@ class SimpleRouteStack implements RouteStackInterface
 
         if (! is_string($type) || $type === '') {
             throw new Exception\InvalidArgumentException('Missing "type" option');
-        }
-
-        if (! array_key_exists('uri_factory', $option)) {
-            $option['uri_factory'] = $this->uriFactory;
         }
 
         $route = $this->routePluginManager->build($type, $option);

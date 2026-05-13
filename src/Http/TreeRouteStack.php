@@ -14,8 +14,8 @@ use Laminas\Router\RoutePluginManager;
 use Laminas\Router\SimpleRouteStack;
 use Override;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
+use ReflectionProperty;
 
 use function array_merge;
 use function assert;
@@ -60,11 +60,10 @@ class TreeRouteStack extends SimpleRouteStack
          * by reference.
          */
         private readonly ArrayObject $prototypes,
-        private readonly UriFactoryInterface $uriFactory,
         array $routes = [],
         array $defaultParams = [],
     ) {
-        parent::__construct($this->routePluginManager, $uriFactory, $routes, $defaultParams);
+        parent::__construct($this->routePluginManager, $routes, $defaultParams);
     }
 
     /**
@@ -81,20 +80,14 @@ class TreeRouteStack extends SimpleRouteStack
         $routePlugins = $options['route_plugins'] ?? null;
         /** @psalm-var array<non-empty-string, non-empty-string> $defaultParams */
         $defaultParams = $options['default_params'] ?? [];
-        $uriFactory    = $options['uri_factory'] ?? null;
 
         if (! $routePlugins instanceof RoutePluginManager) {
             throw new RuntimeException('Missing "route_plugins" in options array');
         }
 
-        if (! $uriFactory instanceof UriFactoryInterface) {
-            throw new RuntimeException('Missing "uri_factory" in options array');
-        }
-
         return new static(
             $routePlugins,
             $prototypes,
-            $uriFactory,
             $routes,
             $defaultParams,
         );
@@ -148,7 +141,6 @@ class TreeRouteStack extends SimpleRouteStack
             $options = [
                 'routes'        => $chainRoutes,
                 'route_plugins' => $this->routePluginManager,
-                'uri_factory'   => $this->uriFactory,
                 'prototypes'    => $this->prototypes,
             ];
 
@@ -163,12 +155,12 @@ class TreeRouteStack extends SimpleRouteStack
 
         if (isset($specs['child_routes'])) {
             $options = [
-                'route'         => $route,
-                'may_terminate' => isset($specs['may_terminate']) && $specs['may_terminate'] === true,
-                'child_routes'  => $specs['child_routes'],
-                'route_plugins' => $this->routePluginManager,
-                'uri_factory'   => $this->uriFactory,
-                'prototypes'    => $this->prototypes,
+                'route'          => $route,
+                'may_terminate'  => isset($specs['may_terminate']) && $specs['may_terminate'] === true,
+                'child_routes'   => $specs['child_routes'],
+                'default_params' => $specs['default_params'] ?? [],
+                'route_plugins'  => $this->routePluginManager,
+                'prototypes'     => $this->prototypes,
             ];
 
             $priority = $route->priority ?? null;
@@ -280,16 +272,65 @@ class TreeRouteStack extends SimpleRouteStack
 
         $returnOfAssemble = $route->assemble(array_merge($this->defaultParams, $params), $options);
 
-        $forceCanonical = isset($options['force_canonical']) && $options['force_canonical'] === true;
+        $forceCanonicalOption = isset($options['force_canonical']) && $options['force_canonical'] === true;
+
+        $contextUri  = isset($options['uri']) && $options['uri'] instanceof UriInterface
+            ? $options['uri']
+            : null;
+        $fallbackUri = $contextUri ?? $this->requestUri;
+
+        if ($forceCanonicalOption && $fallbackUri === null) {
+            throw new RuntimeException('Request URI has not been set');
+        }
+
+        $childScheme = $returnOfAssemble->scheme;
+        $childHost   = $returnOfAssemble->host;
+        $childPort   = $returnOfAssemble->port;
+
+        $resolvedScheme = $childScheme;
+        if ($resolvedScheme === null || $resolvedScheme === '') {
+            $fbScheme       = $fallbackUri?->getScheme();
+            $resolvedScheme = $fbScheme !== null && $fbScheme !== '' ? $fbScheme : null;
+        }
+
+        $resolvedHost = $childHost;
+        if ($resolvedHost === null || $resolvedHost === '') {
+            $fbHost       = $fallbackUri?->getHost();
+            $resolvedHost = $fbHost !== null && $fbHost !== '' ? $fbHost : null;
+        }
+
+        $resolvedPort = $childPort ?? $fallbackUri?->getPort();
+
+        if (
+            $childHost !== null
+            && $childHost !== ''
+            && ($resolvedScheme === null || $resolvedScheme === '')
+        ) {
+            throw new RuntimeException('Request URI has not been set');
+        }
+
+        $childSchemeNonEmpty = is_string($childScheme) && $childScheme !== '';
+
+        $mergedForceCanonical = $forceCanonicalOption
+            || ($childHost !== null && $childHost !== '')
+            || $childSchemeNonEmpty;
 
         return new ReturnOfAssemble(
             path: $returnOfAssemble->path,
             query: $options['query'] ?? $returnOfAssemble->query,
-            host: $returnOfAssemble->host === null && $this->requestUri !== null ? $this->requestUri->getHost() : $returnOfAssemble->host,
-            scheme: $returnOfAssemble->scheme === null && $this->requestUri !== null ? $this->requestUri->getScheme() : $returnOfAssemble->scheme,
+            host: $resolvedHost,
+            scheme: $resolvedScheme,
             fragment: $options['fragment'] ?? $returnOfAssemble->fragment,
-            forceCanonical: $forceCanonical || $returnOfAssemble->host !== null || $returnOfAssemble->scheme !== null,
+            forceCanonical: $mergedForceCanonical,
+            port: $resolvedPort,
         );
+    }
+
+    private function readReturnOfAssembleProperty(ReturnOfAssemble $object, string $property, mixed $default): mixed
+    {
+        $reflection = new ReflectionProperty(ReturnOfAssemble::class, $property);
+
+        return $reflection->isInitialized($object) ? $reflection->getValue($object) : $default;
     }
 
     /**

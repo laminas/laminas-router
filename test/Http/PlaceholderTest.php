@@ -6,7 +6,6 @@ namespace LaminasTest\Router\Http;
 
 use Laminas\Diactoros\Request;
 use Laminas\Diactoros\Uri;
-use Laminas\Diactoros\UriFactory;
 use Laminas\Router\Http\Hostname;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\Literal;
@@ -85,7 +84,6 @@ final class PlaceholderTest extends TestCase
         $router      = TreeRouteStack::factory([
             'routes'        => $routeConfig,
             'route_plugins' => new RoutePluginManager(new ServiceManager()),
-            'uri_factory'   => new UriFactory(),
         ]);
 
         $request = new Request();

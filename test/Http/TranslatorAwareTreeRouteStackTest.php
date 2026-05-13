@@ -7,7 +7,6 @@ namespace LaminasTest\Router\Http;
 use ArrayObject;
 use Laminas\Diactoros\Request;
 use Laminas\Diactoros\Uri;
-use Laminas\Diactoros\UriFactory;
 use Laminas\Router\Http\HttpRouteInterface;
 use Laminas\Router\Http\TranslatorAwareTreeRouteStack;
 use Laminas\Router\RoutePluginManager;
@@ -70,7 +69,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
     {
         /** @var ArrayObject<string, HttpRouteInterface> $prototypes */
         $prototypes = new ArrayObject();
-        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes, new UriFactory());
+        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes);
 
         // Defaults
         $this->assertNull($stack->getTranslator());
@@ -120,7 +119,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
 
         /** @var ArrayObject<string, HttpRouteInterface> $prototypes */
         $prototypes = new ArrayObject();
-        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes, new UriFactory());
+        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes);
         $stack->addRoute('test', $route);
 
         $stack->match($request, null, ['translator' => $translator]);
@@ -141,7 +140,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
 
                 /** @var ArrayObject<string, HttpRouteInterface> $prototypes */
         $prototypes = new ArrayObject();
-        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes, new UriFactory());
+        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes);
         $stack->addRoute('test', $route);
 
         $stack->assemble([], ['name' => 'test', 'translator' => $translator, 'uri' => $uri]);
@@ -151,7 +150,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
     {
                 /** @var ArrayObject<string, HttpRouteInterface> $prototypes */
         $prototypes = new ArrayObject();
-        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes, new UriFactory());
+        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes);
         $stack->setTranslator($this->getTranslator(2), 'route');
         $stack->addRoute(
             'foo',
@@ -166,7 +165,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
     {
                 /** @var ArrayObject<string, HttpRouteInterface> $prototypes */
         $prototypes = new ArrayObject();
-        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes, new UriFactory());
+        $stack      = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()), $prototypes);
         $stack->setTranslator($this->getTranslator(1), 'route');
         $stack->addRoute(
             'foo',

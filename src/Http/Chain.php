@@ -6,13 +6,11 @@ namespace Laminas\Router\Http;
 
 use ArrayObject;
 use Laminas\Router\Exception;
-use Laminas\Router\Exception\RuntimeException;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\ReturnOfAssemble;
 use Laminas\Router\RoutePluginManager;
 use Override;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\UriFactoryInterface;
 
 use function array_diff_key;
 use function array_flip;
@@ -48,17 +46,15 @@ final class Chain extends TreeRouteStack implements HttpRouteInterface
      *
      * @param array<array-key, array|TRoute> $routes
      * @param ArrayObject<string, TRoute> $prototypes
-     * @param array<non-empty-string, non-empty-string> $defaultParams
      */
     public function __construct(
         RoutePluginManager $routePlugins,
         ArrayObject $prototypes,
         array $routes,
-        array $defaultParams,
-        UriFactoryInterface $uriFactory,
+        array $defaultParams = [],
     ) {
         $this->chainRoutes = array_reverse($routes);
-        parent::__construct($routePlugins, $prototypes, $uriFactory, [], $defaultParams);
+        parent::__construct($routePlugins, $prototypes, [], $defaultParams);
     }
 
     /**
@@ -72,7 +68,6 @@ final class Chain extends TreeRouteStack implements HttpRouteInterface
         /** @var ArrayObject<string, TRoute> $prototypes */
         $prototypes   = $options['prototypes'] ?? new ArrayObject();
         $routePlugins = $options['route_plugins'] ?? null;
-        $uriFactory   = $options['uri_factory'] ?? null;
 
         if ($route === null) {
             throw new Exception\InvalidArgumentException('Missing "routes" in options array');
@@ -80,10 +75,6 @@ final class Chain extends TreeRouteStack implements HttpRouteInterface
 
         if (! $routePlugins instanceof RoutePluginManager) {
             throw new Exception\InvalidArgumentException('Missing "route_plugins" in options array');
-        }
-
-        if (! $uriFactory instanceof UriFactoryInterface) {
-            throw new RuntimeException('Missing "uri_factory" in options array');
         }
 
         assert(is_array($route));
@@ -96,7 +87,6 @@ final class Chain extends TreeRouteStack implements HttpRouteInterface
             $prototypes,
             $route,
             [],
-            $uriFactory
         );
     }
 

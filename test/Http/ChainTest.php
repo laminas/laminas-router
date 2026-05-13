@@ -7,7 +7,6 @@ namespace LaminasTest\Router\Http;
 use ArrayObject;
 use Laminas\Diactoros\Request;
 use Laminas\Diactoros\Uri;
-use Laminas\Diactoros\UriFactory;
 use Laminas\Router\Http\Chain;
 use Laminas\Router\Http\HttpRouteInterface;
 use Laminas\Router\Http\HttpRouteMatch;
@@ -51,8 +50,7 @@ final class ChainTest extends TestCase
                         ],
                     ],
                 ],
-            ],
-            new UriFactory()
+            ]
         );
     }
 
@@ -84,8 +82,7 @@ final class ChainTest extends TestCase
                         ],
                     ],
                 ],
-            ],
-            new UriFactory()
+            ]
         );
     }
 

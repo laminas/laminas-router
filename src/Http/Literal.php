@@ -81,7 +81,7 @@ final class Literal implements HttpRouteInterface
             return null;
         }
 
-        if ($path === $this->route) {
+        if ($path === $this->route || ($this->route === '/' && $path === '')) {
             return new HttpRouteMatch($this->defaults, strlen($this->route));
         }
 

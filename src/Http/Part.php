@@ -6,13 +6,11 @@ namespace Laminas\Router\Http;
 
 use ArrayObject;
 use Laminas\Router\Exception;
-use Laminas\Router\Exception\RuntimeException;
 use Laminas\Router\ReturnOfAssemble;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RoutePluginManager;
 use Override;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\UriFactoryInterface;
 
 use function array_diff_key;
 use function array_flip;
@@ -38,11 +36,17 @@ final class Part extends TreeRouteStack implements HttpRouteInterface
      */
     private readonly HttpRouteInterface $route;
 
+    private readonly bool $mayTerminate;
+
+    /** @var array<non-empty-string, array|TRoute> */
+    private array $childRoutes;
+
     /**
      * Create a new part route.
      *
      * @param TRoute|array|string           $routes
      * @param ArrayObject<string, TRoute> $prototypes
+     * @param array<non-empty-string, non-empty-string> $defaultParams
      * @param array<non-empty-string, array|TRoute> $childRoutes
      * @throws Exception\InvalidArgumentException
      */
@@ -50,14 +54,14 @@ final class Part extends TreeRouteStack implements HttpRouteInterface
         RoutePluginManager $routePluginManager,
         ArrayObject $prototypes,
         HttpRouteInterface|array|string $routes = [],
-        /**
-         * Whether the route may terminate.
-         */
-        private readonly bool $mayTerminate,
-        private array $childRoutes,
-        UriFactoryInterface $uriFactory,
+        array $defaultParams = [],
+        bool $mayTerminate = false,
+        array $childRoutes = [],
     ) {
-        parent::__construct($routePluginManager, $prototypes, $uriFactory);
+        $this->mayTerminate = $mayTerminate;
+        $this->childRoutes  = $childRoutes;
+
+        parent::__construct($routePluginManager, $prototypes, [], $defaultParams);
 
         if (! is_object($routes)) {
             $routes = $this->routeFromArray($routes);
@@ -84,7 +88,8 @@ final class Part extends TreeRouteStack implements HttpRouteInterface
         $mayTerminate = $options['may_terminate'] ?? false;
         /** @var array<non-empty-string, TRoute> $childRoutes */
         $childRoutes = $options['child_routes'] ?? [];
-        $uriFactory  = $options['uri_factory'] ?? null;
+        /** @psalm-var array<non-empty-string, non-empty-string> $defaultParams */
+        $defaultParams = $options['default_params'] ?? [];
 
         if (! $routePlugins instanceof RoutePluginManager) {
             throw new Exception\InvalidArgumentException('Missing "route_plugins" in options array');
@@ -94,20 +99,17 @@ final class Part extends TreeRouteStack implements HttpRouteInterface
             throw new Exception\InvalidArgumentException('Missing "route" in options array');
         }
 
-        if (! $uriFactory instanceof UriFactoryInterface) {
-            throw new RuntimeException('Missing "uri_factory" in options array');
-        }
-
         assert(is_bool($mayTerminate));
+        assert(is_array($defaultParams));
         assert(is_array($route) || is_string($route) || $route instanceof HttpRouteInterface);
 
         return new self(
             $routePlugins,
             $prototypes,
             $route,
+            $defaultParams,
             $mayTerminate,
             $childRoutes,
-            $uriFactory
         );
     }
 

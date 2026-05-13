@@ -7,7 +7,6 @@ namespace LaminasTest\Router\Http;
 use ArrayObject;
 use Laminas\Diactoros\Request;
 use Laminas\Diactoros\Uri;
-use Laminas\Diactoros\UriFactory;
 use Laminas\Router\Exception\InvalidArgumentException;
 use Laminas\Router\Exception\RuntimeException;
 use Laminas\Router\Http\HttpRouteInterface;
@@ -116,8 +115,7 @@ final class PartTest extends TestCase
                         ],
                     ],
                 ],
-            ],
-            new UriFactory()
+            ]
         );
     }
 
@@ -284,8 +282,7 @@ final class PartTest extends TestCase
             $prototypes,
             self::getRoute(),
             [],
-            true,
-            new UriFactory()
+            true
         );
     }
 
@@ -336,7 +333,6 @@ final class PartTest extends TestCase
                 ],
             ],
             'route_plugins' => self::getRoutePlugins(),
-            'uri_factory'   => new UriFactory(),
             'may_terminate' => true,
             'child_routes'  => [
                 'child' => [

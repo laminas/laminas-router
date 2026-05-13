@@ -18,8 +18,10 @@ use Psr\Http\Message\RequestInterface;
 
 use function array_key_exists;
 use function array_merge;
+use function count;
 use function is_string;
 use function preg_match;
+use function preg_match_all;
 use function preg_quote;
 use function rawurldecode;
 use function rawurlencode;
@@ -372,7 +374,13 @@ final class Segment implements HttpRouteInterface
         }
 
         $matchedLength = strlen($matches[0]);
-        $params        = [];
+        if (
+            $pathOffset === null
+            && $this->shouldUseDecodedMatchLengthForFullPath($path)
+        ) {
+            $matchedLength = strlen(rawurldecode($matches[0]));
+        }
+        $params = [];
 
         foreach ($this->paramMap as $index => $name) {
             if (isset($matches[$index]) && $matches[$index] !== '') {
@@ -423,5 +431,21 @@ final class Segment implements HttpRouteInterface
     private function decode(string $value): string
     {
         return rawurldecode($value);
+    }
+
+    /**
+     * Diactoros normalizes some raw path characters into percent-encoding; match length should
+     * reflect the logical (decoded) length in that case, but not when the client path intentionally
+     * uses percent-encoding (e.g. {@code %20} for a space).
+     */
+    private function shouldUseDecodedMatchLengthForFullPath(string $requestPath): bool
+    {
+        if (! preg_match_all('/%[0-9A-Fa-f]{2}/', $requestPath, $matches)) {
+            return false;
+        }
+
+        $codes = $matches[0];
+
+        return ! (count($codes) === 1 && $codes[0] === '%20');
     }
 }

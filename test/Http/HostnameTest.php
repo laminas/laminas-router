@@ -197,11 +197,11 @@ final class HostnameTest extends TestCase
             return;
         }
 
-        $uri  = new Uri();
-        $path = $route->assemble($params, ['uri' => $uri]);
+        $uri    = new Uri();
+        $result = $route->assemble($params, ['uri' => $uri]);
 
-        $this->assertEquals('', (string) $path);
-        $this->assertEquals($hostname, $uri->getHost());
+        $this->assertEquals('', (string) $result);
+        $this->assertSame($hostname, $result->host);
     }
 
     public function testNoMatchWithoutUriMethod(): void
