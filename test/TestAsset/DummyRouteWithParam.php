@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\TestAsset;
 
-use Laminas\Router\ReturnOfAssemble;
+use Laminas\Router\AssembledUrl;
 use Laminas\Router\RouteMatch;
 use Psr\Http\Message\RequestInterface;
 
@@ -22,9 +22,9 @@ final class DummyRouteWithParam extends DummyRoute
     }
 
     /** @inheritDoc */
-    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
+    public function assemble(array $params = [], array $options = []): AssembledUrl
     {
-        return new ReturnOfAssemble(array_key_exists('foo', $params) ? (string) $params['foo'] : '');
+        return new AssembledUrl(array_key_exists('foo', $params) ? (string) $params['foo'] : '');
     }
 
     /** @inheritDoc */

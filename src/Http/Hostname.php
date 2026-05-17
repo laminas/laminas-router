@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Laminas\Router\Http;
 
+use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\RouteDefinition\RouteDefinition;
@@ -11,7 +12,6 @@ use Laminas\Router\Http\RouteDefinition\RouteDefinitionLiteral;
 use Laminas\Router\Http\RouteDefinition\RouteDefinitionOption;
 use Laminas\Router\Http\RouteDefinition\RouteDefinitionParameter;
 use Laminas\Router\Http\RouteDefinition\RouteDefinitionPartInterface;
-use Laminas\Router\ReturnOfAssemble;
 use Override;
 use Psr\Http\Message\RequestInterface;
 
@@ -246,7 +246,7 @@ final class Hostname implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function match(RequestInterface $request, int|null $pathOffset = null): ?HttpRouteMatch
+    public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
     {
         $host   = $request->getUri()->getHost();
         $result = preg_match('(^' . $this->regex . '$)', $host, $matches);
@@ -268,7 +268,7 @@ final class Hostname implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
+    public function assemble(array $params = [], array $options = []): AssembledUrl
     {
         $this->assembledParams = [];
 
@@ -278,7 +278,7 @@ final class Hostname implements HttpRouteInterface
             false
         );
 
-        return new ReturnOfAssemble(
+        return new AssembledUrl(
             host: $host,
         );
     }

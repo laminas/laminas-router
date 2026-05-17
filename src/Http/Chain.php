@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Laminas\Router\Http;
 
 use ArrayObject;
+use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception;
 use Laminas\Router\Http\HttpRouteMatch;
-use Laminas\Router\ReturnOfAssemble;
 use Laminas\Router\RoutePluginManager;
 use Override;
 use Psr\Http\Message\RequestInterface;
@@ -92,7 +92,7 @@ final class Chain extends TreeRouteStack implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function match(RequestInterface $request, int|null $pathOffset = null): ?HttpRouteMatch
+    public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
     {
         $mustTerminate = $pathOffset === null;
         $pathOffset  ??= 0;
@@ -107,7 +107,7 @@ final class Chain extends TreeRouteStack implements HttpRouteInterface
 
         foreach ($this->routes as $route) {
             assert($route instanceof HttpRouteInterface);
-            $subMatch = $route->match($request, $pathOffset);
+            $subMatch = $route->match($request, $pathOffset, $options);
 
             if ($subMatch === null) {
                 return null;
@@ -128,10 +128,10 @@ final class Chain extends TreeRouteStack implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
+    public function assemble(array $params = [], array $options = []): AssembledUrl
     {
         // On commence avec un résultat vide
-        $finalResult = new ReturnOfAssemble();
+        $finalResult = new AssembledUrl();
         if ($this->chainRoutes !== null) {
             $this->addRoutes($this->chainRoutes);
             $this->chainRoutes = null;
@@ -149,8 +149,8 @@ final class Chain extends TreeRouteStack implements HttpRouteInterface
 
             $chainOptions['has_child'] = $hasChild || $key !== $lastRouteKey;
 
-            $returnOfAssemble = $route->assemble($params, $chainOptions);
-            $finalResult      = $finalResult->merge($returnOfAssemble);
+            $assembledUrl = $route->assemble($params, $chainOptions);
+            $finalResult  = $finalResult->merge($assembledUrl);
 
             $params = array_diff_key($params, array_flip($route->getAssembledParams()));
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Laminas\Router;
 
+use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception\RuntimeException;
 use Laminas\Router\PriorityList;
-use Laminas\Router\ReturnOfAssemble;
 use Laminas\Router\RouteMatch;
 use Override;
 use Psr\Http\Message\RequestInterface;
@@ -213,7 +213,7 @@ class SimpleRouteStack implements RouteStackInterface
      * @throws RuntimeException
      */
     #[Override]
-    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
+    public function assemble(array $params = [], array $options = []): AssembledUrl
     {
         $name = $options['name'] ?? null;
         if (! is_string($name) || $name === '') {

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Laminas\Router\Http;
 
 use Laminas\Diactoros\Request as DiactorosRequest;
+use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception;
 use Laminas\Router\Http\HttpRouteMatch;
-use Laminas\Router\ReturnOfAssemble;
 use Override;
 use Psr\Http\Message\RequestInterface;
 
@@ -67,7 +67,7 @@ final class Method implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function match(RequestInterface $request, int|null $pathOffset = null): ?HttpRouteMatch
+    public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
     {
         if (
             $request instanceof DiactorosRequest
@@ -91,10 +91,10 @@ final class Method implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
+    public function assemble(array $params = [], array $options = []): AssembledUrl
     {
         // The request method does not contribute to the path, thus nothing is returned.
-        return new ReturnOfAssemble();
+        return new AssembledUrl();
     }
 
     /** @inheritDoc */

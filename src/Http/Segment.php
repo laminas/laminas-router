@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Laminas\Router\Http;
 
+use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception;
 use Laminas\Router\Http\RouteDefinition\RouteDefinition;
 use Laminas\Router\Http\RouteDefinition\RouteDefinitionLiteral;
@@ -11,7 +12,6 @@ use Laminas\Router\Http\RouteDefinition\RouteDefinitionOption;
 use Laminas\Router\Http\RouteDefinition\RouteDefinitionParameter;
 use Laminas\Router\Http\RouteDefinition\RouteDefinitionPartInterface;
 use Laminas\Router\Http\RouteDefinition\RouteDefinitionTranslatedLiteral;
-use Laminas\Router\ReturnOfAssemble;
 use Laminas\Translator\TranslatorInterface as Translator;
 use Override;
 use Psr\Http\Message\RequestInterface;
@@ -342,7 +342,7 @@ final class Segment implements HttpRouteInterface
      * @throws Exception\RuntimeException
      */
     #[Override]
-    public function match(RequestInterface $request, int|null $pathOffset = null): ?HttpRouteMatch
+    public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
     {
         $path  = $request->getUri()->getPath();
         $regex = $this->regex;
@@ -393,11 +393,11 @@ final class Segment implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
+    public function assemble(array $params = [], array $options = []): AssembledUrl
     {
         $this->assembledParams = [];
 
-        return new ReturnOfAssemble(path :$this->buildPath(
+        return new AssembledUrl(path :$this->buildPath(
             $this->parts->getParts(),
             array_merge($this->defaults, $params),
             false,

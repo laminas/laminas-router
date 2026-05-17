@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Laminas\Router\Http;
 
+use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception;
 use Laminas\Router\Http\HttpRouteMatch;
-use Laminas\Router\ReturnOfAssemble;
 use Override;
 use Psr\Http\Message\RequestInterface;
 
@@ -47,16 +47,17 @@ final class Placeholder implements HttpRouteInterface
     #[Override]
     public function match(
         RequestInterface $request,
-        int|null $pathOffset = null
+        int|null $pathOffset = null,
+        array $options = []
     ): HttpRouteMatch|null {
         return new HttpRouteMatch($this->defaults);
     }
 
     /** @inheritDoc */
     #[Override]
-    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
+    public function assemble(array $params = [], array $options = []): AssembledUrl
     {
-        return new ReturnOfAssemble();
+        return new AssembledUrl();
     }
 
     /** @inheritDoc */

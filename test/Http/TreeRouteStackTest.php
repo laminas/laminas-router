@@ -190,7 +190,10 @@ final class TreeRouteStackTest extends TestCase
             ]
         );
 
-        $this->assertEquals('/?foo=bar', (string) $stack->assemble([], ['name' => 'index', 'query' => ['foo' => 'bar']]));
+        $this->assertEquals(
+            '/?foo=bar',
+            (string) $stack->assemble([], ['name' => 'index', 'query' => ['foo' => 'bar']])
+        );
     }
 
     public function testAssembleWithEncodedPath(): void

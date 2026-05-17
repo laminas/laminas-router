@@ -20,5 +20,5 @@ interface HttpRouteInterface extends RouteInterface
      */
     public function getAssembledParams(): array;
 
-    public function match(RequestInterface $request, int|null $pathOffset = null): RouteMatch|null;
+    public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): RouteMatch|null;
 }

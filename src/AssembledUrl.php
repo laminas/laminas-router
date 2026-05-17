@@ -12,7 +12,7 @@ use function sprintf;
 use function str_starts_with;
 use function strtolower;
 
-readonly class ReturnOfAssemble implements Stringable
+readonly class AssembledUrl implements Stringable
 {
     public function __construct(
         public string $path = '',

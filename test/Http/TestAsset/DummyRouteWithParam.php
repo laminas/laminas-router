@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace LaminasTest\Router\Http\TestAsset;
 
+use Laminas\Router\AssembledUrl;
 use Laminas\Router\Http\HttpRouteMatch;
-use Laminas\Router\ReturnOfAssemble;
 use Psr\Http\Message\RequestInterface;
 
 use function array_key_exists;
@@ -18,15 +18,16 @@ final class DummyRouteWithParam extends DummyRoute
     /** @inheritDoc */
     public function match(
         RequestInterface $request,
-        int|null $pathOffset = null
+        int|null $pathOffset = null,
+        array $options = []
     ): HttpRouteMatch {
         return new HttpRouteMatch(['foo' => 'bar'], -4);
     }
 
     /** @inheritDoc */
-    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
+    public function assemble(array $params = [], array $options = []): AssembledUrl
     {
-        return new ReturnOfAssemble(array_key_exists('foo', $params) ? (string) $params['foo'] : '');
+        return new AssembledUrl(array_key_exists('foo', $params) ? (string) $params['foo'] : '');
     }
 
     /** @inheritDoc */

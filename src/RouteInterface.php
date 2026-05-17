@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Laminas\Router;
 
-use Laminas\Router\ReturnOfAssemble;
+use Laminas\Router\AssembledUrl;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -34,5 +34,5 @@ interface RouteInterface
      *
      * @param array<non-empty-string, string|null|int|float> $params
      */
-    public function assemble(array $params = [], array $options = []): ReturnOfAssemble;
+    public function assemble(array $params = [], array $options = []): AssembledUrl;
 }

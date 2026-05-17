@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Laminas\Router\Http;
 
+use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception;
 use Laminas\Router\Exception\InvalidArgumentException;
 use Laminas\Router\Http\HttpRouteMatch;
-use Laminas\Router\ReturnOfAssemble;
 use Override;
 use Psr\Http\Message\RequestInterface;
 
@@ -93,7 +93,7 @@ final class Regex implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function match(RequestInterface $request, int|null $pathOffset = null): ?HttpRouteMatch
+    public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
     {
         $path = $request->getUri()->getPath();
 
@@ -122,7 +122,7 @@ final class Regex implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
+    public function assemble(array $params = [], array $options = []): AssembledUrl
     {
         $url                   = $this->spec;
         $mergedParams          = array_merge($this->defaults, $params);
@@ -138,7 +138,7 @@ final class Regex implements HttpRouteInterface
             }
         }
 
-        return new ReturnOfAssemble(path:$url);
+        return new AssembledUrl(path:$url);
     }
 
     /** @inheritDoc */

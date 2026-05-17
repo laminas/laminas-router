@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Laminas\Router\Http;
 
 use ArrayObject;
+use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception;
 use Laminas\Router\Exception\RuntimeException;
-use Laminas\Router\ReturnOfAssemble;
 use Laminas\Router\RouteInterface;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RoutePluginManager;
@@ -15,7 +15,6 @@ use Laminas\Router\SimpleRouteStack;
 use Override;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
-use ReflectionProperty;
 
 use function array_merge;
 use function assert;
@@ -192,7 +191,8 @@ class TreeRouteStack extends SimpleRouteStack
     #[Override]
     public function match(
         RequestInterface $request,
-        int|null $pathOffset = null
+        int|null $pathOffset = null,
+        array $options = []
     ): ?RouteMatch {
         $baseUrlLength = null;
 
@@ -211,7 +211,7 @@ class TreeRouteStack extends SimpleRouteStack
 
         foreach ($this->routes as $name => $route) {
             assert($route instanceof HttpRouteInterface);
-            $match = $route->match($request, $baseUrlLength);
+            $match = $route->match($request, $baseUrlLength, $options);
             if ($match instanceof HttpRouteMatch && ($pathLength === null || $match->getLength() === $pathLength)) {
                 $match->setMatchedRouteName((string) $name);
 
@@ -234,7 +234,7 @@ class TreeRouteStack extends SimpleRouteStack
      * @throws Exception\RuntimeException
      */
     #[Override]
-    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
+    public function assemble(array $params = [], array $options = []): AssembledUrl
     {
         $name = $options['name'] ?? '';
         if (! is_string($name) || $name === '') {
@@ -269,7 +269,7 @@ class TreeRouteStack extends SimpleRouteStack
             return $route->assemble(array_merge($this->defaultParams, $params), $options);
         }
 
-        $returnOfAssemble = $route->assemble(array_merge($this->defaultParams, $params), $options);
+        $assembledUrl = $route->assemble(array_merge($this->defaultParams, $params), $options);
 
         $forceCanonicalOption = isset($options['force_canonical']) && $options['force_canonical'] === true;
 
@@ -282,9 +282,9 @@ class TreeRouteStack extends SimpleRouteStack
             throw new RuntimeException('Request URI has not been set');
         }
 
-        $childScheme = $returnOfAssemble->scheme;
-        $childHost   = $returnOfAssemble->host;
-        $childPort   = $returnOfAssemble->port;
+        $childScheme = $assembledUrl->scheme;
+        $childHost   = $assembledUrl->host;
+        $childPort   = $assembledUrl->port;
 
         $resolvedScheme = $childScheme;
         if ($resolvedScheme === null || $resolvedScheme === '') {
@@ -314,22 +314,15 @@ class TreeRouteStack extends SimpleRouteStack
             || ($childHost !== null && $childHost !== '')
             || $childSchemeNonEmpty;
 
-        return new ReturnOfAssemble(
-            path: $returnOfAssemble->path,
-            query: $options['query'] ?? $returnOfAssemble->query,
+        return new AssembledUrl(
+            path: $assembledUrl->path,
+            query: $options['query'] ?? $assembledUrl->query,
             host: $resolvedHost,
             scheme: $resolvedScheme,
-            fragment: $options['fragment'] ?? $returnOfAssemble->fragment,
+            fragment: $options['fragment'] ?? $assembledUrl->fragment,
             forceCanonical: $mergedForceCanonical,
             port: $resolvedPort,
         );
-    }
-
-    private function readReturnOfAssembleProperty(ReturnOfAssemble $object, string $property, mixed $default): mixed
-    {
-        $reflection = new ReflectionProperty(ReturnOfAssemble::class, $property);
-
-        return $reflection->isInitialized($object) ? $reflection->getValue($object) : $default;
     }
 
     /**

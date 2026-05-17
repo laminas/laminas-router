@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Laminas\Router\Http;
 
 use ArrayObject;
+use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception;
-use Laminas\Router\ReturnOfAssemble;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RoutePluginManager;
 use Override;
@@ -20,7 +20,6 @@ use function is_array;
 use function is_bool;
 use function is_object;
 use function is_string;
-use function method_exists;
 use function strlen;
 
 /**
@@ -117,14 +116,15 @@ final class Part extends TreeRouteStack implements HttpRouteInterface
     #[Override]
     public function match(
         RequestInterface $request,
-        int|null $pathOffset = null
+        int|null $pathOffset = null,
+        array $options = []
     ): RouteMatch|null {
         $pathOffset ??= 0;
         $match        = $this->route->match($request, $pathOffset, $options);
 
         assert($match instanceof HttpRouteMatch || $match === null);
 
-        if ($match !== null && method_exists($request, 'getUri')) {
+        if ($match !== null) {
             if (count($this->childRoutes) !== 0) {
                 $this->addRoutes($this->childRoutes);
                 $this->childRoutes = [];
@@ -166,7 +166,7 @@ final class Part extends TreeRouteStack implements HttpRouteInterface
      * @throws Exception\RuntimeException
      */
     #[Override]
-    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
+    public function assemble(array $params = [], array $options = []): AssembledUrl
     {
         if (count($this->childRoutes) !== 0) {
             $this->addRoutes($this->childRoutes);

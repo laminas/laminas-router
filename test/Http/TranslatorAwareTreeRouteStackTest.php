@@ -7,6 +7,7 @@ namespace LaminasTest\Router\Http;
 use ArrayObject;
 use Laminas\Diactoros\Request;
 use Laminas\Diactoros\Uri;
+use Laminas\Router\AssembledUrl;
 use Laminas\Router\Http\HttpRouteInterface;
 use Laminas\Router\Http\TranslatorAwareTreeRouteStack;
 use Laminas\Router\RoutePluginManager;
@@ -136,7 +137,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
             ->with(
                 $this->equalTo([]),
                 $this->equalTo(['translator' => $translator, 'text_domain' => 'default', 'uri' => $uri])
-            );
+            )->willReturn(new AssembledUrl());
 
                 /** @var ArrayObject<string, HttpRouteInterface> $prototypes */
         $prototypes = new ArrayObject();

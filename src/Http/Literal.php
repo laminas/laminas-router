@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Laminas\Router\Http;
 
+use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception;
 use Laminas\Router\Http\HttpRouteMatch;
-use Laminas\Router\ReturnOfAssemble;
 use Override;
 use Psr\Http\Message\RequestInterface;
 
@@ -67,7 +67,7 @@ final class Literal implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function match(RequestInterface $request, int|null $pathOffset = null): ?HttpRouteMatch
+    public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?HttpRouteMatch
     {
         $path = $request->getUri()->getPath();
 
@@ -90,9 +90,9 @@ final class Literal implements HttpRouteInterface
 
     /** @inheritDoc */
     #[Override]
-    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
+    public function assemble(array $params = [], array $options = []): AssembledUrl
     {
-        return new ReturnOfAssemble(path:$this->route);
+        return new AssembledUrl(path:$this->route);
     }
 
     /** @inheritDoc */

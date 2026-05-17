@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Laminas\Router\Http;
 
 use ArrayObject;
+use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception;
 use Laminas\Router\Exception\RuntimeException;
-use Laminas\Router\ReturnOfAssemble;
 use Laminas\Router\RouteMatch;
 use Laminas\Router\RoutePluginManager;
 use Laminas\Translator\TranslatorInterface;
@@ -50,7 +50,7 @@ final class TranslatorAwareTreeRouteStack extends TreeRouteStack
          * We use an ArrayObject in this case so we can easily pass it down the tree
          * by reference.
          */
-        private readonly ArrayObject $prototypes,
+        ArrayObject $prototypes,
         array $routes = [],
         array $defaultParams = [],
     ) {
@@ -89,7 +89,7 @@ final class TranslatorAwareTreeRouteStack extends TreeRouteStack
      * @param int|null $pathOffset
      */
     #[Override]
-    public function match(RequestInterface $request, int|null $pathOffset = null): ?RouteMatch
+    public function match(RequestInterface $request, int|null $pathOffset = null, array $options = []): ?RouteMatch
     {
         if ($this->hasTranslator() && $this->isTranslatorEnabled() && ! isset($options['translator'])) {
             $options['translator'] = $this->getTranslator();
@@ -99,7 +99,7 @@ final class TranslatorAwareTreeRouteStack extends TreeRouteStack
             $options['text_domain'] = $this->getTranslatorTextDomain();
         }
 
-        return parent::match($request, $pathOffset);
+        return parent::match($request, $pathOffset, $options);
     }
 
     /**
@@ -108,7 +108,7 @@ final class TranslatorAwareTreeRouteStack extends TreeRouteStack
      * @throws Exception\RuntimeException
      */
     #[Override]
-    public function assemble(array $params = [], array $options = []): ReturnOfAssemble
+    public function assemble(array $params = [], array $options = []): AssembledUrl
     {
         if ($this->hasTranslator() && $this->isTranslatorEnabled() && ! isset($options['translator'])) {
             $options['translator'] = $this->getTranslator();
