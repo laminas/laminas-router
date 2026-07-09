@@ -42,7 +42,7 @@
         "laminas/laminas-http": "^2.22",
         "laminas/laminas-i18n": "^2.31.0",
         "phpunit/phpunit": "^11.5.43",
-        "psalm/plugin-phpunit": "^0.19.5",
+        "psalm/plugin-phpunit": "^0.20.0",
         "vimeo/psalm": "^6.13.1"
     },
     "suggest": {
