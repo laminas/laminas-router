@@ -29,10 +29,10 @@ final readonly class TranslatorAwareTreeRouteStack extends TreeRouteStack
      */
     public function __construct(
         RoutePluginManager $routePluginManager,
+        private TranslatorInterface $translator,
         array $routes = [],
         array $defaultParams = [],
         int|null $priority = null,
-        private ?TranslatorInterface $translator = null,
         private string $translatorTextDomain = 'default'
     ) {
         parent::__construct($routePluginManager, $routes, $defaultParams, $priority);
@@ -59,15 +59,15 @@ final readonly class TranslatorAwareTreeRouteStack extends TreeRouteStack
         if (! is_string($translatorTextDomain)) {
             throw new RuntimeException('Invalid "translator_text_domain" option');
         }
-        if ($translator !== null && ! $translator instanceof TranslatorInterface) {
+        if (! $translator instanceof TranslatorInterface) {
             throw new RuntimeException('Invalid "translator" option');
         }
 
         return new self(
             $routePlugins,
+            $translator,
             $routes,
             $defaultParams,
-            translator: $translator,
             translatorTextDomain: $translatorTextDomain
         );
     }
@@ -82,7 +82,7 @@ final readonly class TranslatorAwareTreeRouteStack extends TreeRouteStack
         int|null $pathOffset = null,
         array $options = []
     ): ?RouteMatchInterface {
-        if ($this->isTranslatorEnabled() && ! isset($options['translator'])) {
+        if (! isset($options['translator'])) {
             $options['translator'] = $this->getTranslator();
         }
 
@@ -101,7 +101,7 @@ final readonly class TranslatorAwareTreeRouteStack extends TreeRouteStack
     #[Override]
     public function assemble(array $params = [], array $options = []): AssembledUrl
     {
-        if ($this->isTranslatorEnabled() && ! isset($options['translator'])) {
+        if (! isset($options['translator'])) {
             $options['translator'] = $this->getTranslator();
         }
 
@@ -115,11 +115,6 @@ final readonly class TranslatorAwareTreeRouteStack extends TreeRouteStack
     public function getTranslator(): ?TranslatorInterface
     {
         return $this->translator;
-    }
-
-    public function isTranslatorEnabled(): bool
-    {
-        return $this->translator !== null;
     }
 
     public function getTranslatorTextDomain(): string

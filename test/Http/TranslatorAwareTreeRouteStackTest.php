@@ -81,7 +81,10 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
             );
 
         /** @var TranslatorAwareTreeRouteStack<HttpRouteInterface> $stack */
-        $stack = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TranslatorAwareTreeRouteStack(
+            new RoutePluginManager(new ServiceManager()),
+            translator: $translator
+        );
         $stack->addRoute('test', $route);
 
         $stack->match($request, null, ['translator' => $translator]);
@@ -101,7 +104,10 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
             )->willReturn(new AssembledUrl());
 
         /** @var TranslatorAwareTreeRouteStack<HttpRouteInterface> $stack */
-        $stack = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TranslatorAwareTreeRouteStack(
+            new RoutePluginManager(new ServiceManager()),
+            translator: $translator
+        );
         $stack->addRoute('test', $route);
 
         $stack->assemble([], ['name' => 'test', 'translator' => $translator, 'uri' => $uri]);
@@ -151,21 +157,18 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
         $this->assertSame($translator, $stack->getTranslator());
         $this->assertSame('route', $stack->getTranslatorTextDomain());
         $this->assertEquals('foo/index', $match->getMatchedRouteName());
-        $this->assertTrue($stack->isTranslatorEnabled());
     }
 
-    public function testMatchDoesNotTranslateWhenTranslatorDisabled(): void
+    public function testTranslatorIsRequired(): void
     {
-        $stack = new TranslatorAwareTreeRouteStack(new RoutePluginManager(new ServiceManager()));
-        $stack->addRoute('foo', $this->fooRoute);
-
-        $request = (new Request())->withUri(new Uri('http://example.com/de/hauptseite'));
-
-        $this->assertFalse($stack->isTranslatorEnabled());
-        $this->assertNull($stack->getTranslator());
-        $this->assertSame('default', $stack->getTranslatorTextDomain());
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('No translator provided');
-        $stack->match($request);
+        $this->expectExceptionMessage('Invalid "translator" option');
+
+        self::assertInstanceOf(
+            TranslatorAwareTreeRouteStack::class,
+            TranslatorAwareTreeRouteStack::factory([
+                'route_plugins' => new RoutePluginManager(new ServiceManager()),
+            ])
+        );
     }
 }

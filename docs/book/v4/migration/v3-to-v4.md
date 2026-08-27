@@ -308,6 +308,7 @@ The following runtime setters have been removed:
 - `setTranslatorEnabled()`
 - `setTranslatorTextDomain()`
 - `hasTranslator()`
+- `isTranslatorEnabled()`
 
 **Migration:** Configure the translator at router creation time:
 
@@ -319,9 +320,6 @@ $router = TranslatorAwareTreeRouteStack::factory([
     'translator_text_domain'  => 'default',
 ]);
 ```
-
-`isTranslatorEnabled()` now returns `true` when a translator instance is
-configured, and `false` when `translator` is `null`.
 
 ## Route plugin manager changes
 

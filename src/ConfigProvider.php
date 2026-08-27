@@ -6,6 +6,7 @@ namespace Laminas\Router;
 
 use Laminas\Router\Http\TreeRouteStack;
 use Laminas\ServiceManager\ServiceManager;
+use Laminas\Translator\TranslatorInterface;
 
 /**
  * Provide base configuration for using the component.
@@ -23,6 +24,7 @@ use Laminas\ServiceManager\ServiceManager;
  *      router: array{
  *          router_class: class-string<RouteStackInterface>,
  *          route_plugins: class-string<RoutePluginManager>,
+ *          translator?: class-string<TranslatorInterface>,
  *      }
  *  }
  */

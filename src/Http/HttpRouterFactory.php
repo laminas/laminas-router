@@ -8,6 +8,7 @@ use Laminas\Router\ConfigProvider;
 use Laminas\Router\RoutePluginManager;
 use Laminas\Router\RouteStackInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Laminas\Translator\TranslatorInterface;
 use Psr\Container\ContainerInterface;
 
 use function assert;
@@ -46,6 +47,15 @@ final readonly class HttpRouterFactory implements FactoryInterface
         assert($routePluginManager instanceof RoutePluginManager);
 
         $config['route_plugins'] = $routePluginManager;
+
+        if ($class === TranslatorAwareTreeRouteStack::class) {
+            $translaterServiceName = $config['router']['translator']
+                             ?? TranslatorInterface::class;
+
+            $translator = $container->get($translaterServiceName);
+            assert($translator instanceof TranslatorInterface);
+            $config['translator'] = $translator;
+        }
 
         $router = $class::factory($config);
 
