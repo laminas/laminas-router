@@ -18,6 +18,9 @@ use Laminas\Stdlib\RequestInterface;
 
 interface RouteInterface
 {
+    /**
+     * @deprecated since 3.20.0; use RouteBuilderRegistry::build() instead
+     */
     public static function factory(array $options = []);
     public function match(RequestInterface $request);
     public function assemble(array $params = [], array $options = []);
@@ -75,14 +78,22 @@ Routes will be queried in a LIFO order, and hence the reason behind the name
 at a time using `addRoute()`, or in bulk using `addRoutes()`.
 
 ```php
-// One at a time:
-$route = Literal::factory([
+$options = [
     'route' => '/foo',
     'defaults' => [
         'controller' => 'foo-index',
         'action'     => 'index',
     ],
-]);
+];
+
+// One at a time:
+
+// Deprecated since 3.20.0:
+$route = Literal::factory($options);
+
+// Since 3.20.0:
+$route = $routeBuilderRegistry->build(Literal::class, $options);
+
 $router->addRoute('foo', $route);
 
 // In bulk:
@@ -103,6 +114,142 @@ $router->addRoutes([
     ],
 ]);
 ```
+
+## Route builders
+
+- **Since 3.20.0**
+
+`RouteInterface::factory()` and `RoutePluginManager` are deprecated since
+3.20.0. Prefer `RouteBuilderRegistry` to construct routes from data-only
+options. Route definitions in configuration (`router.routes`) are unchanged.
+
+```php
+use Laminas\Router\Http\Literal;
+use Laminas\Router\RouteBuilderRegistry;
+
+$routeBuilderRegistry = $container->get(RouteBuilderRegistry::class);
+
+$route = $routeBuilderRegistry->build(Literal::class, [
+    'route' => '/foo',
+    'defaults' => [
+        'controller' => 'foo-index',
+        'action'     => 'index',
+    ],
+]);
+
+// Historical aliases work as well:
+$route = $routeBuilderRegistry->build('literal', [/* ... */]);
+```
+
+### Custom route example
+
+A minimal custom route that always matches and returns defaults:
+
+```php
+namespace App\Router;
+
+use Laminas\Router\RouteInterface;
+use Laminas\Router\RouteMatch;
+use Laminas\Stdlib\RequestInterface;
+
+final class AlwaysMatch implements RouteInterface
+{
+    public function __construct(private readonly array $defaults = [])
+    {
+    }
+
+    public static function factory($options = []): self
+    {
+        return new self($options['defaults'] ?? []);
+    }
+
+    public function match(RequestInterface $request): RouteMatch
+    {
+        return new RouteMatch($this->defaults);
+    }
+
+    public function assemble(array $params = [], array $options = []): string
+    {
+        return '';
+    }
+}
+```
+
+Its builder (object dependencies belong on the builder constructor, not in
+route options):
+
+```php
+namespace App\Router;
+
+use Laminas\Router\RouteBuilderInterface;
+use Laminas\Router\RouteInterface;
+
+/** @implements RouteBuilderInterface<AlwaysMatch> */
+final readonly class AlwaysMatchBuilder implements RouteBuilderInterface
+{
+    public function build(array $options = []): RouteInterface
+    {
+        return new AlwaysMatch($options['defaults'] ?? []);
+    }
+}
+```
+
+```php
+namespace App\Router;
+
+final readonly class AlwaysMatchBuilderFactory
+{
+    public function __invoke(): AlwaysMatchBuilder
+    {
+        return new AlwaysMatchBuilder();
+    }
+}
+```
+
+Register the builder in the container and map the type (and alias) under
+`router.route_builders`:
+
+```php
+return [
+    'dependencies' => [
+        'factories' => [
+            \App\Router\AlwaysMatchBuilder::class
+                => \App\Router\AlwaysMatchBuilderFactory::class,
+        ],
+    ],
+    'router' => [
+        'route_builders' => [
+            'always-match' => \App\Router\AlwaysMatchBuilder::class,
+            \App\Router\AlwaysMatch::class => \App\Router\AlwaysMatchBuilder::class,
+        ],
+        'routes' => [
+            'health' => [
+                'type' => 'always-match',
+                'options' => [
+                    'defaults' => [
+                        'controller' => HealthController::class,
+                        'action' => 'ping',
+                    ],
+                ],
+            ],
+        ],
+    ],
+];
+```
+
+You can also build it programmatically:
+
+```php
+$route = $routeBuilderRegistry->build('always-match', [
+    'defaults' => [
+        'controller' => HealthController::class,
+        'action' => 'ping',
+    ],
+]);
+```
+
+Later programmatic examples assume `$routeBuilderRegistry` is already available
+from the container.
 
 ## Router Types
 
@@ -170,12 +317,18 @@ example, if the "subdomain" segment needed to match only if it started with "fw"
 and contained exactly 2 digits following, the following route would be needed:
 
 ```php
-$route = Hostname::factory([
+$options = [
     'route' => ':subdomain.domain.tld',
     'constraints' => [
         'subdomain' => 'fw\d{2}',
     ],
-]);
+];
+
+// Deprecated since 3.20.0:
+$route = Hostname::factory($options);
+
+// Since 3.20.0:
+$route = $routeBuilderRegistry->build(Hostname::class, $options);
 ```
 
 In the above example, only a "subdomain" key will be returned in the
@@ -184,7 +337,7 @@ or a default value to return for the subdomain, you need to also provide
 defaults.
 
 ```php
-$route = Hostname::factory([
+$options = [
     'route' => ':subdomain.domain.tld',
     'constraints' => [
         'subdomain' => 'fw\d{2}',
@@ -192,7 +345,13 @@ $route = Hostname::factory([
     'defaults' => [
         'type' => 'json',
     ],
-]);
+];
+
+// Deprecated since 3.20.0:
+$route = Hostname::factory($options);
+
+// Since 3.20.0:
+$route = $routeBuilderRegistry->build(Hostname::class, $options);
 ```
 
 When matched, the above will return two keys in the `RouteMatch`, "subdomain"
@@ -205,13 +364,19 @@ therefore is solely the path you want to match, and the "defaults", or
 parameters you want returned on a match.
 
 ```php
-$route = Literal::factory([
+$options = [
     'route' => '/foo',
     'defaults' => [
         'controller' => 'Application\Controller\IndexController',
         'action' => 'foo',
     ],
-]);
+];
+
+// Deprecated since 3.20.0:
+$route = Literal::factory($options);
+
+// Since 3.20.0:
+$route = $routeBuilderRegistry->build(Literal::class, $options);
 ```
 
 The above route would match a path "/foo", and return the key "action" in the
@@ -224,13 +389,19 @@ request (See RFC 2616 Sec. 5.1.1). It can optionally be configured to match
 against multiple methods by providing a comma-separated list of method tokens.
 
 ```php
-$route = Method::factory([
+$options = [
     'verb' => 'post,put',
     'defaults' => [
         'controller' => 'Application\Controller\IndexController',
         'action' => 'form-submit',
     ],
-]);
+];
+
+// Deprecated since 3.20.0:
+$route = Method::factory($options);
+
+// Since 3.20.0:
+$route = $routeBuilderRegistry->build(Method::class, $options);
 ```
 
 The above route would match an http "POST" or "PUT" request and return a
@@ -245,7 +416,7 @@ the URI path. It actually extends the `TreeRouteStack`.
 here.
 
 ```php
-$route = Part::factory([
+$options = [
     'route' => [
         'type' => 'literal',
         'options' => [
@@ -304,7 +475,13 @@ $route = Part::factory([
             ],
         ],
     ],
-]);
+];
+
+// Deprecated since 3.20.0:
+$route = Part::factory($options);
+
+// Since 3.20.0:
+$route = $routeBuilderRegistry->build(Part::class, $options);
 ```
 
 The above would match the following:
@@ -326,6 +503,10 @@ You may use any route type as a child route of a `Part` route.
 > further insight.
 
 > ### Route plugins
+>
+> `RoutePluginManager` is deprecated since 3.20.0. Prefer programmatic
+> construction via `RouteBuilderRegistry`. Composite routes such as `Part` may
+> still require a `route_plugins` option when built directly.
 >
 > In the above example, the `$routePlugins` is an instance of
 > `Laminas\Router\RoutePluginManager`, containing essentially the following
@@ -438,7 +619,7 @@ Just like other routes, the `Regex` route can accept "defaults", parameters to
 include in the `RouteMatch` when successfully matched.
 
 ```php
-$route = Regex::factory([
+$options = [
     'regex' => '/blog/(?<id>[a-zA-Z0-9_-]+)(\.(?<format>(json|html|xml|rss)))?',
     'defaults' => [
         'controller' => 'Application\Controller\BlogController',
@@ -446,7 +627,13 @@ $route = Regex::factory([
         'format'     => 'html',
     ],
     'spec' => '/blog/%id%.%format%',
-]);
+];
+
+// Deprecated since 3.20.0:
+$route = Regex::factory($options);
+
+// Since 3.20.0:
+$route = $routeBuilderRegistry->build(Regex::class, $options);
 ```
 
 The above would match `/blog/001-some-blog_slug-here.html`, and return four
@@ -461,12 +648,18 @@ such, this route, like the `Literal` route, simply takes what you want to match
 and the "defaults", parameters to return on a match.
 
 ```php
-$route = Scheme::factory([
+$options = [
     'scheme' => 'https',
     'defaults' => [
         'https' => true,
     ],
-]);
+];
+
+// Deprecated since 3.20.0:
+$route = Scheme::factory($options);
+
+// Since 3.20.0:
+$route = $routeBuilderRegistry->build(Scheme::class, $options);
 ```
 
 The above route would match the "https" scheme, and return the key "https" in
@@ -496,7 +689,7 @@ particularly useful when using optional segments.
 As a complex example:
 
 ```php
-$route = Segment::factory([
+$options = [
     'route' => '/:controller[/:action]',
     'constraints' => [
         'controller' => '[a-zA-Z][a-zA-Z0-9_-]+',
@@ -506,7 +699,13 @@ $route = Segment::factory([
         'controller' => 'Application\Controller\IndexController',
         'action'     => 'index',
     ],
-]);
+];
+
+// Deprecated since 3.20.0:
+$route = Segment::factory($options);
+
+// Since 3.20.0:
+$route = $routeBuilderRegistry->build(Segment::class, $options);
 ```
 
 ### Laminas\\Router\\Http\\Wildcard (Deprecated)

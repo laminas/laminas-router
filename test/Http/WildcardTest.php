@@ -202,7 +202,6 @@ final class WildcardTest extends TestCase
 
     public function testPathAssemblyShouldSkipAnyNonScalarValues(): void
     {
-        /** @psalm-suppress DeprecatedClass */
         $route = new Wildcard('/', '/', [
             'action'     => 'index',
             'controller' => 'index',

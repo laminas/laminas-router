@@ -24,6 +24,8 @@ use function sprintf;
  * The manager is marked to not share by default, in order to allow multiple
  * route instances of the same type.
  *
+ * @deprecated since 3.20.0
+ *
  * @see ServiceManager for expected configuration shape
  *
  * @template InstanceType of RouteInterface

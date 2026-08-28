@@ -4,6 +4,30 @@ declare(strict_types=1);
 
 namespace Laminas\Router;
 
+use Laminas\Router\Http\ChainBuilder;
+use Laminas\Router\Http\ChainBuilderFactory;
+use Laminas\Router\Http\HostnameBuilder;
+use Laminas\Router\Http\HostnameBuilderFactory;
+use Laminas\Router\Http\LiteralBuilder;
+use Laminas\Router\Http\LiteralBuilderFactory;
+use Laminas\Router\Http\MethodBuilder;
+use Laminas\Router\Http\MethodBuilderFactory;
+use Laminas\Router\Http\PartBuilder;
+use Laminas\Router\Http\PartBuilderFactory;
+use Laminas\Router\Http\PlaceholderBuilder;
+use Laminas\Router\Http\PlaceholderBuilderFactory;
+use Laminas\Router\Http\RegexBuilder;
+use Laminas\Router\Http\RegexBuilderFactory;
+use Laminas\Router\Http\SchemeBuilder;
+use Laminas\Router\Http\SchemeBuilderFactory;
+use Laminas\Router\Http\SegmentBuilder;
+use Laminas\Router\Http\SegmentBuilderFactory;
+use Laminas\Router\Http\TranslatorAwareTreeRouteStackBuilder;
+use Laminas\Router\Http\TranslatorAwareTreeRouteStackBuilderFactory;
+use Laminas\Router\Http\TreeRouteStackBuilder;
+use Laminas\Router\Http\TreeRouteStackBuilderFactory;
+use Laminas\Router\Http\WildcardBuilder;
+use Laminas\Router\Http\WildcardBuilderFactory;
 use Laminas\ServiceManager\ConfigInterface;
 
 /**
@@ -29,6 +53,9 @@ class ConfigProvider
     public function __invoke()
     {
         return [
+            'router'        => [
+                'route_builders' => RouteBuilderRegistry::defaultBuilderMap(),
+            ],
             'dependencies'  => $this->getDependencyConfig(),
             'route_manager' => $this->getRouteManagerConfig(),
         ];
@@ -55,9 +82,24 @@ class ConfigProvider
                 'Zend\Router\RouteStackInterface' => RouteStackInterface::class,
             ],
             'factories' => [
-                Http\TreeRouteStack::class => Http\HttpRouterFactory::class,
-                RoutePluginManager::class  => RoutePluginManagerFactory::class,
-                RouteStackInterface::class => RouterFactory::class,
+                Http\TreeRouteStack::class     => Http\HttpRouterFactory::class,
+                RoutePluginManager::class      => RoutePluginManagerFactory::class,
+                RouteStackInterface::class     => RouterFactory::class,
+                RouteBuilderRegistry::class    => RouteBuilderRegistryFactory::class,
+                LiteralBuilder::class          => LiteralBuilderFactory::class,
+                SegmentBuilder::class          => SegmentBuilderFactory::class,
+                HostnameBuilder::class         => HostnameBuilderFactory::class,
+                RegexBuilder::class            => RegexBuilderFactory::class,
+                MethodBuilder::class           => MethodBuilderFactory::class,
+                SchemeBuilder::class           => SchemeBuilderFactory::class,
+                PlaceholderBuilder::class      => PlaceholderBuilderFactory::class,
+                PartBuilder::class             => PartBuilderFactory::class,
+                ChainBuilder::class            => ChainBuilderFactory::class,
+                SimpleRouteStackBuilder::class => SimpleRouteStackBuilderFactory::class,
+                TreeRouteStackBuilder::class   => TreeRouteStackBuilderFactory::class,
+                TranslatorAwareTreeRouteStackBuilder::class
+                => TranslatorAwareTreeRouteStackBuilderFactory::class,
+                WildcardBuilder::class => WildcardBuilderFactory::class,
             ],
         ];
     }
