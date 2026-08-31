@@ -730,13 +730,17 @@
       <code><![CDATA[Module]]></code>
     </UnusedClass>
   </file>
-  <file src="src/RouteBuilderRegistry.php">
+  <file src="src/RouteBuilderContainer.php">
     <DeprecatedClass>
       <code><![CDATA[Wildcard::class]]></code>
       <code><![CDATA[WildcardBuilder::class]]></code>
       <code><![CDATA[WildcardBuilder::class]]></code>
       <code><![CDATA[WildcardBuilder::class]]></code>
     </DeprecatedClass>
+    <ParamNameMismatch>
+      <code><![CDATA[$type]]></code>
+      <code><![CDATA[$type]]></code>
+    </ParamNameMismatch>
     <PossiblyUnusedReturnValue>
       <code><![CDATA[RouteInterface]]></code>
     </PossiblyUnusedReturnValue>
