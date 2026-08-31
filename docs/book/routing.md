@@ -19,7 +19,7 @@ use Laminas\Stdlib\RequestInterface;
 interface RouteInterface
 {
     /**
-     * @deprecated since 3.20.0; use RouteBuilderRegistry::build() instead
+     * @deprecated since 3.20.0; use RouteBuilderContainer::build() instead
      */
     public static function factory(array $options = []);
     public function match(RequestInterface $request);
@@ -92,7 +92,7 @@ $options = [
 $route = Literal::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderRegistry->build(Literal::class, $options);
+$route = $routeBuilderContainer->build(Literal::class, $options);
 
 $router->addRoute('foo', $route);
 
@@ -120,16 +120,16 @@ $router->addRoutes([
 - **Since 3.20.0**
 
 `RouteInterface::factory()` and `RoutePluginManager` are deprecated since
-3.20.0. Prefer `RouteBuilderRegistry` to construct routes from data-only
+3.20.0. Prefer `RouteBuilderContainer` to construct routes from data-only
 options. Route definitions in configuration (`router.routes`) are unchanged.
 
 ```php
 use Laminas\Router\Http\Literal;
-use Laminas\Router\RouteBuilderRegistry;
+use Laminas\Router\RouteBuilderContainer;
 
-$routeBuilderRegistry = $container->get(RouteBuilderRegistry::class);
+$routeBuilderContainer = $container->get(RouteBuilderContainer::class);
 
-$route = $routeBuilderRegistry->build(Literal::class, [
+$route = $routeBuilderContainer->build(Literal::class, [
     'route' => '/foo',
     'defaults' => [
         'controller' => 'foo-index',
@@ -138,7 +138,7 @@ $route = $routeBuilderRegistry->build(Literal::class, [
 ]);
 
 // Historical aliases work as well:
-$route = $routeBuilderRegistry->build('literal', [/* ... */]);
+$route = $routeBuilderContainer->build('literal', [/* ... */]);
 ```
 
 ### Custom route example
@@ -240,7 +240,7 @@ return [
 You can also build it programmatically:
 
 ```php
-$route = $routeBuilderRegistry->build('always-match', [
+$route = $routeBuilderContainer->build('always-match', [
     'defaults' => [
         'controller' => HealthController::class,
         'action' => 'ping',
@@ -248,7 +248,7 @@ $route = $routeBuilderRegistry->build('always-match', [
 ]);
 ```
 
-Later programmatic examples assume `$routeBuilderRegistry` is already available
+Later programmatic examples assume `$routeBuilderContainer` is already available
 from the container.
 
 ## Router Types
@@ -328,7 +328,7 @@ $options = [
 $route = Hostname::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderRegistry->build(Hostname::class, $options);
+$route = $routeBuilderContainer->build(Hostname::class, $options);
 ```
 
 In the above example, only a "subdomain" key will be returned in the
@@ -351,7 +351,7 @@ $options = [
 $route = Hostname::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderRegistry->build(Hostname::class, $options);
+$route = $routeBuilderContainer->build(Hostname::class, $options);
 ```
 
 When matched, the above will return two keys in the `RouteMatch`, "subdomain"
@@ -376,7 +376,7 @@ $options = [
 $route = Literal::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderRegistry->build(Literal::class, $options);
+$route = $routeBuilderContainer->build(Literal::class, $options);
 ```
 
 The above route would match a path "/foo", and return the key "action" in the
@@ -401,7 +401,7 @@ $options = [
 $route = Method::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderRegistry->build(Method::class, $options);
+$route = $routeBuilderContainer->build(Method::class, $options);
 ```
 
 The above route would match an http "POST" or "PUT" request and return a
@@ -481,7 +481,7 @@ $options = [
 $route = Part::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderRegistry->build(Part::class, $options);
+$route = $routeBuilderContainer->build(Part::class, $options);
 ```
 
 The above would match the following:
@@ -505,7 +505,7 @@ You may use any route type as a child route of a `Part` route.
 > ### Route plugins
 >
 > `RoutePluginManager` is deprecated since 3.20.0. Prefer programmatic
-> construction via `RouteBuilderRegistry`. Composite routes such as `Part` may
+> construction via `RouteBuilderContainer`. Composite routes such as `Part` may
 > still require a `route_plugins` option when built directly.
 >
 > In the above example, the `$routePlugins` is an instance of
@@ -633,7 +633,7 @@ $options = [
 $route = Regex::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderRegistry->build(Regex::class, $options);
+$route = $routeBuilderContainer->build(Regex::class, $options);
 ```
 
 The above would match `/blog/001-some-blog_slug-here.html`, and return four
@@ -659,7 +659,7 @@ $options = [
 $route = Scheme::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderRegistry->build(Scheme::class, $options);
+$route = $routeBuilderContainer->build(Scheme::class, $options);
 ```
 
 The above route would match the "https" scheme, and return the key "https" in
@@ -705,7 +705,7 @@ $options = [
 $route = Segment::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderRegistry->build(Segment::class, $options);
+$route = $routeBuilderContainer->build(Segment::class, $options);
 ```
 
 ### Laminas\\Router\\Http\\Wildcard (Deprecated)

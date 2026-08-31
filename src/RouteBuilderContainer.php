@@ -35,12 +35,12 @@ use function get_debug_type;
 use function sprintf;
 
 /**
- * Central registry for resolving route builders by type or alias.
+ * Container for resolving route builders by type or alias.
  *
  * Builders are resolved lazily from the container to avoid a construction cycle
- * between composite builders and this registry.
+ * between composite builders and this container.
  */
-final class RouteBuilderRegistry
+final class RouteBuilderContainer implements ContainerInterface
 {
     /**
      * @param array<string, string> $builderMap type/alias => builder service id
@@ -127,5 +127,12 @@ final class RouteBuilderRegistry
         }
 
         return $builder;
+    }
+
+    public function has(string $type): bool
+    {
+        $serviceId = $this->builderMap[$type] ?? $type;
+
+        return $this->container->has($serviceId);
     }
 }

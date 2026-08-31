@@ -21,7 +21,7 @@ interface RouteInterface
     /**
      * Create a new route with given options.
      *
-     * @deprecated since 3.20.0, use RouteBuilderRegistry::build() instead
+     * @deprecated since 3.20.0, use RouteBuilderContainer::build() instead
      *
      * @param iterable $options
      * @return RouteInterface

@@ -54,7 +54,7 @@ class ConfigProvider
     {
         return [
             'router'        => [
-                'route_builders' => RouteBuilderRegistry::defaultBuilderMap(),
+                'route_builders' => RouteBuilderContainer::defaultBuilderMap(),
             ],
             'dependencies'  => $this->getDependencyConfig(),
             'route_manager' => $this->getRouteManagerConfig(),
@@ -85,7 +85,7 @@ class ConfigProvider
                 Http\TreeRouteStack::class     => Http\HttpRouterFactory::class,
                 RoutePluginManager::class      => RoutePluginManagerFactory::class,
                 RouteStackInterface::class     => RouterFactory::class,
-                RouteBuilderRegistry::class    => RouteBuilderRegistryFactory::class,
+                RouteBuilderContainer::class   => RouteBuilderContainerFactory::class,
                 LiteralBuilder::class          => LiteralBuilderFactory::class,
                 SegmentBuilder::class          => SegmentBuilderFactory::class,
                 HostnameBuilder::class         => HostnameBuilderFactory::class,

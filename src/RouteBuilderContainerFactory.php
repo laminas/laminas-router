@@ -15,16 +15,16 @@ use function is_array;
  * @psalm-internal \Laminas\Router
  * @psalm-internal \LaminasTest\Router
  */
-final readonly class RouteBuilderRegistryFactory
+final readonly class RouteBuilderContainerFactory
 {
-    public function __invoke(ContainerInterface $container): RouteBuilderRegistry
+    public function __invoke(ContainerInterface $container): RouteBuilderContainer
     {
         $config = $container->has('config') ? $container->get('config') : [];
         if (! is_array($config)) {
             throw new RuntimeException('Config service must return an array');
         }
 
-        $builderMap = $config['router']['route_builders'] ?? RouteBuilderRegistry::defaultBuilderMap();
+        $builderMap = $config['router']['route_builders'] ?? RouteBuilderContainer::defaultBuilderMap();
 
         if (! is_array($builderMap)) {
             throw new RuntimeException(
@@ -35,6 +35,6 @@ final readonly class RouteBuilderRegistryFactory
         /** @var array<string, string> $typedBuilderMap */
         $typedBuilderMap = $builderMap;
 
-        return new RouteBuilderRegistry($container, $typedBuilderMap);
+        return new RouteBuilderContainer($container, $typedBuilderMap);
     }
 }
