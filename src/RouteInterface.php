@@ -13,7 +13,7 @@ use Laminas\Stdlib\RequestInterface;
  *    type: class-string<RouteInterface>|non-empty-string,
  *    name?: non-empty-string,
  *    child_routes?: list<array<string, mixed>>,
- *    ...
+ *    ...<string, scalar>,
  *  }
  */
 interface RouteInterface
