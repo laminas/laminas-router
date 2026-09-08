@@ -198,7 +198,7 @@ use Laminas\Router\RouteInterface;
 /** @implements RouteBuilderInterface<AlwaysMatch> */
 final readonly class AlwaysMatchBuilder implements RouteBuilderInterface
 {
-    public function build(array $options = []): RouteInterface
+    public function build(array $options): RouteInterface
     {
         return new AlwaysMatch($options['defaults'] ?? []);
     }

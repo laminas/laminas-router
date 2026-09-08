@@ -10,12 +10,13 @@ namespace Laminas\Router;
  * Object dependencies must be constructor-injected into the builder
  *
  * @template-covariant TRoute of RouteInterface
+ * @psalm-import-type RouteSpec from RouteInterface
  */
 interface RouteBuilderInterface
 {
     /**
-     * @param array<string, mixed> $options
+     * @psalm-param RouteSpec $options
      * @return TRoute
      */
-    public function build(array $options = []): RouteInterface;
+    public function build(array $options): RouteInterface;
 }

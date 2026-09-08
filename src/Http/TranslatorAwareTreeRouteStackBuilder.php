@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Laminas\Router\Http;
 
 use Laminas\Router\RouteBuilderInterface;
-use Laminas\Router\RouteInterface;
 
 /**
  * @template TRoute of HttpRouteInterface
@@ -13,7 +12,8 @@ use Laminas\Router\RouteInterface;
  */
 final readonly class TranslatorAwareTreeRouteStackBuilder implements RouteBuilderInterface
 {
-    public function build(array $options = []): RouteInterface
+    /** @inheritDoc */
+    public function build(array $options): TranslatorAwareTreeRouteStack
     {
         return TranslatorAwareTreeRouteStack::factory($options);
     }

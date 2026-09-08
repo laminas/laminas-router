@@ -10,7 +10,8 @@ namespace Laminas\Router;
  */
 final readonly class SimpleRouteStackBuilder implements RouteBuilderInterface
 {
-    public function build(array $options = []): RouteInterface
+    /** @inheritDoc */
+    public function build(array $options): SimpleRouteStack
     {
         return SimpleRouteStack::factory($options);
     }

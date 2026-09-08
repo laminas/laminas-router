@@ -8,7 +8,6 @@ use Laminas\Router\Http\HttpRouteInterface;
 use Laminas\Router\Http\TreeRouteStack;
 use Laminas\Router\Http\Wildcard;
 use Laminas\Router\RouteBuilderInterface;
-use Laminas\Router\RouteInterface;
 
 /**
  * @deprecated since version 2.3.
@@ -20,7 +19,8 @@ use Laminas\Router\RouteInterface;
  */
 final readonly class WildcardBuilder implements RouteBuilderInterface
 {
-    public function build(array $options = []): RouteInterface
+    /** @inheritDoc */
+    public function build(array $options): Wildcard
     {
         return Wildcard::factory($options);
     }

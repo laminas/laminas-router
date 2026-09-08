@@ -60,7 +60,7 @@
       <code><![CDATA[Chain::factory($options)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code><![CDATA[RouteInterface]]></code>
+      <code><![CDATA[Chain]]></code>
     </MoreSpecificReturnType>
   </file>
   <file src="src/Http/Hostname.php">
@@ -140,7 +140,7 @@
       <code><![CDATA[Hostname::factory($options)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code><![CDATA[RouteInterface]]></code>
+      <code><![CDATA[Hostname]]></code>
     </MoreSpecificReturnType>
   </file>
   <file src="src/Http/HttpRouteMatch.php">
@@ -197,7 +197,7 @@
       <code><![CDATA[Literal::factory($options)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code><![CDATA[RouteInterface]]></code>
+      <code><![CDATA[Literal]]></code>
     </MoreSpecificReturnType>
   </file>
   <file src="src/Http/Method.php">
@@ -218,7 +218,7 @@
       <code><![CDATA[Method::factory($options)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code><![CDATA[RouteInterface]]></code>
+      <code><![CDATA[Method]]></code>
     </MoreSpecificReturnType>
   </file>
   <file src="src/Http/Part.php">
@@ -280,7 +280,7 @@
       <code><![CDATA[Part::factory($options)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code><![CDATA[RouteInterface]]></code>
+      <code><![CDATA[Part]]></code>
     </MoreSpecificReturnType>
   </file>
   <file src="src/Http/Placeholder.php">
@@ -296,7 +296,7 @@
       <code><![CDATA[Placeholder::factory($options)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code><![CDATA[RouteInterface]]></code>
+      <code><![CDATA[Placeholder]]></code>
     </MoreSpecificReturnType>
   </file>
   <file src="src/Http/Regex.php">
@@ -331,7 +331,7 @@
       <code><![CDATA[Regex::factory($options)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code><![CDATA[RouteInterface]]></code>
+      <code><![CDATA[Regex]]></code>
     </MoreSpecificReturnType>
   </file>
   <file src="src/Http/RouteInterface.php">
@@ -372,7 +372,7 @@
       <code><![CDATA[Scheme::factory($options)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code><![CDATA[RouteInterface]]></code>
+      <code><![CDATA[Scheme]]></code>
     </MoreSpecificReturnType>
   </file>
   <file src="src/Http/Segment.php">
@@ -484,7 +484,7 @@
       <code><![CDATA[Segment::factory($options)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code><![CDATA[RouteInterface]]></code>
+      <code><![CDATA[Segment]]></code>
     </MoreSpecificReturnType>
   </file>
   <file src="src/Http/TranslatorAwareTreeRouteStack.php">
@@ -519,7 +519,7 @@
       <code><![CDATA[TranslatorAwareTreeRouteStack::factory($options)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code><![CDATA[RouteInterface]]></code>
+      <code><![CDATA[TranslatorAwareTreeRouteStack]]></code>
     </MoreSpecificReturnType>
   </file>
   <file src="src/Http/TreeRouteStack.php">
@@ -673,7 +673,7 @@
       <code><![CDATA[TreeRouteStack::factory($options)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code><![CDATA[RouteInterface]]></code>
+      <code><![CDATA[TreeRouteStack]]></code>
     </MoreSpecificReturnType>
   </file>
   <file src="src/Http/Wildcard.php">
@@ -707,14 +707,9 @@
   </file>
   <file src="src/Http/WildcardBuilder.php">
     <DeprecatedClass>
+      <code><![CDATA[Wildcard]]></code>
       <code><![CDATA[Wildcard::factory($options)]]></code>
     </DeprecatedClass>
-    <InvalidReturnStatement>
-      <code><![CDATA[Wildcard::factory($options)]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[RouteInterface]]></code>
-    </InvalidReturnType>
   </file>
   <file src="src/Http/WildcardBuilderFactory.php">
     <DeprecatedClass>
@@ -904,7 +899,7 @@
       <code><![CDATA[SimpleRouteStack::factory($options)]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
-      <code><![CDATA[RouteInterface]]></code>
+      <code><![CDATA[SimpleRouteStack]]></code>
     </MoreSpecificReturnType>
   </file>
   <file src="test/FactoryTester.php">
