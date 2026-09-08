@@ -737,10 +737,8 @@
       <code><![CDATA[WildcardBuilder::class]]></code>
       <code><![CDATA[WildcardBuilder::class]]></code>
     </DeprecatedClass>
-    <ParamNameMismatch>
-      <code><![CDATA[$type]]></code>
-      <code><![CDATA[$type]]></code>
-    </ParamNameMismatch>
+  </file>
+  <file src="src/RouteBuilderContainerInterface.php">
     <PossiblyUnusedReturnValue>
       <code><![CDATA[RouteInterface]]></code>
     </PossiblyUnusedReturnValue>
@@ -910,13 +908,13 @@
     </MoreSpecificReturnType>
   </file>
   <file src="test/FactoryTester.php">
+    <InvalidArgument>
+      <code><![CDATA[['type' => $classname, ...$options]]]></code>
+      <code><![CDATA[['type' => $classname, ...$testOptions]]]></code>
+    </InvalidArgument>
     <MixedArgument>
       <code><![CDATA[$exceptionMessage]]></code>
     </MixedArgument>
-    <MixedArgumentTypeCoercion>
-      <code><![CDATA[$options]]></code>
-      <code><![CDATA[$testOptions]]></code>
-    </MixedArgumentTypeCoercion>
     <MixedAssignment>
       <code><![CDATA[$exceptionMessage]]></code>
     </MixedAssignment>

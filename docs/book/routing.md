@@ -79,6 +79,7 @@ at a time using `addRoute()`, or in bulk using `addRoutes()`.
 
 ```php
 $options = [
+    'type' => Literal::class,
     'route' => '/foo',
     'defaults' => [
         'controller' => 'foo-index',
@@ -92,7 +93,7 @@ $options = [
 $route = Literal::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderContainer->build(Literal::class, $options);
+$route = $routeBuilderContainer->build($options);
 
 $router->addRoute('foo', $route);
 
@@ -129,7 +130,8 @@ use Laminas\Router\RouteBuilderContainer;
 
 $routeBuilderContainer = $container->get(RouteBuilderContainer::class);
 
-$route = $routeBuilderContainer->build(Literal::class, [
+$route = $routeBuilderContainer->build([
+    'type' => Literal::class,
     'route' => '/foo',
     'defaults' => [
         'controller' => 'foo-index',
@@ -138,7 +140,16 @@ $route = $routeBuilderContainer->build(Literal::class, [
 ]);
 
 // Historical aliases work as well:
-$route = $routeBuilderContainer->build('literal', [/* ... */]);
+
+$route = $routeBuilderContainer->build([
+    'type' => 'literal',
+    'route' => '/foo',
+    'defaults' => [
+        'controller' => 'foo-index',
+        'action'     => 'index',
+    ],
+]);
+
 ```
 
 ### Custom route example
@@ -240,7 +251,8 @@ return [
 You can also build it programmatically:
 
 ```php
-$route = $routeBuilderContainer->build('always-match', [
+$route = $routeBuilderContainer->build([
+    'type' => 'always-match',
     'defaults' => [
         'controller' => HealthController::class,
         'action' => 'ping',
@@ -318,6 +330,7 @@ and contained exactly 2 digits following, the following route would be needed:
 
 ```php
 $options = [
+    'type' => Hostname::class,
     'route' => ':subdomain.domain.tld',
     'constraints' => [
         'subdomain' => 'fw\d{2}',
@@ -328,7 +341,7 @@ $options = [
 $route = Hostname::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderContainer->build(Hostname::class, $options);
+$route = $routeBuilderContainer->build($options);
 ```
 
 In the above example, only a "subdomain" key will be returned in the
@@ -338,6 +351,7 @@ defaults.
 
 ```php
 $options = [
+    'type' => Hostname::class,
     'route' => ':subdomain.domain.tld',
     'constraints' => [
         'subdomain' => 'fw\d{2}',
@@ -351,7 +365,7 @@ $options = [
 $route = Hostname::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderContainer->build(Hostname::class, $options);
+$route = $routeBuilderContainer->build($options);
 ```
 
 When matched, the above will return two keys in the `RouteMatch`, "subdomain"
@@ -365,6 +379,7 @@ parameters you want returned on a match.
 
 ```php
 $options = [
+    'type' => Literal::class,
     'route' => '/foo',
     'defaults' => [
         'controller' => 'Application\Controller\IndexController',
@@ -376,7 +391,7 @@ $options = [
 $route = Literal::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderContainer->build(Literal::class, $options);
+$route = $routeBuilderContainer->build($options);
 ```
 
 The above route would match a path "/foo", and return the key "action" in the
@@ -390,6 +405,7 @@ against multiple methods by providing a comma-separated list of method tokens.
 
 ```php
 $options = [
+    'type' => Method::class,
     'verb' => 'post,put',
     'defaults' => [
         'controller' => 'Application\Controller\IndexController',
@@ -401,7 +417,7 @@ $options = [
 $route = Method::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderContainer->build(Method::class, $options);
+$route = $routeBuilderContainer->build($options);
 ```
 
 The above route would match an http "POST" or "PUT" request and return a
@@ -417,6 +433,7 @@ here.
 
 ```php
 $options = [
+    'type' => Part::class,
     'route' => [
         'type' => 'literal',
         'options' => [
@@ -481,7 +498,7 @@ $options = [
 $route = Part::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderContainer->build(Part::class, $options);
+$route = $routeBuilderContainer->build($options);
 ```
 
 The above would match the following:
@@ -620,6 +637,7 @@ include in the `RouteMatch` when successfully matched.
 
 ```php
 $options = [
+    'type' => Regex::class,
     'regex' => '/blog/(?<id>[a-zA-Z0-9_-]+)(\.(?<format>(json|html|xml|rss)))?',
     'defaults' => [
         'controller' => 'Application\Controller\BlogController',
@@ -633,7 +651,7 @@ $options = [
 $route = Regex::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderContainer->build(Regex::class, $options);
+$route = $routeBuilderContainer->build($options);
 ```
 
 The above would match `/blog/001-some-blog_slug-here.html`, and return four
@@ -649,6 +667,7 @@ and the "defaults", parameters to return on a match.
 
 ```php
 $options = [
+    'type' => Scheme::class,
     'scheme' => 'https',
     'defaults' => [
         'https' => true,
@@ -659,7 +678,7 @@ $options = [
 $route = Scheme::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderContainer->build(Scheme::class, $options);
+$route = $routeBuilderContainer->build($options);
 ```
 
 The above route would match the "https" scheme, and return the key "https" in
@@ -690,6 +709,7 @@ As a complex example:
 
 ```php
 $options = [
+    'type' => Segment::class,
     'route' => '/:controller[/:action]',
     'constraints' => [
         'controller' => '[a-zA-Z][a-zA-Z0-9_-]+',
@@ -705,7 +725,7 @@ $options = [
 $route = Segment::factory($options);
 
 // Since 3.20.0:
-$route = $routeBuilderContainer->build(Segment::class, $options);
+$route = $routeBuilderContainer->build($options);
 ```
 
 ### Laminas\\Router\\Http\\Wildcard (Deprecated)

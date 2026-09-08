@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Laminas\Router;
 
 use Laminas\Router\Exception\RuntimeException;
+use Laminas\Router\RouteBuilderContainerInterface;
 use Psr\Container\ContainerInterface;
+use Traversable;
 
 use function is_array;
+use function iterator_to_array;
 
 /**
  * @internal
@@ -17,11 +20,16 @@ use function is_array;
  */
 final readonly class RouteBuilderContainerFactory
 {
-    public function __invoke(ContainerInterface $container): RouteBuilderContainer
+    public function __invoke(ContainerInterface $container): RouteBuilderContainerInterface
     {
         $config = $container->has('config') ? $container->get('config') : [];
+
+        if ($config instanceof Traversable) {
+            $config = iterator_to_array($config);
+        }
+
         if (! is_array($config)) {
-            throw new RuntimeException('Config service must return an array');
+            throw new RuntimeException('Config service must return an array or Traversable');
         }
 
         $builderMap = $config['router']['route_builders'] ?? RouteBuilderContainer::defaultBuilderMap();
@@ -32,7 +40,7 @@ final readonly class RouteBuilderContainerFactory
             );
         }
 
-        /** @var array<string, string> $typedBuilderMap */
+        /** @var array<string, class-string<RouteBuilderInterface>> $typedBuilderMap */
         $typedBuilderMap = $builderMap;
 
         return new RouteBuilderContainer($container, $typedBuilderMap);

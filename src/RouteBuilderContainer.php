@@ -29,30 +29,30 @@ use Laminas\Router\Http\TreeRouteStack;
 use Laminas\Router\Http\TreeRouteStackBuilder;
 use Laminas\Router\Http\Wildcard;
 use Laminas\Router\Http\WildcardBuilder;
+use Laminas\Router\RouteBuilderContainerInterface;
 use Psr\Container\ContainerInterface;
 
 use function get_debug_type;
 use function sprintf;
 
 /**
- * Container for resolving route builders by type or alias.
- *
- * Builders are resolved lazily from the container to avoid a construction cycle
- * between composite builders and this container.
+ * @psalm-import-type RouteSpec from RouteInterface
  */
-final class RouteBuilderContainer implements ContainerInterface
+final readonly class RouteBuilderContainer implements RouteBuilderContainerInterface
 {
     /**
-     * @param array<string, string> $builderMap type/alias => builder service id
+     * @param array<string, class-string<RouteBuilderInterface>> $builderMap type/alias => builder service id
      */
     public function __construct(
-        private readonly ContainerInterface $container,
-        private readonly array $builderMap = [],
+        private ContainerInterface $container,
+        private array $builderMap = [],
     ) {
     }
 
     /**
-     * @return array<string, class-string>
+     * @internal
+     *
+     * @return array<string, class-string<RouteBuilderInterface>>
      */
     public static function defaultBuilderMap(): array
     {
@@ -96,21 +96,21 @@ final class RouteBuilderContainer implements ContainerInterface
     }
 
     /**
-     * @param array<string, mixed> $options
+     * @psalm-param RouteSpec $options
      */
-    public function build(string $type, array $options = []): RouteInterface
+    public function build(array $options): RouteInterface
     {
-        return $this->get($type)->build($options);
+        return $this->get($options['type'] ?? '')->build($options);
     }
 
-    public function get(string $type): RouteBuilderInterface
+    public function get(string $id): RouteBuilderInterface
     {
-        $serviceId = $this->builderMap[$type] ?? $type;
+        $serviceId = $this->builderMap[$id] ?? $id;
 
         if (! $this->container->has($serviceId)) {
             throw new RuntimeException(sprintf(
                 'Unable to resolve route builder for type "%s" (service "%s")',
-                $type,
+                $id,
                 $serviceId
             ));
         }
@@ -129,9 +129,9 @@ final class RouteBuilderContainer implements ContainerInterface
         return $builder;
     }
 
-    public function has(string $type): bool
+    public function has(string $id): bool
     {
-        $serviceId = $this->builderMap[$type] ?? $type;
+        $serviceId = $this->builderMap[$id] ?? $id;
 
         return $this->container->has($serviceId);
     }

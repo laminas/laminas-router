@@ -8,6 +8,12 @@ use Laminas\Stdlib\RequestInterface;
 
 /**
  * RouteInterface interface.
+ *
+ * @psalm-type RouteSpec = array{
+ *    type: class-string<RouteInterface>|non-empty-string,
+ *    name?: non-empty-string,
+ *    child_routes?: list<array<string, mixed>>,
+ *  }
  */
 interface RouteInterface
 {

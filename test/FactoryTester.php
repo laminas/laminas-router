@@ -7,8 +7,8 @@ namespace LaminasTest\Router;
 use ArrayIterator;
 use Laminas\Router\ConfigProvider;
 use Laminas\Router\Exception\InvalidArgumentException;
-use Laminas\Router\RouteBuilderContainer;
 use Laminas\Router\RouteBuilderContainerFactory;
+use Laminas\Router\RouteBuilderContainerInterface;
 use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ use function sprintf;
  */
 final class FactoryTester
 {
-    private readonly RouteBuilderContainer $routerBuilderContainer;
+    private readonly RouteBuilderContainerInterface $routerBuilderContainer;
 
     /**
      * Create a new factory tester.
@@ -38,6 +38,7 @@ final class FactoryTester
     /**
      * Test a factory.
      *
+     * @param non-empty-string $classname
      * @param array<string, mixed> $requiredOptions
      */
     public function testFactory(string $classname, array $requiredOptions, array $options): void
@@ -62,7 +63,7 @@ final class FactoryTester
             unset($testOptions[$option]);
 
             try {
-                $this->routerBuilderContainer->build($classname, $testOptions);
+                $this->routerBuilderContainer->build(['type' => $classname, ...$testOptions]);
                 $factory($testOptions);
                 $this->testCase->fail('An expected exception was not thrown');
             } catch (InvalidArgumentException $e) {
@@ -72,7 +73,7 @@ final class FactoryTester
 
         // Create the route, will throw an exception if something goes wrong.
         $factory($options);
-        $this->routerBuilderContainer->build($classname, $options);
+        $this->routerBuilderContainer->build(['type' => $classname, ...$options]);
 
         // Try the same with an iterator.
         $factory(new ArrayIterator($options));
