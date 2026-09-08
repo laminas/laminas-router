@@ -23,6 +23,11 @@ interface RouteBuilderContainerInterface extends ContainerInterface
      */
     public function build(array $options): RouteInterface;
 
+    /**
+     * @template T of RouteBuilderInterface
+     * @param string|class-string<T> $id
+     * @return ($id is class-string<T> ? T : RouteBuilderInterface)
+     */ 
     public function get(string $id): RouteBuilderInterface;
 
     public function has(string $id): bool;
