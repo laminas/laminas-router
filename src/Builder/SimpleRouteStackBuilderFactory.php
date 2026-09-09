@@ -7,6 +7,8 @@ namespace Laminas\Router\Builder;
 use Laminas\Router\RouteBuilderContainerInterface;
 use Psr\Container\ContainerInterface;
 
+use function assert;
+
 /**
  * @internal
  *
@@ -17,6 +19,10 @@ final readonly class SimpleRouteStackBuilderFactory
 {
     public function __invoke(ContainerInterface $container): SimpleRouteStackBuilder
     {
-        return new SimpleRouteStackBuilder($container->get(RouteBuilderContainerInterface::class));
+        $routeBuilder = $container->get(RouteBuilderContainerInterface::class);
+
+        assert($routeBuilder instanceof RouteBuilderContainerInterface);
+
+        return new SimpleRouteStackBuilder($routeBuilder);
     }
 }

@@ -31,6 +31,7 @@ use Laminas\Router\Http\TreeRouteStack;
 use Psr\Container\ContainerInterface;
 
 use function get_debug_type;
+use function is_string;
 use function sprintf;
 
 /**
@@ -95,7 +96,13 @@ final readonly class RouteBuilderContainer implements RouteBuilderContainerInter
      */
     public function build(array $options): RouteInterface
     {
-        return $this->get($options['type'] ?? '')->build($options);
+        $type = $options['type'] ?? '';
+
+        if (! is_string($type) || $type === '') {
+            throw new RuntimeException('Route option "type" must be a non-empty string');
+        }
+
+        return $this->get($type)->build($options);
     }
 
     public function get(string $id): RouteBuilderInterface

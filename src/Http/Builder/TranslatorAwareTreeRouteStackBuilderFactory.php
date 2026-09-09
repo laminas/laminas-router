@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace Laminas\Router\Http\Builder;
 
 use Laminas\Router\RouteBuilderContainerInterface;
+use Laminas\Router\RouterConfig;
+use Laminas\Translator\TranslatorInterface;
 use Psr\Container\ContainerInterface;
+
+use function assert;
 
 /**
  * @internal
@@ -17,6 +21,10 @@ final readonly class TranslatorAwareTreeRouteStackBuilderFactory
 {
     public function __invoke(ContainerInterface $container): TranslatorAwareTreeRouteStackBuilder
     {
-        return new TranslatorAwareTreeRouteStackBuilder($container->get(RouteBuilderContainerInterface::class));
+        $routeBuilder = $container->get(RouteBuilderContainerInterface::class);
+
+        assert($routeBuilder instanceof RouteBuilderContainerInterface);
+
+        return new TranslatorAwareTreeRouteStackBuilder($routeBuilder);
     }
 }

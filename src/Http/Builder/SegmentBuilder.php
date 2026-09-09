@@ -7,6 +7,7 @@ namespace Laminas\Router\Http\Builder;
 use Laminas\Router\Exception;
 use Laminas\Router\Http\Segment;
 use Laminas\Router\RouteBuilderInterface;
+use Laminas\Translator\TranslatorInterface;
 
 use function is_string;
 
@@ -15,6 +16,11 @@ use function is_string;
  */
 final readonly class SegmentBuilder implements RouteBuilderInterface
 {
+    public function __construct(
+        private ?TranslatorInterface $translator,
+    ) {
+    }
+
     /** @inheritDoc */
     public function build(array $options): Segment
     {
@@ -35,6 +41,6 @@ final readonly class SegmentBuilder implements RouteBuilderInterface
             throw new Exception\InvalidArgumentException('Missing "name" in options array');
         }
 
-        return new Segment($name, $route, $constraints, $defaults, $priority);
+        return new Segment($name, $route, $constraints, $defaults, $priority, $this->translator);
     }
 }

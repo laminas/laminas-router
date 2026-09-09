@@ -14,6 +14,13 @@ final readonly class SegmentBuilderFactory
 {
     public function __invoke(): SegmentBuilder
     {
-        return new SegmentBuilder();
+        $config       = $container->get(RouterConfig::class);
+
+        assert($config instanceof RouterConfig);
+
+        $translator = $container->has($config->translator) ? $container->get($config->translator) : null;
+        assert($translator instanceof TranslatorInterface || $translator === null);
+
+        return new SegmentBuilder($translator);
     }
 }

@@ -19,6 +19,7 @@ use Laminas\Router\RouteMatchInterface;
 use Laminas\Translator\TranslatorInterface as Translator;
 use Override;
 use Psr\Http\Message\RequestInterface;
+use Laminas\Translator\TranslatorInterface;
 
 use function array_key_exists;
 use function array_merge;
@@ -52,6 +53,7 @@ final readonly class Segment implements HttpRouteInterface
         array $constraints = [],
         private array $defaults = [],
         private int|null $priority = null,
+        private ?Translator $translator = null,
     ) {
         $this->parts                 = $this->parseRouteDefinition($route);
         $this->routeRegexBuildResult = $this->buildRegex($this->parts->getParts(), $constraints);
@@ -181,13 +183,11 @@ final readonly class Segment implements HttpRouteInterface
         bool $hasChild,
         array $options,
     ): RouteAssemblyBuildResult {
-        $translator = null;
+        $translator = $this->translator;
         $textDomain = null;
         $locale     = null;
 
         if (count($this->routeRegexBuildResult->translationKeys) > 0) {
-            /** @var mixed $translator */
-            $translator = $options['translator'] ?? null;
             /** @psalm-var string $textDomain */
             $textDomain = $options['text_domain'] ?? 'default';
             /** @psalm-var string|null $locale */
@@ -277,7 +277,7 @@ final readonly class Segment implements HttpRouteInterface
         $regex = $this->routeRegexBuildResult->regex;
 
         if (count($this->routeRegexBuildResult->translationKeys) > 0) {
-            $translator = $options['translator'] ?? null;
+            $translator = $this->translator;
             /** @psalm-var string $textDomain */
             $textDomain = $options['text_domain'] ?? 'default';
             /** @psalm-var string|null $locale */

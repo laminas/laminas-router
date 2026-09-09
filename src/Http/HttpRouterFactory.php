@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Laminas\Router\Http;
 
-use Laminas\Router\ConfigProvider;
-use Laminas\Router\RouteBuilderContainer;
 use Laminas\Router\RouteBuilderContainerInterface;
+use Laminas\Router\RouterConfig;
 use Laminas\Router\RouteStackInterface;
 use Psr\Container\ContainerInterface;
 
@@ -16,7 +15,6 @@ use function assert;
  * @internal
  *
  * @psalm-internal LaminasTest\Router
- * @psalm-import-type RouterConfigShape from ConfigProvider
  */
 final readonly class HttpRouterFactory
 {
@@ -30,20 +28,13 @@ final readonly class HttpRouterFactory
     public function __invoke(
         ContainerInterface $container
     ): RouteStackInterface {
-        /** @psalm-var RouterConfigShape $config */
-        $config = $container->has('config') ? $container->get('config') : [
-            'router' => [
-                'router_class'   => TreeRouteStack::class,
-                'route_builders' => RouteBuilderContainer::defaultBuilderMap(),
-            ],
-        ];
-
-        $class                 = $config['router']['router_class'];
+        $config                = $container->get(RouterConfig::class);
         $routeBuilderContainer = $container->get(RouteBuilderContainerInterface::class);
 
+        assert($config instanceof RouterConfig);
         assert($routeBuilderContainer instanceof RouteBuilderContainerInterface);
 
-        $router = $routeBuilderContainer->get($class)->build([]);
+        $router = $routeBuilderContainer->get($config->routerClass)->build([]);
 
         assert($router instanceof RouteStackInterface);
 

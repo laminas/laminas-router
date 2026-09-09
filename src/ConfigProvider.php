@@ -80,6 +80,7 @@ final readonly class ConfigProvider
     {
         return [
             'factories' => [
+                RouterConfig::class                   => RouterConfigFactory::class,
                 TreeRouteStack::class                 => Http\HttpRouterFactory::class,
                 RouteStackInterface::class            => RouterFactory::class,
                 RouteBuilderContainerInterface::class => RouteBuilderContainerFactory::class,

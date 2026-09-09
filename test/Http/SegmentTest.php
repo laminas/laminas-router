@@ -221,61 +221,59 @@ final class SegmentTest extends TestCase
             });
 
         $this->matchingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            new Segment('foo', '/{fw}', [], [], translator:translator),
             '/framework',
             null,
             [],
-            ['translator' => $translator]
         );
         $this->matchingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            new Segment('foo', '/{fw}', [], [], translator:translator),
             '/baukasten',
             null,
             [],
-            ['translator' => $translator, 'locale' => 'de-DE']
+            ['locale' => 'de-DE']
         );
         $this->matchingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            new Segment('foo', '/{fw}', [], [], translator:translator),
             '/fw',
             null,
             [],
-            ['translator' => $translator, 'locale' => 'fr-FR']
+            ['locale' => 'fr-FR']
         );
         $this->matchingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            new Segment('foo', '/{fw}', [], [], translator:translator),
             '/fw-alternative',
             null,
             [],
-            ['translator' => $translator, 'text_domain' => 'alternative']
+            ['text_domain' => 'alternative']
         );
 
         $this->assemblingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            new Segment('foo', '/{fw}', [], [], translator:translator),
             '/framework',
             null,
             [],
-            ['translator' => $translator]
         );
         $this->assemblingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            new Segment('foo', '/{fw}', [], [], translator:translator),
             '/baukasten',
             null,
             [],
-            ['translator' => $translator, 'locale' => 'de-DE']
+            ['locale' => 'de-DE']
         );
         $this->assemblingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            new Segment('foo', '/{fw}', [], [], translator:translator),
             '/fw',
             null,
             [],
-            ['translator' => $translator, 'locale' => 'fr-FR']
+            ['locale' => 'fr-FR']
         );
         $this->assemblingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            new Segment('foo', '/{fw}', [], [], translator:translator),
             '/fw-alternative',
             null,
             [],
-            ['translator' => $translator, 'text_domain' => 'alternative']
+            ['text_domain' => 'alternative']
         );
     }
 

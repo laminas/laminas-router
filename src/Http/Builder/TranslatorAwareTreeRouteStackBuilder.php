@@ -31,16 +31,12 @@ final readonly class TranslatorAwareTreeRouteStackBuilder implements RouteBuilde
         $routes = $options['routes'] ?? [];
         /** @psalm-var array<string, string|int|float|null> $defaultParams */
         $defaultParams        = $options['default_params'] ?? [];
-        $translator           = $options['translator'] ?? null;
         $translatorTextDomain = $options['translator_text_domain'] ?? 'default';
         /** @psalm-var int|null $priority */
         $priority = $options['priority'] ?? null;
 
         if (! is_string($translatorTextDomain)) {
             throw new RuntimeException('Invalid "translator_text_domain" option');
-        }
-        if (! $translator instanceof TranslatorInterface) {
-            throw new RuntimeException('Invalid "translator" option');
         }
 
         return new TranslatorAwareTreeRouteStack(

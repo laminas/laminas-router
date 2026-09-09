@@ -26,7 +26,6 @@ final readonly class TranslatorAwareTreeRouteStack extends TreeRouteStack
      */
     public function __construct(
         RouteBuilderContainerInterface $routeBuilderContainer,
-        private TranslatorInterface $translator,
         array $routes = [],
         array $defaultParams = [],
         int|null $priority = null,
@@ -45,8 +44,6 @@ final readonly class TranslatorAwareTreeRouteStack extends TreeRouteStack
         int|null $pathOffset = null,
         array $options = []
     ): ?RouteMatchInterface {
-        $options['translator'] ??= $this->getTranslator();
-
         $options['text_domain'] ??= $this->getTranslatorTextDomain();
 
         return parent::match($request, $pathOffset, $options);
@@ -60,16 +57,9 @@ final readonly class TranslatorAwareTreeRouteStack extends TreeRouteStack
     #[Override]
     public function assemble(array $params = [], array $options = []): AssembledUrl
     {
-        $options['translator'] ??= $this->getTranslator();
-
         $options['text_domain'] ??= $this->getTranslatorTextDomain();
 
         return parent::assemble($params, $options);
-    }
-
-    public function getTranslator(): ?TranslatorInterface
-    {
-        return $this->translator;
     }
 
     public function getTranslatorTextDomain(): string
