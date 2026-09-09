@@ -28,8 +28,6 @@ use Laminas\Router\Http\Builder\TranslatorAwareTreeRouteStackBuilder;
 use Laminas\Router\Http\Builder\TranslatorAwareTreeRouteStackBuilderFactory;
 use Laminas\Router\Http\Builder\TreeRouteStackBuilder;
 use Laminas\Router\Http\Builder\TreeRouteStackBuilderFactory;
-use Laminas\Router\Http\Builder\WildcardBuilder;
-use Laminas\Router\Http\Builder\WildcardBuilderFactory;
 use Laminas\Router\Http\TreeRouteStack;
 use Laminas\ServiceManager\ConfigInterface;
 use Laminas\ServiceManager\ServiceManager;
@@ -100,7 +98,6 @@ final readonly class ConfigProvider
                 TreeRouteStackBuilder::class   => TreeRouteStackBuilderFactory::class,
                 TranslatorAwareTreeRouteStackBuilder::class
                 => TranslatorAwareTreeRouteStackBuilderFactory::class,
-                WildcardBuilder::class => WildcardBuilderFactory::class,
             ],
         ];
     }

@@ -17,7 +17,6 @@ use Laminas\Router\Http\Builder\SchemeBuilder;
 use Laminas\Router\Http\Builder\SegmentBuilder;
 use Laminas\Router\Http\Builder\TranslatorAwareTreeRouteStackBuilder;
 use Laminas\Router\Http\Builder\TreeRouteStackBuilder;
-use Laminas\Router\Http\Builder\WildcardBuilder;
 use Laminas\Router\Http\Chain;
 use Laminas\Router\Http\Hostname;
 use Laminas\Router\Http\Literal;
@@ -29,7 +28,6 @@ use Laminas\Router\Http\Scheme;
 use Laminas\Router\Http\Segment;
 use Laminas\Router\Http\TranslatorAwareTreeRouteStack;
 use Laminas\Router\Http\TreeRouteStack;
-use Laminas\Router\Http\Wildcard;
 use Psr\Container\ContainerInterface;
 
 use function get_debug_type;
@@ -89,9 +87,6 @@ final readonly class RouteBuilderContainer implements RouteBuilderContainerInter
             SimpleRouteStack::class              => SimpleRouteStackBuilder::class,
             TreeRouteStack::class                => TreeRouteStackBuilder::class,
             TranslatorAwareTreeRouteStack::class => TranslatorAwareTreeRouteStackBuilder::class,
-            'wildcard'                           => WildcardBuilder::class,
-            'Wildcard'                           => WildcardBuilder::class,
-            Wildcard::class                      => WildcardBuilder::class,
         ];
     }
 
