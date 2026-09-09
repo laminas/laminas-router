@@ -27,35 +27,6 @@
     <InvalidReturnType>
       <code><![CDATA[RouterConfigShape]]></code>
     </InvalidReturnType>
-    <MixedReturnTypeCoercion>
-      <code><![CDATA[ServiceManagerConfiguration]]></code>
-      <code><![CDATA[[
-            'factories' => [
-                TreeRouteStack::class          => Http\HttpRouterFactory::class,
-                RoutePluginManager::class      => RoutePluginManagerFactory::class,
-                RouteStackInterface::class     => RouterFactory::class,
-                RouteBuilderContainer::class   => RouteBuilderContainerFactory::class,
-                LiteralBuilder::class          => LiteralBuilderFactory::class,
-                SegmentBuilder::class          => SegmentBuilderFactory::class,
-                HostnameBuilder::class         => HostnameBuilderFactory::class,
-                RegexBuilder::class            => RegexBuilderFactory::class,
-                MethodBuilder::class           => MethodBuilderFactory::class,
-                SchemeBuilder::class           => SchemeBuilderFactory::class,
-                PlaceholderBuilder::class      => PlaceholderBuilderFactory::class,
-                PartBuilder::class             => PartBuilderFactory::class,
-                ChainBuilder::class            => ChainBuilderFactory::class,
-                SimpleRouteStackBuilder::class => SimpleRouteStackBuilderFactory::class,
-                TreeRouteStackBuilder::class   => TreeRouteStackBuilderFactory::class,
-                TranslatorAwareTreeRouteStackBuilder::class
-                => TranslatorAwareTreeRouteStackBuilderFactory::class,
-                WildcardBuilder::class => WildcardBuilderFactory::class,
-            ],
-        ]]]></code>
-    </MixedReturnTypeCoercion>
-    <UndefinedClass>
-      <code><![CDATA[WildcardBuilder]]></code>
-      <code><![CDATA[WildcardBuilderFactory]]></code>
-    </UndefinedClass>
   </file>
   <file src="src/Http/Builder/ChainBuilder.php">
     <InvalidReturnStatement>
@@ -112,59 +83,17 @@
     <DeprecatedClass>
       <code><![CDATA[RoutePluginManager]]></code>
     </DeprecatedClass>
+    <MixedAssignment>
+      <code><![CDATA[$options['text_domain']]]></code>
+      <code><![CDATA[$options['text_domain']]]></code>
+      <code><![CDATA[$options['translator']]]></code>
+      <code><![CDATA[$options['translator']]]></code>
+    </MixedAssignment>
   </file>
   <file src="src/Http/TreeRouteStack.php">
     <DeprecatedClass>
       <code><![CDATA[private]]></code>
     </DeprecatedClass>
-  </file>
-  <file src="src/RouteBuilderContainer.php">
-    <MixedReturnTypeCoercion>
-      <code><![CDATA[[
-            'chain'                              => ChainBuilder::class,
-            'Chain'                              => ChainBuilder::class,
-            Chain::class                         => ChainBuilder::class,
-            'hostname'                           => HostnameBuilder::class,
-            'Hostname'                           => HostnameBuilder::class,
-            'hostName'                           => HostnameBuilder::class,
-            'HostName'                           => HostnameBuilder::class,
-            Hostname::class                      => HostnameBuilder::class,
-            'literal'                            => LiteralBuilder::class,
-            'Literal'                            => LiteralBuilder::class,
-            Literal::class                       => LiteralBuilder::class,
-            'method'                             => MethodBuilder::class,
-            'Method'                             => MethodBuilder::class,
-            Method::class                        => MethodBuilder::class,
-            'part'                               => PartBuilder::class,
-            'Part'                               => PartBuilder::class,
-            Part::class                          => PartBuilder::class,
-            'regex'                              => RegexBuilder::class,
-            'Regex'                              => RegexBuilder::class,
-            Regex::class                         => RegexBuilder::class,
-            'scheme'                             => SchemeBuilder::class,
-            'Scheme'                             => SchemeBuilder::class,
-            Scheme::class                        => SchemeBuilder::class,
-            'segment'                            => SegmentBuilder::class,
-            'Segment'                            => SegmentBuilder::class,
-            Segment::class                       => SegmentBuilder::class,
-            'placeholder'                        => PlaceholderBuilder::class,
-            'Placeholder'                        => PlaceholderBuilder::class,
-            Placeholder::class                   => PlaceholderBuilder::class,
-            SimpleRouteStack::class              => SimpleRouteStackBuilder::class,
-            TreeRouteStack::class                => TreeRouteStackBuilder::class,
-            TranslatorAwareTreeRouteStack::class => TranslatorAwareTreeRouteStackBuilder::class,
-            'wildcard'                           => WildcardBuilder::class,
-            'Wildcard'                           => WildcardBuilder::class,
-            Wildcard::class                      => WildcardBuilder::class,
-        ]]]></code>
-      <code><![CDATA[array<string, class-string<RouteBuilderInterface>>]]></code>
-    </MixedReturnTypeCoercion>
-    <UndefinedClass>
-      <code><![CDATA[Wildcard]]></code>
-      <code><![CDATA[WildcardBuilder]]></code>
-      <code><![CDATA[WildcardBuilder]]></code>
-      <code><![CDATA[WildcardBuilder]]></code>
-    </UndefinedClass>
   </file>
   <file src="src/RouteInvokableFactory.php">
     <DeprecatedMethod>

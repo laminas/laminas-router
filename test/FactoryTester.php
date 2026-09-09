@@ -18,9 +18,9 @@ use function array_key_exists;
 /**
  * Helper to test route factories.
  */
-final class FactoryTester
+final readonly class FactoryTester
 {
-    private readonly RouteBuilderContainerInterface $routerBuilderContainer;
+    private RouteBuilderContainerInterface $routerBuilderContainer;
 
     /**
      * Create a new factory tester.
