@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Laminas\Router\Http;
+namespace Laminas\Router\Http\Builder;
 
 /**
  * @internal

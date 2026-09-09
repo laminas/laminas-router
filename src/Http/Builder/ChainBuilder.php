@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Laminas\Router\Http;
+namespace Laminas\Router\Http\Builder;
 
+use Laminas\Router\Http\Chain;
+use Laminas\Router\Http\HttpRouteInterface;
 use Laminas\Router\RouteBuilderInterface;
 
 /**

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace LaminasTest\Router;
 
 use ArrayIterator;
-use Laminas\Router\Http\LiteralBuilder;
+use Laminas\Router\Http\Builder\LiteralBuilder;
 use Laminas\Router\RouteBuilderContainerFactory;
 use Laminas\Router\RouteBuilderContainerInterface;
 use Laminas\Router\RouteBuilderInterface;
