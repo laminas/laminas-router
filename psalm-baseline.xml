@@ -1,11 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.15.1@28dc127af1b5aecd52314f6f645bafc10d0e11f9">
+<files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
+  <file src="src/Builder/SimpleRouteStackBuilder.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[SimpleRouteStack::factory($options)]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[SimpleRouteStack]]></code>
+    </MoreSpecificReturnType>
+  </file>
   <file src="src/ConfigProvider.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[WildcardBuilder::class]]></code>
+    </DeprecatedClass>
     <DeprecatedMethod>
       <code><![CDATA[getRouteManagerConfig]]></code>
     </DeprecatedMethod>
   </file>
+  <file src="src/Http/Builder/ChainBuilder.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[Chain::factory($options)]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[Chain]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Http/Builder/HostnameBuilder.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[Hostname::factory($options)]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[Hostname]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Http/Builder/LiteralBuilder.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[Literal::factory($options)]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[Literal]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Http/Builder/MethodBuilder.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[Method::factory($options)]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[Method]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Http/Builder/PartBuilder.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[Part::factory($options)]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[Part]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Http/Builder/PlaceholderBuilder.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[Placeholder::factory($options)]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[Placeholder]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Http/Builder/RegexBuilder.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[Regex::factory($options)]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[Regex]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Http/Builder/SchemeBuilder.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[Scheme::factory($options)]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[Scheme]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Http/Builder/SegmentBuilder.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[Segment::factory($options)]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[Segment]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Http/Builder/TranslatorAwareTreeRouteStackBuilder.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[TranslatorAwareTreeRouteStack::factory($options)]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[TranslatorAwareTreeRouteStack]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Http/Builder/TreeRouteStackBuilder.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[TreeRouteStack::factory($options)]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[TreeRouteStack]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Http/Builder/WildcardBuilder.php">
+    <DeprecatedClass>
+      <code><![CDATA[Wildcard]]></code>
+      <code><![CDATA[Wildcard::factory($options)]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/Http/Builder/WildcardBuilderFactory.php">
+    <DeprecatedClass>
+      <code><![CDATA[WildcardBuilder]]></code>
+      <code><![CDATA[new WildcardBuilder()]]></code>
+    </DeprecatedClass>
+  </file>
   <file src="src/Http/Chain.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager<TRoute>]]></code>
+    </DeprecatedClass>
     <DeprecatedMethod>
       <code><![CDATA[getAssembledParams]]></code>
       <code><![CDATA[getAssembledParams]]></code>
@@ -181,6 +298,9 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="src/Http/Part.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager<TRoute>]]></code>
+    </DeprecatedClass>
     <DeprecatedMethod>
       <code><![CDATA[getAssembledParams]]></code>
     </DeprecatedMethod>
@@ -613,11 +733,27 @@
       <code><![CDATA[Module]]></code>
     </UnusedClass>
   </file>
+  <file src="src/RouteBuilderContainer.php">
+    <DeprecatedClass>
+      <code><![CDATA[Wildcard::class]]></code>
+      <code><![CDATA[WildcardBuilder::class]]></code>
+      <code><![CDATA[WildcardBuilder::class]]></code>
+      <code><![CDATA[WildcardBuilder::class]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/RouteBuilderContainerInterface.php">
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[RouteInterface]]></code>
+    </PossiblyUnusedReturnValue>
+  </file>
   <file src="src/RouteInvokableFactory.php">
     <DeprecatedInterface>
       <code><![CDATA[RouteInvokableFactory]]></code>
       <code><![CDATA[RouteInvokableFactory]]></code>
     </DeprecatedInterface>
+    <DeprecatedMethod>
+      <code><![CDATA[$routeName::factory($options)]]></code>
+    </DeprecatedMethod>
     <MissingReturnType>
       <code><![CDATA[setCreationOptions]]></code>
     </MissingReturnType>
@@ -666,6 +802,12 @@
     </PossiblyUnusedProperty>
   </file>
   <file src="src/RoutePluginManagerFactory.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager]]></code>
+      <code><![CDATA[RoutePluginManager]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[new RoutePluginManager($container, $options)]]></code>
+    </DeprecatedClass>
     <DeprecatedInterface>
       <code><![CDATA[RoutePluginManagerFactory]]></code>
     </DeprecatedInterface>
@@ -697,6 +839,14 @@
     </ParamNameMismatch>
   </file>
   <file src="src/SimpleRouteStack.php">
+    <DeprecatedClass>
+      <code><![CDATA[$this->routePluginManager]]></code>
+      <code><![CDATA[RoutePluginManager<TRoute>]]></code>
+      <code><![CDATA[RoutePluginManager<TRoute>]]></code>
+      <code><![CDATA[RoutePluginManager<TRoute>]]></code>
+      <code><![CDATA[RoutePluginManager<TRoute>|null]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+    </DeprecatedClass>
     <DeprecatedMethod>
       <code><![CDATA[setDefaultParams]]></code>
     </DeprecatedMethod>
@@ -756,13 +906,22 @@
     <MixedArgument>
       <code><![CDATA[$exceptionMessage]]></code>
     </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[['type' => $classname, ...$options]]]></code>
+      <code><![CDATA[['type' => $classname, ...$testOptions]]]></code>
+    </MixedArgumentTypeCoercion>
     <MixedAssignment>
       <code><![CDATA[$exceptionMessage]]></code>
     </MixedAssignment>
   </file>
   <file src="test/Http/ChainTest.php">
     <DeprecatedClass>
+      <code><![CDATA[$routePlugins]]></code>
+      <code><![CDATA[$routePlugins]]></code>
       <code><![CDATA[Wildcard::class]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
     </DeprecatedClass>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$key]]></code>
@@ -788,6 +947,10 @@
     </MixedAssignment>
   </file>
   <file src="test/Http/HttpRouterFactoryTest.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager]]></code>
+      <code><![CDATA[new RoutePluginManager($services)]]></code>
+    </DeprecatedClass>
     <MissingClosureParamType>
       <code><![CDATA[$services]]></code>
     </MissingClosureParamType>
@@ -808,6 +971,8 @@
       <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
     </ArgumentTypeCoercion>
     <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager]]></code>
+      <code><![CDATA[RoutePluginManager<HttpRouteInterface>]]></code>
       <code><![CDATA[Wildcard::class]]></code>
       <code><![CDATA[Wildcard::class]]></code>
       <code><![CDATA[Wildcard::class]]></code>
@@ -815,6 +980,33 @@
       <code><![CDATA[Wildcard::class]]></code>
       <code><![CDATA[Wildcard::class]]></code>
       <code><![CDATA[Wildcard::class]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager(), [
+            'aliases'   => [
+                'literal'  => Literal::class,
+                'Literal'  => Literal::class,
+                'part'     => Part::class,
+                'Part'     => Part::class,
+                'segment'  => Segment::class,
+                'Segment'  => Segment::class,
+                'wildcard' => Wildcard::class,
+                'Wildcard' => Wildcard::class,
+                'wildCard' => Wildcard::class,
+                'WildCard' => Wildcard::class,
+            ],
+            'factories' => [
+                Literal::class  => RouteInvokableFactory::class,
+                Part::class     => RouteInvokableFactory::class,
+                Segment::class  => RouteInvokableFactory::class,
+                Wildcard::class => RouteInvokableFactory::class,
+
+                // v2 normalized names
+                'laminasmvcrouterhttpliteral'  => RouteInvokableFactory::class,
+                'laminasmvcrouterhttppart'     => RouteInvokableFactory::class,
+                'laminasmvcrouterhttpsegment'  => RouteInvokableFactory::class,
+                'laminasmvcrouterhttpwildcard' => RouteInvokableFactory::class,
+            ],
+        ])]]></code>
     </DeprecatedClass>
     <DeprecatedMethod>
       <code><![CDATA[getAssembledParams]]></code>
@@ -1002,6 +1194,14 @@
       <code><![CDATA[new Wildcard('-')]]></code>
       <code><![CDATA[new Wildcard('-')]]></code>
       <code><![CDATA[new Wildcard('/', '-')]]></code>
+      <code><![CDATA[new Wildcard('/', '/', [
+            'action'     => 'index',
+            'controller' => 'index',
+            'middleware' => [
+                ConnectMiddleware::class,
+                Handler::class,
+            ],
+        ])]]></code>
       <code><![CDATA[new Wildcard('/', '/', ['foo' => 'baz'])]]></code>
       <code><![CDATA[new Wildcard()]]></code>
       <code><![CDATA[new Wildcard()]]></code>
@@ -1130,6 +1330,13 @@
     </NullArgument>
   </file>
   <file src="test/RoutePluginManagerFactoryTest.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+    </DeprecatedClass>
     <DeprecatedMethod>
       <code><![CDATA[createService]]></code>
     </DeprecatedMethod>
@@ -1148,8 +1355,19 @@
       <code><![CDATA[$container]]></code>
     </UnusedClosureParam>
   </file>
+  <file src="test/RoutePluginManagerTest.php">
+    <DeprecatedClass>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager(), [
+            'invokables' => [
+                'DummyRoute' => TestAsset\DummyRoute::class,
+            ],
+        ])]]></code>
+    </DeprecatedClass>
+  </file>
   <file src="test/RouterFactoryTest.php">
     <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager]]></code>
       <code><![CDATA[new Config(array_merge_recursive($this->defaultServiceConfig, [
             'services' => [
                 'config' => [
@@ -1168,6 +1386,7 @@
                 ],
             ],
         ]))]]></code>
+      <code><![CDATA[new RoutePluginManager($services)]]></code>
     </DeprecatedClass>
     <InternalClass>
       <code><![CDATA[new RouterFactory()]]></code>
@@ -1187,6 +1406,11 @@
     <ArgumentTypeCoercion>
       <code><![CDATA['Traversable']]></code>
     </ArgumentTypeCoercion>
+    <DeprecatedClass>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+    </DeprecatedClass>
     <DeprecatedMethod>
       <code><![CDATA[setDefaultParam]]></code>
       <code><![CDATA[setDefaultParam]]></code>
