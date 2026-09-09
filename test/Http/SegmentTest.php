@@ -11,7 +11,7 @@ use Laminas\Router\Exception\RuntimeException;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\Segment;
 use Laminas\Translator\TranslatorInterface;
-use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\BuilderTester;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Throwable;
@@ -471,8 +471,8 @@ final class SegmentTest extends TestCase
 
     public function testFactory(): void
     {
-        $tester = new FactoryTester();
-        $tester->testFactory(
+        $tester = new BuilderTester();
+        $tester->testBuilder(
             Segment::class,
             [
                 'route' => 'Missing "route" in options array',

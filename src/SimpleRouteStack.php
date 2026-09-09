@@ -37,7 +37,7 @@ readonly class SimpleRouteStack implements RouteStackInterface
      * @param array<string, string|int|float|null> $defaultParams
      */
     public function __construct(
-        private RoutePluginManager $routePluginManager,
+        protected RouteBuilderContainerInterface $routeBuilderContainer,
         array $routes = [],
         protected array $defaultParams = []
     ) {
@@ -45,29 +45,6 @@ readonly class SimpleRouteStack implements RouteStackInterface
         $priorityList = new PriorityList();
         $this->routes = $priorityList;
         $this->addRoutes($routes);
-    }
-
-    /**
-     * @inheritDoc
-     * @throws Exception\InvalidArgumentException
-     */
-    #[Override]
-    public static function factory(array $options = []): self
-    {
-        /** @psalm-var array<non-empty-string, array|TRoute>  $routes */
-        $routes       = $options['routes'] ?? [];
-        $routePlugins = $options['route_plugins'] ?? null;
-        /** @psalm-var array<string, string|int|float|null> $defaultParams */
-        $defaultParams = $options['default_params'] ?? [];
-
-        if (! $routePlugins instanceof RoutePluginManager) {
-            throw new RuntimeException('Missing "route_plugins" in options array');
-        }
-        return new self(
-            $routePlugins,
-            $routes,
-            $defaultParams
-        );
     }
 
     /** @inheritDoc */
@@ -158,8 +135,9 @@ readonly class SimpleRouteStack implements RouteStackInterface
         /** @psalm-var array<string, string|int|float|null> $defaults */
         $defaults = $option['defaults'] ?? [];
         /** @psalm-var TRoute $route */
-        $route = $this->routePluginManager->build($type, [
+        $route = $this->routeBuilderContainer->build([
             ...$option,
+            'type'     => $type,
             'priority' => $specs['priority'] ?? null,
             'name'     => $name,
             'defaults' => array_merge($defaults, $this->defaultParams),

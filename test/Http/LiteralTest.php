@@ -8,7 +8,7 @@ use Laminas\Diactoros\Request;
 use Laminas\Diactoros\Uri;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\Literal;
-use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\BuilderTester;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -114,8 +114,8 @@ final class LiteralTest extends TestCase
 
     public function testFactory(): void
     {
-        $tester = new FactoryTester();
-        $tester->testFactory(
+        $tester = new BuilderTester();
+        $tester->testBuilder(
             Literal::class,
             [
                 'route' => 'Missing "route" in options array',

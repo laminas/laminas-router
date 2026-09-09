@@ -20,9 +20,9 @@ use Psr\Http\Message\RequestInterface;
 
 interface RouteInterface
 {
-    public static function factory(array $options = []): self;
     public function match(RequestInterface $request): RouteMatch|null;
     public function assemble(array $params = [], array $options = []): AssembledUrl;
+    public function getPriority(): int|null;
 }
 ```
 
@@ -76,17 +76,29 @@ Routes will be queried in a LIFO order, and hence the reason behind the name
 at a time using `addRoute()`, or in bulk using `addRoutes()`.
 
 ```php
-use Laminas\Router\RouteStackInterface;
 use Laminas\Router\Http\Literal;
+use Laminas\Router\RouteBuilderContainer;
+use Laminas\Router\RouteStackInterface;
 
-// One at a time:
-$route = Literal::factory([
+$routeBuilderContainer = $container->get(RouteBuilderContainer::class);
+
+// One at a time, from a spec:
+$route = $routeBuilderContainer->build([
+    'type' => Literal::class,
+    'name' => 'foo',
     'route' => '/foo',
     'defaults' => [
         'controller' => 'foo-index',
         'action'     => 'index',
     ],
 ]);
+
+// Or construct the route directly:
+$route = new Literal('foo', '/foo', [
+    'controller' => 'foo-index',
+    'action'     => 'index',
+]);
+
 assert($router instanceof RouteStackInterface);
 $router->addRoute('foo', $route);
 
@@ -108,6 +120,164 @@ $router->addRoutes([
     ],
 ]);
 ```
+
+## Route builders
+
+`RouteBuilderContainer` is the only supported way to construct routes from
+data-only options (configuration arrays). Route definitions in configuration
+(`router.routes`) are unchanged.
+
+```php
+use Laminas\Router\Http\Literal;
+use Laminas\Router\RouteBuilderContainer;
+
+$routeBuilderContainer = $container->get(RouteBuilderContainer::class);
+
+$route = $routeBuilderContainer->build([
+    'type' => Literal::class,
+    'name' => 'foo',
+    'route' => '/foo',
+    'defaults' => [
+        'controller' => 'foo-index',
+        'action'     => 'index',
+    ],
+]);
+
+// Historical aliases work as well:
+
+$route = $routeBuilderContainer->build([
+    'type' => 'literal',
+    'name' => 'foo',
+    'route' => '/foo',
+    'defaults' => [
+        'controller' => 'foo-index',
+        'action'     => 'index',
+    ],
+]);
+```
+
+### Custom route example
+
+A minimal custom route that always matches and returns defaults:
+
+```php
+namespace App\Router;
+
+use Laminas\Router\AssembledUrl;
+use Laminas\Router\Http\HttpRouteMatch;
+use Laminas\Router\RouteInterface;
+use Laminas\Router\RouteMatchInterface;
+use Psr\Http\Message\RequestInterface;
+
+final readonly class AlwaysMatch implements RouteInterface
+{
+    /**
+     * @param array<string, string|int|float|null> $defaults
+     */
+    public function __construct(
+        private string $name,
+        private array $defaults = [],
+        private int|null $priority = null,
+    ) {
+    }
+
+    public function match(RequestInterface $request): RouteMatchInterface
+    {
+        return new HttpRouteMatch($this->defaults, $this->name);
+    }
+
+    public function assemble(array $params = [], array $options = []): AssembledUrl
+    {
+        return new AssembledUrl();
+    }
+
+    public function getPriority(): int|null
+    {
+        return $this->priority;
+    }
+}
+```
+
+Its builder (object dependencies belong on the builder constructor, not in
+route options):
+
+```php
+namespace App\Router;
+
+use Laminas\Router\RouteBuilderInterface;
+
+/** @implements RouteBuilderInterface<AlwaysMatch> */
+final readonly class AlwaysMatchBuilder implements RouteBuilderInterface
+{
+    public function build(array $options): AlwaysMatch
+    {
+        return new AlwaysMatch(
+            $options['name'] ?? 'always-match',
+            $options['defaults'] ?? [],
+            $options['priority'] ?? null,
+        );
+    }
+}
+```
+
+```php
+namespace App\Router;
+
+final readonly class AlwaysMatchBuilderFactory
+{
+    public function __invoke(): AlwaysMatchBuilder
+    {
+        return new AlwaysMatchBuilder();
+    }
+}
+```
+
+Register the builder in the container and map the type (and alias) under
+`router.route_builders`:
+
+```php
+return [
+    'dependencies' => [
+        'factories' => [
+            \App\Router\AlwaysMatchBuilder::class
+                => \App\Router\AlwaysMatchBuilderFactory::class,
+        ],
+    ],
+    'router' => [
+        'route_builders' => [
+            'always-match' => \App\Router\AlwaysMatchBuilder::class,
+            \App\Router\AlwaysMatch::class => \App\Router\AlwaysMatchBuilder::class,
+        ],
+        'routes' => [
+            'health' => [
+                'type' => 'always-match',
+                'options' => [
+                    'defaults' => [
+                        'controller' => HealthController::class,
+                        'action' => 'ping',
+                    ],
+                ],
+            ],
+        ],
+    ],
+];
+```
+
+You can also build it programmatically:
+
+```php
+$route = $routeBuilderContainer->build([
+    'type' => 'always-match',
+    'name' => 'health',
+    'defaults' => [
+        'controller' => HealthController::class,
+        'action' => 'ping',
+    ],
+]);
+```
+
+Later programmatic examples assume `$routeBuilderContainer` is already available
+from the container.
 
 ## Router Types
 
@@ -136,8 +306,6 @@ single route with many children.
 A `TreeRouteStack` will consist of the following configuration:
 
 - A base "route", which describes the base match needed, the root of the tree.
-- An optional `route_plugins`, which is a configured
-  `Laminas\Router\RoutePluginManager` that can lazy-load routes.
 - The option `may_terminate`, which hints to the router that no other segments
   will follow it.
 - An optional `child_routes` array, which contains additional routes that stem
@@ -174,7 +342,9 @@ example, if the "subdomain" segment needed to match only if it started with "fw"
 and contained exactly 2 digits following, the following route would be needed:
 
 ```php
-$route = Hostname::factory([
+$route = $routeBuilderContainer->build([
+    'type' => Hostname::class,
+    'name' => 'subdomain',
     'route' => ':subdomain.domain.tld',
     'constraints' => [
         'subdomain' => 'fw\d{2}',
@@ -188,7 +358,9 @@ or a default value to return for the subdomain, you need to also provide
 defaults.
 
 ```php
-$route = Hostname::factory([
+$route = $routeBuilderContainer->build([
+    'type' => Hostname::class,
+    'name' => 'subdomain',
     'route' => ':subdomain.domain.tld',
     'constraints' => [
         'subdomain' => 'fw\d{2}',
@@ -209,7 +381,9 @@ therefore is solely the path you want to match, and the "defaults", or
 parameters you want returned on a match.
 
 ```php
-$route = Literal::factory([
+$route = $routeBuilderContainer->build([
+    'type' => Literal::class,
+    'name' => 'foo',
     'route' => '/foo',
     'defaults' => [
         'controller' => 'Application\Controller\IndexController',
@@ -228,7 +402,9 @@ request (See RFC 2616 Sec. 5.1.1). It can optionally be configured to match
 against multiple methods by providing a comma-separated list of method tokens.
 
 ```php
-$route = Method::factory([
+$route = $routeBuilderContainer->build([
+    'type' => Method::class,
+    'name' => 'form-submit',
     'verb' => 'post,put',
     'defaults' => [
         'controller' => 'Application\Controller\IndexController',
@@ -249,7 +425,9 @@ the URI path. It actually extends the `TreeRouteStack`.
 here.
 
 ```php
-$route = Part::factory([
+$route = $routeBuilderContainer->build([
+    'type' => Part::class,
+    'name' => 'root',
     'route' => [
         'type' => 'literal',
         'options' => [
@@ -260,7 +438,6 @@ $route = Part::factory([
             ],
         ],
     ],
-    'route_plugins' => $routePlugins,
     'may_terminate' => true,
     'child_routes' => [
         'blog' => [
@@ -328,32 +505,11 @@ You may use any route type as a child route of a `Part` route.
 > already said, describing `Part` routes with words is difficult, so hopefully
 > the additional [examples at the end](#http-routing-examples) will provide
 > further insight.
-
-> ### Route plugins
 >
-> In the above example, the `$routePlugins` is an instance of
-> `Laminas\Router\RoutePluginManager`, containing essentially the following
-> configuration:
->
-> ```php
-> $routePlugins = new Laminas\Router\RoutePluginManager();
-> $plugins = [
->     'hostname' => 'Laminas\Router\Http\Hostname',
->     'literal'  => 'Laminas\Router\Http\Literal',
->     'part'     => 'Laminas\Router\Http\Part',
->     'regex'    => 'Laminas\Router\Http\Regex',
->     'scheme'   => 'Laminas\Router\Http\Scheme',
->     'segment'  => 'Laminas\Router\Http\Segment',
->     'method'   => 'Laminas\Router\Http\Method',
-> ];
-> foreach ($plugins as $name => $class) {
->     $routePlugins->setInvokableClass($name, $class);
-> }
-> ```
->
-> When using `Laminas\Router\Http\TreeRouteStack`, the `RoutePluginManager` is
-> set up by default, and the developer does not need to worry about autoloading
-> of standard HTTP routes.
+> Child routes are built through `RouteBuilderContainer` (configured via
+> `router.route_builders`). When using `Laminas\Router\Http\TreeRouteStack`
+> from the service container, the default HTTP route builders are already
+> registered.
 
 ### Laminas\\Router\\Http\\Placeholder
 
@@ -439,7 +595,9 @@ Just like other routes, the `Regex` route can accept "defaults", parameters to
 include in the `RouteMatch` when successfully matched.
 
 ```php
-$route = Regex::factory([
+$route = $routeBuilderContainer->build([
+    'type' => Regex::class,
+    'name' => 'blog',
     'regex' => '/blog/(?<id>[a-zA-Z0-9_-]+)(\.(?<format>(json|html|xml|rss)))?',
     'defaults' => [
         'controller' => 'Application\Controller\BlogController',
@@ -462,7 +620,9 @@ such, this route, like the `Literal` route, simply takes what you want to match
 and the "defaults", parameters to return on a match.
 
 ```php
-$route = Scheme::factory([
+$route = $routeBuilderContainer->build([
+    'type' => Scheme::class,
+    'name' => 'https',
     'scheme' => 'https',
     'defaults' => [
         'https' => true,
@@ -497,7 +657,9 @@ particularly useful when using optional segments.
 As a complex example:
 
 ```php
-$route = Segment::factory([
+$route = $routeBuilderContainer->build([
+    'type' => Segment::class,
+    'name' => 'default',
     'route' => '/:controller[/:action]',
     'constraints' => [
         'controller' => '[a-zA-Z][a-zA-Z0-9_-]+',

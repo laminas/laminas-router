@@ -8,9 +8,10 @@ use Laminas\Diactoros\Request;
 use Laminas\Diactoros\Uri;
 use Laminas\Router\Exception\InvalidArgumentException;
 use Laminas\Router\Exception\RuntimeException;
+use Laminas\Router\Http\Builder\HostnameBuilder;
 use Laminas\Router\Http\Hostname;
 use Laminas\Router\Http\HttpRouteMatch;
-use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\BuilderTester;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -394,7 +395,7 @@ final class HostnameTest extends TestCase
 
     public function testFactoryAppliesConstraintsDefaultsAndPriority(): void
     {
-        $route = Hostname::factory([
+        $route = (new HostnameBuilder())->build([
             'name'        => 'foo',
             'route'       => ':foo.example.com',
             'constraints' => ['foo' => '\d+'],
@@ -421,8 +422,8 @@ final class HostnameTest extends TestCase
 
     public function testFactory(): void
     {
-        $tester = new FactoryTester();
-        $tester->testFactory(
+        $tester = new BuilderTester();
+        $tester->testBuilder(
             Hostname::class,
             [
                 'route' => 'Missing "route" in options array',

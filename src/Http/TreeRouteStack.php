@@ -7,9 +7,9 @@ namespace Laminas\Router\Http;
 use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception;
 use Laminas\Router\Exception\RuntimeException;
+use Laminas\Router\RouteBuilderContainerInterface;
 use Laminas\Router\RouteInterface;
 use Laminas\Router\RouteMatchInterface;
-use Laminas\Router\RoutePluginManager;
 use Laminas\Router\SimpleRouteStack;
 use Override;
 use Psr\Http\Message\RequestInterface;
@@ -37,36 +37,12 @@ readonly class TreeRouteStack extends SimpleRouteStack
      * @param array<string, string|int|float|null> $defaultParams
      */
     public function __construct(
-        private RoutePluginManager $routePluginManager,
+        RouteBuilderContainerInterface $routeBuilderContainer,
         array $routes = [],
         array $defaultParams = [],
         protected int|null $priority = null,
     ) {
-        parent::__construct($this->routePluginManager, $routes, $defaultParams);
-    }
-
-    /**
-     * @inheritDoc
-     * @throws Exception\InvalidArgumentException
-     */
-    #[Override]
-    public static function factory(array $options = []): self
-    {
-        /** @psalm-var array<non-empty-string, array|TRoute>  $routes */
-        $routes       = $options['routes'] ?? [];
-        $routePlugins = $options['route_plugins'] ?? null;
-        /** @psalm-var array<string, string|int|float|null> $defaultParams */
-        $defaultParams = $options['default_params'] ?? [];
-
-        if (! $routePlugins instanceof RoutePluginManager) {
-            throw new RuntimeException('Missing "route_plugins" in options array');
-        }
-
-        return new self(
-            $routePlugins,
-            $routes,
-            $defaultParams,
-        );
+        parent::__construct($routeBuilderContainer, $routes, $defaultParams);
     }
 
     /**
@@ -109,12 +85,12 @@ readonly class TreeRouteStack extends SimpleRouteStack
         if (isset($specs['child_routes'])) {
             /** @psalm-var array<string, string|int|float|null> $defaults */
             $defaults = $specs['defaults'] ?? [];
-            $route    = $this->routePluginManager->build(Part::class, [
+            $route    = $this->routeBuilderContainer->build([
+                'type'          => Part::class,
                 'name'          => $name,
                 'route'         => $route,
                 'may_terminate' => isset($specs['may_terminate']) && $specs['may_terminate'] === true,
                 'child_routes'  => $specs['child_routes'],
-                'route_plugins' => $this->routePluginManager,
                 'priority'      => $route->getPriority(),
                 'defaults'      => array_merge($defaults, $this->defaultParams),
             ]);
@@ -271,10 +247,10 @@ readonly class TreeRouteStack extends SimpleRouteStack
             unset($chainRoutes[0]['child_routes']);
         }
 
-        return $this->routePluginManager->build(Chain::class, [
-            'routes'        => $chainRoutes,
-            'route_plugins' => $this->routePluginManager,
-            'priority'      => $specs['priority'] ?? null,
+        return $this->routeBuilderContainer->build([
+            'type'     => Chain::class,
+            'routes'   => $chainRoutes,
+            'priority' => $specs['priority'] ?? null,
         ]);
     }
 }

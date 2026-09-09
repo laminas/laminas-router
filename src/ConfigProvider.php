@@ -38,7 +38,7 @@ use Laminas\Translator\TranslatorInterface;
  *
  * Provides base configuration expected in order to:
  *
- * - seed and configure the default routers and route plugin manager.
+ * - seed and configure the default routers and route builder container.
  * - provide routes to the given routers.
  *
  * @see ConfigInterface
@@ -48,7 +48,7 @@ use Laminas\Translator\TranslatorInterface;
  *      dependencies: ServiceManagerConfiguration,
  *      router: array{
  *          router_class: class-string<RouteStackInterface>,
- *          route_plugins: class-string<RoutePluginManager>,
+ *          route_builders: array<string, class-string<RouteBuilderInterface>>,
  *          translator?: class-string<TranslatorInterface>,
  *      }
  *  }
@@ -65,7 +65,6 @@ final readonly class ConfigProvider
         return [
             'router'       => [
                 'router_class'   => TreeRouteStack::class,
-                'route_plugins'  => RoutePluginManager::class,
                 'route_builders' => RouteBuilderContainer::defaultBuilderMap(),
             ],
             'dependencies' => $this->getDependencyConfig(),
@@ -81,21 +80,20 @@ final readonly class ConfigProvider
     {
         return [
             'factories' => [
-                TreeRouteStack::class          => Http\HttpRouterFactory::class,
-                RoutePluginManager::class      => RoutePluginManagerFactory::class,
-                RouteStackInterface::class     => RouterFactory::class,
-                RouteBuilderContainer::class   => RouteBuilderContainerFactory::class,
-                LiteralBuilder::class          => LiteralBuilderFactory::class,
-                SegmentBuilder::class          => SegmentBuilderFactory::class,
-                HostnameBuilder::class         => HostnameBuilderFactory::class,
-                RegexBuilder::class            => RegexBuilderFactory::class,
-                MethodBuilder::class           => MethodBuilderFactory::class,
-                SchemeBuilder::class           => SchemeBuilderFactory::class,
-                PlaceholderBuilder::class      => PlaceholderBuilderFactory::class,
-                PartBuilder::class             => PartBuilderFactory::class,
-                ChainBuilder::class            => ChainBuilderFactory::class,
-                SimpleRouteStackBuilder::class => SimpleRouteStackBuilderFactory::class,
-                TreeRouteStackBuilder::class   => TreeRouteStackBuilderFactory::class,
+                TreeRouteStack::class                 => Http\HttpRouterFactory::class,
+                RouteStackInterface::class            => RouterFactory::class,
+                RouteBuilderContainerInterface::class => RouteBuilderContainerFactory::class,
+                LiteralBuilder::class                 => LiteralBuilderFactory::class,
+                SegmentBuilder::class                 => SegmentBuilderFactory::class,
+                HostnameBuilder::class                => HostnameBuilderFactory::class,
+                RegexBuilder::class                   => RegexBuilderFactory::class,
+                MethodBuilder::class                  => MethodBuilderFactory::class,
+                SchemeBuilder::class                  => SchemeBuilderFactory::class,
+                PlaceholderBuilder::class             => PlaceholderBuilderFactory::class,
+                PartBuilder::class                    => PartBuilderFactory::class,
+                ChainBuilder::class                   => ChainBuilderFactory::class,
+                SimpleRouteStackBuilder::class        => SimpleRouteStackBuilderFactory::class,
+                TreeRouteStackBuilder::class          => TreeRouteStackBuilderFactory::class,
                 TranslatorAwareTreeRouteStackBuilder::class
                 => TranslatorAwareTreeRouteStackBuilderFactory::class,
             ],

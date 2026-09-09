@@ -9,9 +9,8 @@ use Laminas\Diactoros\Uri;
 use Laminas\Router\Http\Chain;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\Segment;
-use Laminas\Router\RoutePluginManager;
-use Laminas\ServiceManager\ServiceManager;
-use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\BuilderTester;
+use LaminasTest\Router\RouteBuilderContainerTestHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -22,7 +21,7 @@ final class ChainTest extends TestCase
 {
     public static function getRoute(): Chain
     {
-        $routePlugins = new RoutePluginManager(new ServiceManager());
+        $routePlugins = RouteBuilderContainerTestHelper::create();
 
         return new Chain(
             $routePlugins,
@@ -51,7 +50,7 @@ final class ChainTest extends TestCase
 
     public static function getRouteWithOptionalParam(): Chain
     {
-        $routePlugins = new RoutePluginManager(new ServiceManager());
+        $routePlugins = RouteBuilderContainerTestHelper::create();
 
         return new Chain(
             $routePlugins,
@@ -206,7 +205,7 @@ final class ChainTest extends TestCase
 
     public function testAssemblingPropagatesHasChildOptionToLastSegment(): void
     {
-        $routePlugins = new RoutePluginManager(new ServiceManager());
+        $routePlugins = RouteBuilderContainerTestHelper::create();
         $route        = new Chain(
             $routePlugins,
             [
@@ -232,7 +231,7 @@ final class ChainTest extends TestCase
 
     public function testAssemblingStripsConsumedParamsBetweenSegments(): void
     {
-        $routePlugins = new RoutePluginManager(new ServiceManager());
+        $routePlugins = RouteBuilderContainerTestHelper::create();
         $route        = new Chain(
             $routePlugins,
             [
@@ -265,18 +264,16 @@ final class ChainTest extends TestCase
         );
     }
 
-    public function testFactory(): void
+    public function testBuilder(): void
     {
-        $tester = new FactoryTester();
-        $tester->testFactory(
+        $tester = new BuilderTester();
+        $tester->testBuilder(
             Chain::class,
             [
-                'routes'        => 'Missing "routes" in options array',
-                'route_plugins' => 'Missing "route_plugins" in options array',
+                'routes' => 'Missing "routes" in options array',
             ],
             [
-                'routes'        => [],
-                'route_plugins' => new RoutePluginManager(new ServiceManager()),
+                'routes' => [],
             ]
         );
     }

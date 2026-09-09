@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Laminas\Router\Http\Builder;
 
+use Laminas\Router\RouteBuilderContainerInterface;
+use Psr\Container\ContainerInterface;
+
 /**
  * @internal
  *
@@ -12,8 +15,8 @@ namespace Laminas\Router\Http\Builder;
  */
 final readonly class PartBuilderFactory
 {
-    public function __invoke(): PartBuilder
+    public function __invoke(ContainerInterface $container): PartBuilder
     {
-        return new PartBuilder();
+        return new PartBuilder($container->get(RouteBuilderContainerInterface::class));
     }
 }

@@ -12,12 +12,11 @@ use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Part;
 use Laminas\Router\Http\Segment;
-use Laminas\Router\RouteInvokableFactory;
+use Laminas\Router\RouteBuilderContainerInterface;
 use Laminas\Router\RouteMatchInterface;
-use Laminas\Router\RoutePluginManager;
-use Laminas\ServiceManager\ServiceManager;
 use Laminas\Translator\TranslatorInterface;
-use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\BuilderTester;
+use LaminasTest\Router\RouteBuilderContainerTestHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -29,29 +28,15 @@ use function strpos;
 
 final class PartTest extends TestCase
 {
-    public static function getRoutePlugins(): RoutePluginManager
+    public static function getRouteBuilderContainer(): RouteBuilderContainerInterface
     {
-        return new RoutePluginManager(new ServiceManager(), [
-            'aliases'   => [
-                'literal' => Literal::class,
-                'Literal' => Literal::class,
-                'part'    => Part::class,
-                'Part'    => Part::class,
-                'segment' => Segment::class,
-                'Segment' => Segment::class,
-            ],
-            'factories' => [
-                Literal::class => RouteInvokableFactory::class,
-                Part::class    => RouteInvokableFactory::class,
-                Segment::class => RouteInvokableFactory::class,
-            ],
-        ]);
+        return RouteBuilderContainerTestHelper::create();
     }
 
     public static function getRoute(): Part
     {
         return new Part(
-            self::getRoutePlugins(),
+            self::getRouteBuilderContainer(),
             [
                 'type'    => Literal::class,
                 'options' => [
@@ -273,7 +258,7 @@ final class PartTest extends TestCase
         $this->expectExceptionMessage('Base route may not be a part route');
 
         new Part(
-            new RoutePluginManager(new ServiceManager()),
+            self::getRouteBuilderContainer(),
             self::getRoute(),
             [],
             null,
@@ -298,18 +283,16 @@ final class PartTest extends TestCase
         );
     }
 
-    public function testFactory(): void
+    public function testBuilder(): void
     {
-        $tester = new FactoryTester();
-        $tester->testFactory(
+        $tester = new BuilderTester();
+        $tester->testBuilder(
             Part::class,
             [
-                'route'         => 'Missing "route" in options array',
-                'route_plugins' => 'Missing "route_plugins" in options array',
+                'route' => 'Missing "route" in options array',
             ],
             [
-                'route'         => new Literal('foo', '/foo'),
-                'route_plugins' => self::getRoutePlugins(),
+                'route' => new Literal('foo', '/foo'),
             ]
         );
     }
@@ -318,6 +301,7 @@ final class PartTest extends TestCase
     public function testPartRouteMarkedAsMayTerminateCanMatchWhenQueryStringPresent(): void
     {
         $options = [
+            'type'          => Part::class,
             'route'         => [
                 'type'    => Literal::class,
                 'options' => [
@@ -328,7 +312,6 @@ final class PartTest extends TestCase
                     ],
                 ],
             ],
-            'route_plugins' => self::getRoutePlugins(),
             'may_terminate' => true,
             'child_routes'  => [
                 'child' => [
@@ -343,7 +326,7 @@ final class PartTest extends TestCase
             ],
         ];
 
-        $route   = Part::factory($options);
+        $route   = RouteBuilderContainerTestHelper::create()->build($options);
         $request = new Request();
         $uri     = new Uri('http://example.com/resource?foo=bar');
         $uri     = $uri->withQuery('foo');
@@ -357,7 +340,7 @@ final class PartTest extends TestCase
     private function getLocalePartRoute(): Part
     {
         return new Part(
-            self::getRoutePlugins(),
+            self::getRouteBuilderContainer(),
             [
                 'type'    => Segment::class,
                 'options' => [
@@ -461,7 +444,7 @@ final class PartTest extends TestCase
     public function testAssembleStripsParentAssembledParams(): void
     {
         $route = new Part(
-            self::getRoutePlugins(),
+            self::getRouteBuilderContainer(),
             [
                 'type'    => Segment::class,
                 'options' => [

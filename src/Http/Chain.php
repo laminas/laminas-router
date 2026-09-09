@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Laminas\Router\Http;
 
 use Laminas\Router\AssembledUrl;
-use Laminas\Router\Exception;
+use Laminas\Router\RouteBuilderContainerInterface;
 use Laminas\Router\RouteMatchInterface;
-use Laminas\Router\RoutePluginManager;
 use Override;
 use Psr\Http\Message\RequestInterface;
 
@@ -15,7 +14,6 @@ use function array_diff_key;
 use function array_flip;
 use function array_key_last;
 use function array_reverse;
-use function is_array;
 use function is_bool;
 use function strlen;
 
@@ -32,46 +30,12 @@ final readonly class Chain extends TreeRouteStack implements HttpRouteInterface
      * @param array<string, string|int|float|null> $defaultParams
      */
     public function __construct(
-        RoutePluginManager $routePluginManager,
+        RouteBuilderContainerInterface $routeBuilderContainer,
         array $routes = [],
         array $defaultParams = [],
         ?int $priority = null,
     ) {
-        parent::__construct($routePluginManager, array_reverse($routes), $defaultParams, $priority);
-    }
-
-    /**
-     * @inheritDoc
-     * @throws Exception\InvalidArgumentException
-     */
-    #[Override]
-    public static function factory(array $options = []): self
-    {
-        $routePlugins = $options['route_plugins'] ?? null;
-
-        if (! isset($options['routes']) || ! is_array($options['routes'])) {
-            throw new Exception\InvalidArgumentException('Missing "routes" in options array');
-        }
-
-        if (! $routePlugins instanceof RoutePluginManager) {
-            throw new Exception\InvalidArgumentException('Missing "route_plugins" in options array');
-        }
-
-        /** @psalm-var array<non-empty-string, array|TRoute> $routes */
-        $routes = $options['routes'];
-        /** @psalm-var RoutePluginManager $routePlugins */
-
-        /** @psalm-var int|null $priority */
-        $priority = $options['priority'] ?? null;
-        /** @psalm-var array<string, string|int|float|null> $defaults */
-        $defaults = $options['defaults'] ?? [];
-
-        return new self(
-            $routePlugins,
-            $routes,
-            $defaults,
-            $priority,
-        );
+        parent::__construct($routeBuilderContainer, array_reverse($routes), $defaultParams, $priority);
     }
 
     /** @inheritDoc */

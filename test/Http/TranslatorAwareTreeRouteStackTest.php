@@ -10,9 +10,8 @@ use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception\RuntimeException;
 use Laminas\Router\Http\HttpRouteInterface;
 use Laminas\Router\Http\TranslatorAwareTreeRouteStack;
-use Laminas\Router\RoutePluginManager;
-use Laminas\ServiceManager\ServiceManager;
 use Laminas\Translator\TranslatorInterface;
+use LaminasTest\Router\RouteBuilderContainerTestHelper;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use UnexpectedValueException;
@@ -82,7 +81,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
 
         /** @var TranslatorAwareTreeRouteStack<HttpRouteInterface> $stack */
         $stack = new TranslatorAwareTreeRouteStack(
-            new RoutePluginManager(new ServiceManager()),
+            RouteBuilderContainerTestHelper::create(),
             translator: $translator
         );
         $stack->addRoute('test', $route);
@@ -105,7 +104,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
 
         /** @var TranslatorAwareTreeRouteStack<HttpRouteInterface> $stack */
         $stack = new TranslatorAwareTreeRouteStack(
-            new RoutePluginManager(new ServiceManager()),
+            RouteBuilderContainerTestHelper::create(),
             translator: $translator
         );
         $stack->addRoute('test', $route);
@@ -117,7 +116,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
     {
         $translator = $this->getTranslator(2);
         $stack      = new TranslatorAwareTreeRouteStack(
-            new RoutePluginManager(new ServiceManager()),
+            RouteBuilderContainerTestHelper::create(),
             translator: $translator,
             translatorTextDomain: 'route'
         );
@@ -140,7 +139,7 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
     {
         $translator = $this->getTranslator(1);
         $stack      = new TranslatorAwareTreeRouteStack(
-            new RoutePluginManager(new ServiceManager()),
+            RouteBuilderContainerTestHelper::create(),
             translator: $translator,
             translatorTextDomain: 'route'
         );
@@ -166,8 +165,8 @@ final class TranslatorAwareTreeRouteStackTest extends TestCase
 
         self::assertInstanceOf(
             TranslatorAwareTreeRouteStack::class,
-            TranslatorAwareTreeRouteStack::factory([
-                'route_plugins' => new RoutePluginManager(new ServiceManager()),
+            RouteBuilderContainerTestHelper::create()->build([
+                'type' => TranslatorAwareTreeRouteStack::class,
             ])
         );
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace LaminasTest\Router;
 
 use ArrayIterator;
+use Laminas\Router\Exception\RuntimeException;
 use Laminas\Router\Http\Builder\LiteralBuilder;
 use Laminas\Router\RouteBuilderContainerFactory;
 use Laminas\Router\RouteBuilderContainerInterface;
@@ -97,6 +98,19 @@ final class RouteBuilderContainerFactoryTest extends TestCase
         $this->assertTrue($routeBuilders->has('custom'));
         $this->assertSame($builder, $routeBuilders->get('custom'));
         $this->assertFalse($routeBuilders->has('literal'));
+    }
+
+    public function testBuildUnknownTypeThrows(): void
+    {
+        $container = $this->createMock(ContainerInterface::class);
+        $container->method('has')->willReturn(false);
+        $container->expects($this->never())->method('get');
+
+        $routeBuilders = $this->factory->__invoke($container);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unable to resolve route builder for type "unknown"');
+        $routeBuilders->build(['type' => 'unknown']);
     }
 
     /**

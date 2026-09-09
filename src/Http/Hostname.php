@@ -19,7 +19,6 @@ use Override;
 use Psr\Http\Message\RequestInterface;
 
 use function array_merge;
-use function is_string;
 use function preg_match;
 use function preg_quote;
 use function sprintf;
@@ -54,33 +53,6 @@ final readonly class Hostname implements HttpRouteInterface
     ) {
         $this->parts                 = $this->parseRouteDefinition($route);
         $this->routeRegexBuildResult = $this->buildRegex($this->parts->getParts(), $constraints);
-    }
-
-    /**
-     * @inheritDoc
-     * @throws Exception\InvalidArgumentException
-     */
-    #[Override]
-    public static function factory(array $options = []): self
-    {
-        $name  = $options['name'] ?? null;
-        $route = $options['route'] ?? null;
-        /** @psalm-var array<non-empty-string, string> $constraints */
-        $constraints = $options['constraints'] ?? [];
-        /** @psalm-var array<string, string|int|float|null> $defaults */
-        $defaults = $options['defaults'] ?? [];
-        /** @psalm-var int|null $priority */
-        $priority = $options['priority'] ?? null;
-
-        if (! is_string($route)) {
-            throw new Exception\InvalidArgumentException('Missing "route" in options array');
-        }
-
-        if (! is_string($name)) {
-            throw new Exception\InvalidArgumentException('Missing "name" in options array');
-        }
-
-        return new self($name, $route, $constraints, $defaults, $priority);
     }
 
     /**

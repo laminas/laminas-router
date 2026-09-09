@@ -11,21 +11,13 @@ use Psr\Http\Message\RequestInterface;
  * RouteInterface interface.
  *
  * @psalm-type RouteSpec = array{
- *    type: class-string<RouteInterface>|non-empty-string,
- *    name?: non-empty-string,
- *    child_routes?: list<array<string, mixed>>,
- *    ...<string, scalar>,
+ *    type?: class-string<RouteInterface>|non-empty-string,
+ *    name?: string,
+ *    ...<string, mixed>,
  *  }
  */
 interface RouteInterface
 {
-    /**
-     * Create a new route with given options.
-     *
-     * @deprecated since 3.20.0, use RouteBuilderContainer::build() instead
-     */
-    public static function factory(array $options = []): self;
-
     /**
      * Match a given request.
      */

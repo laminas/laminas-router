@@ -6,14 +6,11 @@ namespace Laminas\Router\Http;
 
 use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception;
-use Laminas\Router\Exception\RuntimeException;
+use Laminas\Router\RouteBuilderContainerInterface;
 use Laminas\Router\RouteMatchInterface;
-use Laminas\Router\RoutePluginManager;
 use Laminas\Translator\TranslatorInterface;
 use Override;
 use Psr\Http\Message\RequestInterface;
-
-use function is_string;
 
 /**
  * Translator aware tree route stack.
@@ -28,48 +25,14 @@ final readonly class TranslatorAwareTreeRouteStack extends TreeRouteStack
      * @param array<string, string|int|float|null> $defaultParams
      */
     public function __construct(
-        RoutePluginManager $routePluginManager,
+        RouteBuilderContainerInterface $routeBuilderContainer,
         private TranslatorInterface $translator,
         array $routes = [],
         array $defaultParams = [],
         int|null $priority = null,
         private string $translatorTextDomain = 'default'
     ) {
-        parent::__construct($routePluginManager, $routes, $defaultParams, $priority);
-    }
-
-    /**
-     * @inheritDoc
-     * @throws Exception\InvalidArgumentException
-     */
-    #[Override]
-    public static function factory(array $options = []): self
-    {
-        /** @psalm-var array<non-empty-string, array|TRoute>  $routes */
-        $routes       = $options['routes'] ?? [];
-        $routePlugins = $options['route_plugins'] ?? null;
-        /** @psalm-var array<string, string|int|float|null> $defaultParams */
-        $defaultParams        = $options['default_params'] ?? [];
-        $translator           = $options['translator'] ?? null;
-        $translatorTextDomain = $options['translator_text_domain'] ?? TranslatorInterface::DEFAULT_TEXT_DOMAIN;
-
-        if (! $routePlugins instanceof RoutePluginManager) {
-            throw new RuntimeException('Missing "route_plugins" in options array');
-        }
-        if (! is_string($translatorTextDomain)) {
-            throw new RuntimeException('Invalid "translator_text_domain" option');
-        }
-        if (! $translator instanceof TranslatorInterface) {
-            throw new RuntimeException('Invalid "translator" option');
-        }
-
-        return new self(
-            $routePlugins,
-            $translator,
-            $routes,
-            $defaultParams,
-            translatorTextDomain: $translatorTextDomain
-        );
+        parent::__construct($routeBuilderContainer, $routes, $defaultParams, $priority);
     }
 
     /**
