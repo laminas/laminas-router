@@ -1,3 +1,268 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
+  <file src="src/Builder/SimpleRouteStackBuilder.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[SimpleRouteStack::factory($options)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[SimpleRouteStack]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/ConfigProvider.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[RouterConfigShape]]></code>
+    </DeprecatedClass>
+    <InvalidReturnStatement>
+      <code><![CDATA[[
+            'router'       => [
+                'router_class'   => TreeRouteStack::class,
+                'route_plugins'  => RoutePluginManager::class,
+                'route_builders' => RouteBuilderContainer::defaultBuilderMap(),
+            ],
+            'dependencies' => $this->getDependencyConfig(),
+        ]]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[RouterConfigShape]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Http/Builder/ChainBuilder.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[Chain::factory($options)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[Chain]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Http/Builder/PartBuilder.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[Part::factory($options)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[Part]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Http/Builder/TranslatorAwareTreeRouteStackBuilder.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[TranslatorAwareTreeRouteStack::factory($options)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[TranslatorAwareTreeRouteStack]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Http/Builder/TreeRouteStackBuilder.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[TreeRouteStack::factory($options)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[TreeRouteStack]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Http/Chain.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/Http/HttpRouterFactory.php">
+    <DeprecatedClass>
+      <code><![CDATA[$config]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+    </DeprecatedClass>
+    <DeprecatedMethod>
+      <code><![CDATA[$class::factory($config)]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="src/Http/Part.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/Http/TranslatorAwareTreeRouteStack.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager]]></code>
+    </DeprecatedClass>
+    <MixedAssignment>
+      <code><![CDATA[$options['text_domain']]]></code>
+      <code><![CDATA[$options['text_domain']]]></code>
+      <code><![CDATA[$options['translator']]]></code>
+      <code><![CDATA[$options['translator']]]></code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Http/TreeRouteStack.php">
+    <DeprecatedClass>
+      <code><![CDATA[private]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/RouteInvokableFactory.php">
+    <DeprecatedMethod>
+      <code><![CDATA[$requestedName::factory($options)]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="src/RoutePluginManagerFactory.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager]]></code>
+      <code><![CDATA[new RoutePluginManager($container, $options)]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="src/SimpleRouteStack.php">
+    <DeprecatedClass>
+      <code><![CDATA[private]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="test/FactoryTester.php">
+    <DeprecatedClass>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager((new ConfigProvider())->__invoke()))]]></code>
+    </DeprecatedClass>
+    <DeprecatedMethod>
+      <code><![CDATA[$classname::factory($options)]]></code>
+      <code><![CDATA[$classname::factory($testOptions)]]></code>
+    </DeprecatedMethod>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[['type' => $classname, ...$options]]]></code>
+      <code><![CDATA[['type' => $classname, ...$testOptions]]]></code>
+    </MixedArgumentTypeCoercion>
+  </file>
+  <file src="test/Http/ChainTest.php">
+    <DeprecatedClass>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="test/Http/HttpRouterFactoryTest.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[new RoutePluginManager($services)]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="test/Http/PartTest.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager(), [
+            'aliases'   => [
+                'literal' => Literal::class,
+                'Literal' => Literal::class,
+                'part'    => Part::class,
+                'Part'    => Part::class,
+                'segment' => Segment::class,
+                'Segment' => Segment::class,
+            ],
+            'factories' => [
+                Literal::class => RouteInvokableFactory::class,
+                Part::class    => RouteInvokableFactory::class,
+                Segment::class => RouteInvokableFactory::class,
+            ],
+        ])]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="test/Http/PlaceholderTest.php">
+    <DeprecatedClass>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="test/Http/TranslatorAwareTreeRouteStackTest.php">
+    <DeprecatedClass>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="test/Http/TreeRouteStackTest.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager(), [
+            'invokables' => [
+                DummyRoute::class => DummyRoute::class,
+            ],
+        ])]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager(), [
+            'invokables' => [
+                TestAsset\DummyRoute::class          => TestAsset\DummyRoute::class,
+                TestAsset\DummyRouteWithParam::class => TestAsset\DummyRouteWithParam::class,
+            ],
+        ])]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="test/RoutePluginManagerFactoryTest.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="test/RoutePluginManagerTest.php">
+    <DeprecatedClass>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager(), [
+            'invokables' => [
+                'DummyRoute' => TestAsset\DummyRoute::class,
+            ],
+        ])]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="test/RouterFactoryTest.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[RoutePluginManager::class]]></code>
+      <code><![CDATA[new RoutePluginManager($services)]]></code>
+    </DeprecatedClass>
+  </file>
+  <file src="test/SimpleRouteStackTest.php">
+    <DeprecatedClass>
+      <code><![CDATA[RoutePluginManager]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager())]]></code>
+      <code><![CDATA[new RoutePluginManager(new ServiceManager(), [
+            'invokables' => [
+                TestAsset\DummyRoute::class          => TestAsset\DummyRoute::class,
+                TestAsset\DummyRouteWithParam::class => TestAsset\DummyRouteWithParam::class,
+            ],
+        ])]]></code>
+    </DeprecatedClass>
+  </file>
 </files>

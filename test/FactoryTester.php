@@ -6,6 +6,8 @@ namespace LaminasTest\Router;
 
 use Laminas\Router\ConfigProvider;
 use Laminas\Router\Exception\InvalidArgumentException;
+use Laminas\Router\RouteBuilderContainerFactory;
+use Laminas\Router\RouteBuilderContainerInterface;
 use Laminas\Router\RouteInterface;
 use Laminas\Router\RoutePluginManager;
 use Laminas\ServiceManager\ServiceManager;
@@ -16,8 +18,20 @@ use function array_key_exists;
 /**
  * Helper to test route factories.
  */
-final class FactoryTester
+final readonly class FactoryTester
 {
+    private RouteBuilderContainerInterface $routerBuilderContainer;
+
+    /**
+     * Create a new factory tester.
+     */
+    public function __construct()
+    {
+        $this->routerBuilderContainer = (new RouteBuilderContainerFactory())->__invoke(
+            new ServiceManager((new ConfigProvider())->__invoke()['dependencies']),
+        );
+    }
+
     /**
      * Test a factory.
      *
@@ -33,6 +47,7 @@ final class FactoryTester
             unset($testOptions[$option]);
 
             try {
+                $this->routerBuilderContainer->build(['type' => $classname, ...$testOptions]);
                 $classname::factory($testOptions);
                 TestCase::fail('An expected exception was not thrown');
             } catch (InvalidArgumentException $exception) {
@@ -46,5 +61,9 @@ final class FactoryTester
 
         // Create the route, will throw an exception if something goes wrong.
         TestCase::assertInstanceOf($classname, $classname::factory($options));
+        TestCase::assertInstanceOf(
+            $classname,
+            $this->routerBuilderContainer->build(['type' => $classname, ...$options])
+        );
     }
 }

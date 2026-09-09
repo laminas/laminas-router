@@ -82,13 +82,9 @@ final readonly class TranslatorAwareTreeRouteStack extends TreeRouteStack
         int|null $pathOffset = null,
         array $options = []
     ): ?RouteMatchInterface {
-        if (! isset($options['translator'])) {
-            $options['translator'] = $this->getTranslator();
-        }
+        $options['translator'] ??= $this->getTranslator();
 
-        if (! isset($options['text_domain'])) {
-            $options['text_domain'] = $this->getTranslatorTextDomain();
-        }
+        $options['text_domain'] ??= $this->getTranslatorTextDomain();
 
         return parent::match($request, $pathOffset, $options);
     }
@@ -101,13 +97,9 @@ final readonly class TranslatorAwareTreeRouteStack extends TreeRouteStack
     #[Override]
     public function assemble(array $params = [], array $options = []): AssembledUrl
     {
-        if (! isset($options['translator'])) {
-            $options['translator'] = $this->getTranslator();
-        }
+        $options['translator'] ??= $this->getTranslator();
 
-        if (! isset($options['text_domain'])) {
-            $options['text_domain'] = $this->getTranslatorTextDomain();
-        }
+        $options['text_domain'] ??= $this->getTranslatorTextDomain();
 
         return parent::assemble($params, $options);
     }
