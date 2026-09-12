@@ -29,7 +29,7 @@ final readonly class RouterFactory implements FactoryInterface
         string $requestedName,
         ?array $options = null
     ): RouteStackInterface {
-        $router = $container->get(Http\TreeRouteStack::class);
+        $router = $container->get(RouteStackInterface::class);
 
         assert($router instanceof RouteStackInterface);
 

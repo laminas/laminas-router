@@ -87,7 +87,7 @@ final readonly class Part extends TreeRouteStack implements HttpRouteInterface
                 return $match;
             }
 
-            if ( ! isset($options['locale'])) {
+            if (! isset($options['locale'])) {
                 /** @var mixed $locale */
                 $locale = $match->getParam('locale');
                 if (is_string($locale)) {
@@ -117,7 +117,7 @@ final readonly class Part extends TreeRouteStack implements HttpRouteInterface
     {
         $options['has_child'] = isset($options['name']);
 
-        if (isset($options['translator']) && ! isset($options['locale']) && isset($params['locale'])) {
+        if (! isset($options['locale']) && isset($params['locale'])) {
             $options['locale'] = $params['locale'];
         }
 

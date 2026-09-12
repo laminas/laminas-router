@@ -34,7 +34,7 @@ final readonly class HttpRouterFactory
         assert($config instanceof RouterConfig);
         assert($routeBuilderContainer instanceof RouteBuilderContainerInterface);
 
-        $router = $routeBuilderContainer->get($config->routerClass)->build([]);
+        $router = $container->get($config->routerClass);
 
         assert($router instanceof RouteStackInterface);
 

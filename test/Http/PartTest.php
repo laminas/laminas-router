@@ -23,14 +23,20 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use UnexpectedValueException;
 
+use function assert;
 use function strlen;
 use function strpos;
 
 final class PartTest extends TestCase
 {
-    public static function getRouteBuilderContainer(): RouteBuilderContainerInterface
-    {
-        return RouteBuilderContainerTestHelper::create();
+    public static function getRouteBuilderContainer(
+        TranslatorInterface|null $translator = null,
+    ): RouteBuilderContainerInterface {
+        $services              = RouteBuilderContainerTestHelper::createServiceManager(translator: $translator);
+        $routeBuilderContainer = $services->get(RouteBuilderContainerInterface::class);
+        assert($routeBuilderContainer instanceof RouteBuilderContainerInterface);
+
+        return $routeBuilderContainer;
     }
 
     public static function getRoute(): Part
@@ -337,10 +343,10 @@ final class PartTest extends TestCase
         $this->assertEquals('resource', $match->getParam('action'));
     }
 
-    private function getLocalePartRoute(): Part
+    private function getLocalePartRoute(TranslatorInterface $translator): Part
     {
         return new Part(
-            self::getRouteBuilderContainer(),
+            self::getRouteBuilderContainer($translator),
             [
                 'type'    => Segment::class,
                 'options' => [
@@ -387,10 +393,10 @@ final class PartTest extends TestCase
 
     public function testMatchPropagatesLocaleFromParentParam(): void
     {
-        $route   = $this->getLocalePartRoute();
+        $route   = $this->getLocalePartRoute($this->getTranslator(1));
         $request = (new Request())->withUri(new Uri('http://example.com/de/hauptseite'));
 
-        $match = $route->match($request, null, ['translator' => $this->getTranslator(1), 'text_domain' => 'route']);
+        $match = $route->match($request, null, ['text_domain' => 'route']);
 
         $this->assertInstanceOf(HttpRouteMatch::class, $match);
         $this->assertSame('index', $match->getMatchedRouteName());
@@ -398,20 +404,22 @@ final class PartTest extends TestCase
 
     public function testAssemblePropagatesLocaleFromParamsWhenLocaleOptionIsNotSet(): void
     {
-        $route = $this->getLocalePartRoute();
+        $translator = $this->getTranslator(1);
+        $route      = $this->getLocalePartRoute($translator);
 
         $this->assertSame(
             '/de/hauptseite',
             $route->assemble(
                 ['locale' => 'de'],
-                ['name' => 'index', 'translator' => $this->getTranslator(1), 'text_domain' => 'route']
+                ['name' => 'index', 'translator' => $translator, 'text_domain' => 'route']
             )->toString()
         );
     }
 
     public function testAssembleDoesNotPropagateLocaleWhenLocaleOptionIsSet(): void
     {
-        $route = $this->getLocalePartRoute();
+        $translator = $this->getTranslator(1);
+        $route      = $this->getLocalePartRoute($translator);
 
         $this->assertSame(
             '/de/homepage',
@@ -420,7 +428,7 @@ final class PartTest extends TestCase
                 [
                     'name'        => 'index',
                     'locale'      => 'en',
-                    'translator'  => $this->getTranslator(1),
+                    'translator'  => $translator,
                     'text_domain' => 'route',
                 ]
             )->toString()
@@ -429,11 +437,11 @@ final class PartTest extends TestCase
 
     public function testMatchDoesNotPropagateLocaleWhenLocaleOptionIsSet(): void
     {
-        $route   = $this->getLocalePartRoute();
-        $request = (new Request())->withUri(new Uri('http://example.com/de/hauptseite'));
+        $translator = $this->getTranslator(1);
+        $route      = $this->getLocalePartRoute($translator);
+        $request    = (new Request())->withUri(new Uri('http://example.com/de/hauptseite'));
 
         $match = $route->match($request, null, [
-            'translator'  => $this->getTranslator(1),
             'text_domain' => 'route',
             'locale'      => 'en',
         ]);

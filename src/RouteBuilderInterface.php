@@ -15,7 +15,6 @@ namespace Laminas\Router;
 interface RouteBuilderInterface
 {
     /**
-     * @psalm-param RouteSpec $options
      * @return TRoute
      */
     public function build(array $options): RouteInterface;

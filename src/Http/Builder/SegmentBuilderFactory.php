@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace Laminas\Router\Http\Builder;
 
+use Laminas\Router\RouterConfig;
+use Laminas\Translator\TranslatorInterface;
+use Psr\Container\ContainerInterface;
+
+use function assert;
+
 /**
  * @internal
  *
@@ -12,9 +18,9 @@ namespace Laminas\Router\Http\Builder;
  */
 final readonly class SegmentBuilderFactory
 {
-    public function __invoke(): SegmentBuilder
+    public function __invoke(ContainerInterface $container): SegmentBuilder
     {
-        $config       = $container->get(RouterConfig::class);
+        $config = $container->get(RouterConfig::class);
 
         assert($config instanceof RouterConfig);
 

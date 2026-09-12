@@ -18,9 +18,6 @@ use Psr\Container\ContainerInterface;
  */
 interface RouteBuilderContainerInterface extends ContainerInterface
 {
-    /**
-     * @psalm-param RouteSpec $options
-     */
     public function build(array $options): RouteInterface;
 
     /**

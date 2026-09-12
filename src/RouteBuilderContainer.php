@@ -15,7 +15,6 @@ use Laminas\Router\Http\Builder\PlaceholderBuilder;
 use Laminas\Router\Http\Builder\RegexBuilder;
 use Laminas\Router\Http\Builder\SchemeBuilder;
 use Laminas\Router\Http\Builder\SegmentBuilder;
-use Laminas\Router\Http\Builder\TranslatorAwareTreeRouteStackBuilder;
 use Laminas\Router\Http\Builder\TreeRouteStackBuilder;
 use Laminas\Router\Http\Chain;
 use Laminas\Router\Http\Hostname;
@@ -26,7 +25,6 @@ use Laminas\Router\Http\Placeholder;
 use Laminas\Router\Http\Regex;
 use Laminas\Router\Http\Scheme;
 use Laminas\Router\Http\Segment;
-use Laminas\Router\Http\TranslatorAwareTreeRouteStack;
 use Laminas\Router\Http\TreeRouteStack;
 use Psr\Container\ContainerInterface;
 
@@ -56,44 +54,40 @@ final readonly class RouteBuilderContainer implements RouteBuilderContainerInter
     public static function defaultBuilderMap(): array
     {
         return [
-            'chain'                              => ChainBuilder::class,
-            'Chain'                              => ChainBuilder::class,
-            Chain::class                         => ChainBuilder::class,
-            'hostname'                           => HostnameBuilder::class,
-            'Hostname'                           => HostnameBuilder::class,
-            'hostName'                           => HostnameBuilder::class,
-            'HostName'                           => HostnameBuilder::class,
-            Hostname::class                      => HostnameBuilder::class,
-            'literal'                            => LiteralBuilder::class,
-            'Literal'                            => LiteralBuilder::class,
-            Literal::class                       => LiteralBuilder::class,
-            'method'                             => MethodBuilder::class,
-            'Method'                             => MethodBuilder::class,
-            Method::class                        => MethodBuilder::class,
-            'part'                               => PartBuilder::class,
-            'Part'                               => PartBuilder::class,
-            Part::class                          => PartBuilder::class,
-            'regex'                              => RegexBuilder::class,
-            'Regex'                              => RegexBuilder::class,
-            Regex::class                         => RegexBuilder::class,
-            'scheme'                             => SchemeBuilder::class,
-            'Scheme'                             => SchemeBuilder::class,
-            Scheme::class                        => SchemeBuilder::class,
-            'segment'                            => SegmentBuilder::class,
-            'Segment'                            => SegmentBuilder::class,
-            Segment::class                       => SegmentBuilder::class,
-            'placeholder'                        => PlaceholderBuilder::class,
-            'Placeholder'                        => PlaceholderBuilder::class,
-            Placeholder::class                   => PlaceholderBuilder::class,
-            SimpleRouteStack::class              => SimpleRouteStackBuilder::class,
-            TreeRouteStack::class                => TreeRouteStackBuilder::class,
-            TranslatorAwareTreeRouteStack::class => TranslatorAwareTreeRouteStackBuilder::class,
+            'chain'                 => ChainBuilder::class,
+            'Chain'                 => ChainBuilder::class,
+            Chain::class            => ChainBuilder::class,
+            'hostname'              => HostnameBuilder::class,
+            'Hostname'              => HostnameBuilder::class,
+            'hostName'              => HostnameBuilder::class,
+            'HostName'              => HostnameBuilder::class,
+            Hostname::class         => HostnameBuilder::class,
+            'literal'               => LiteralBuilder::class,
+            'Literal'               => LiteralBuilder::class,
+            Literal::class          => LiteralBuilder::class,
+            'method'                => MethodBuilder::class,
+            'Method'                => MethodBuilder::class,
+            Method::class           => MethodBuilder::class,
+            'part'                  => PartBuilder::class,
+            'Part'                  => PartBuilder::class,
+            Part::class             => PartBuilder::class,
+            'regex'                 => RegexBuilder::class,
+            'Regex'                 => RegexBuilder::class,
+            Regex::class            => RegexBuilder::class,
+            'scheme'                => SchemeBuilder::class,
+            'Scheme'                => SchemeBuilder::class,
+            Scheme::class           => SchemeBuilder::class,
+            'segment'               => SegmentBuilder::class,
+            'Segment'               => SegmentBuilder::class,
+            Segment::class          => SegmentBuilder::class,
+            'placeholder'           => PlaceholderBuilder::class,
+            'Placeholder'           => PlaceholderBuilder::class,
+            Placeholder::class      => PlaceholderBuilder::class,
+            SimpleRouteStack::class => SimpleRouteStackBuilder::class,
+            TreeRouteStack::class   => TreeRouteStackBuilder::class,
         ];
     }
 
-    /**
-     * @psalm-param RouteSpec $options
-     */
     public function build(array $options): RouteInterface
     {
         $type = $options['type'] ?? '';

@@ -19,7 +19,6 @@ use Laminas\Router\RouteMatchInterface;
 use Laminas\Translator\TranslatorInterface as Translator;
 use Override;
 use Psr\Http\Message\RequestInterface;
-use Laminas\Translator\TranslatorInterface;
 
 use function array_key_exists;
 use function array_merge;

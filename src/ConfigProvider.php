@@ -24,11 +24,10 @@ use Laminas\Router\Http\Builder\SchemeBuilder;
 use Laminas\Router\Http\Builder\SchemeBuilderFactory;
 use Laminas\Router\Http\Builder\SegmentBuilder;
 use Laminas\Router\Http\Builder\SegmentBuilderFactory;
-use Laminas\Router\Http\Builder\TranslatorAwareTreeRouteStackBuilder;
-use Laminas\Router\Http\Builder\TranslatorAwareTreeRouteStackBuilderFactory;
 use Laminas\Router\Http\Builder\TreeRouteStackBuilder;
 use Laminas\Router\Http\Builder\TreeRouteStackBuilderFactory;
 use Laminas\Router\Http\TreeRouteStack;
+use Laminas\Router\Http\TreeRouteStackFactory;
 use Laminas\ServiceManager\ConfigInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Translator\TranslatorInterface;
@@ -81,8 +80,9 @@ final readonly class ConfigProvider
         return [
             'factories' => [
                 RouterConfig::class                   => RouterConfigFactory::class,
-                TreeRouteStack::class                 => Http\HttpRouterFactory::class,
-                RouteStackInterface::class            => RouterFactory::class,
+                SimpleRouteStack::class               => SimpleRouteStackFactory::class,
+                TreeRouteStack::class                 => TreeRouteStackFactory::class,
+                RouteStackInterface::class            => Http\HttpRouterFactory::class,
                 RouteBuilderContainerInterface::class => RouteBuilderContainerFactory::class,
                 LiteralBuilder::class                 => LiteralBuilderFactory::class,
                 SegmentBuilder::class                 => SegmentBuilderFactory::class,
@@ -95,8 +95,6 @@ final readonly class ConfigProvider
                 ChainBuilder::class                   => ChainBuilderFactory::class,
                 SimpleRouteStackBuilder::class        => SimpleRouteStackBuilderFactory::class,
                 TreeRouteStackBuilder::class          => TreeRouteStackBuilderFactory::class,
-                TranslatorAwareTreeRouteStackBuilder::class
-                => TranslatorAwareTreeRouteStackBuilderFactory::class,
             ],
         ];
     }
