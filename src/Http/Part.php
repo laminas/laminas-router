@@ -6,8 +6,8 @@ namespace Laminas\Router\Http;
 
 use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception;
+use Laminas\Router\RouteBuilderContainerInterface;
 use Laminas\Router\RouteMatchInterface;
-use Laminas\Router\RoutePluginManager;
 use Override;
 use Psr\Http\Message\RequestInterface;
 
@@ -15,8 +15,6 @@ use function array_diff_key;
 use function array_flip;
 use function assert;
 use function is_array;
-use function is_bool;
-use function is_int;
 use function is_string;
 use function strlen;
 
@@ -42,7 +40,7 @@ final readonly class Part extends TreeRouteStack implements HttpRouteInterface
      * @throws Exception\InvalidArgumentException
      */
     public function __construct(
-        RoutePluginManager $routePluginManager,
+        RouteBuilderContainerInterface $routeBuilderContainer,
         HttpRouteInterface|array $routes = [],
         array $defaultParams = [],
         ?int $priority = null,
@@ -52,7 +50,7 @@ final readonly class Part extends TreeRouteStack implements HttpRouteInterface
         private bool $mayTerminate = false,
         array $childRoutes = [],
     ) {
-        parent::__construct($routePluginManager, defaultParams: $defaultParams, priority: $priority);
+        parent::__construct($routeBuilderContainer, defaultParams: $defaultParams, priority: $priority);
 
         if (is_array($routes)) {
             $routes = $this->routeFromArray('', $routes);
@@ -71,46 +69,8 @@ final readonly class Part extends TreeRouteStack implements HttpRouteInterface
 
     /**
      * @inheritDoc
-     * @throws Exception\InvalidArgumentException
+     * @param array<array-key, mixed> $options
      */
-    #[Override]
-    public static function factory(array $options = []): self
-    {
-        $routes       = $options['route'] ?? null;
-        $routePlugins = $options['route_plugins'] ?? null;
-        $mayTerminate = $options['may_terminate'] ?? false;
-        /** @var array<non-empty-string, TRoute> $childRoutes */
-        $childRoutes = $options['child_routes'] ?? [];
-        /** @psalm-var array<string, string|int|float|null> $defaults */
-        $defaults = $options['defaults'] ?? [];
-
-        if (! $routePlugins instanceof RoutePluginManager) {
-            throw new Exception\InvalidArgumentException('Missing "route_plugins" in options array');
-        }
-
-        if ($routes === null) {
-            throw new Exception\InvalidArgumentException('Missing "route" in options array');
-        }
-
-        assert(is_bool($mayTerminate));
-        assert(is_array($routes) || $routes instanceof HttpRouteInterface);
-
-        /** @psalm-var int|null $priority */
-        $priority = $options['priority'] ?? null;
-
-        /** @psalm-var TRoute|array $routes */
-
-        return new self(
-            $routePlugins,
-            $routes,
-            $defaults,
-            is_int($priority) ? $priority : null,
-            $mayTerminate,
-            $childRoutes,
-        );
-    }
-
-    /** @inheritDoc */
     #[Override]
     public function match(
         RequestInterface $request,
@@ -130,7 +90,7 @@ final readonly class Part extends TreeRouteStack implements HttpRouteInterface
                 return $match;
             }
 
-            if (isset($options['translator']) && ! isset($options['locale'])) {
+            if (! isset($options['locale'])) {
                 /** @var mixed $locale */
                 $locale = $match->getParam('locale');
                 if (is_string($locale)) {
@@ -153,6 +113,8 @@ final readonly class Part extends TreeRouteStack implements HttpRouteInterface
 
     /**
      * @inheritDoc
+      * @param array<string, string|int|float|null> $params
+      * @param array<array-key, mixed> $options
      * @throws Exception\RuntimeException
      */
     #[Override]
@@ -160,7 +122,7 @@ final readonly class Part extends TreeRouteStack implements HttpRouteInterface
     {
         $options['has_child'] = isset($options['name']);
 
-        if (isset($options['translator']) && ! isset($options['locale']) && isset($params['locale'])) {
+        if (! isset($options['locale']) && isset($params['locale'])) {
             $options['locale'] = $params['locale'];
         }
 

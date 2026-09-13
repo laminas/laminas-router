@@ -19,7 +19,6 @@ use Override;
 use Psr\Http\Message\RequestInterface;
 
 use function array_merge;
-use function is_string;
 use function preg_match;
 use function preg_quote;
 use function sprintf;
@@ -57,33 +56,6 @@ final readonly class Hostname implements HttpRouteInterface
     }
 
     /**
-     * @inheritDoc
-     * @throws Exception\InvalidArgumentException
-     */
-    #[Override]
-    public static function factory(array $options = []): self
-    {
-        $name  = $options['name'] ?? null;
-        $route = $options['route'] ?? null;
-        /** @psalm-var array<non-empty-string, string> $constraints */
-        $constraints = $options['constraints'] ?? [];
-        /** @psalm-var array<string, string|int|float|null> $defaults */
-        $defaults = $options['defaults'] ?? [];
-        /** @psalm-var int|null $priority */
-        $priority = $options['priority'] ?? null;
-
-        if (! is_string($route)) {
-            throw new Exception\InvalidArgumentException('Missing "route" in options array');
-        }
-
-        if (! is_string($name)) {
-            throw new Exception\InvalidArgumentException('Missing "name" in options array');
-        }
-
-        return new self($name, $route, $constraints, $defaults, $priority);
-    }
-
-    /**
      * Parse a route definition.
      *
      * @throws Exception\RuntimeException
@@ -93,13 +65,19 @@ final readonly class Hostname implements HttpRouteInterface
         $currentPos      = 0;
         $length          = strlen($def);
         $routeDefinition = new RouteDefinition();
+        /** @var array<string, string> $matches */
+        $matches = [];
+        /** @var array<string, string> $nameAndDelimitersMatch */
+        $nameAndDelimitersMatch = [];
 
         while ($currentPos < $length) {
             if (! preg_match('(\G(?P<literal>[a-z0-9-.]*)(?P<token>[:\[\]]|$))', $def, $matches, 0, $currentPos)) {
                 throw new Exception\RuntimeException('Matched hostname literal contains a disallowed character');
             }
 
-            $currentPos += strlen($matches[0]);
+            $firstMatch = $matches[0] ?? '';
+
+            $currentPos += strlen($firstMatch);
 
             if (isset($matches['literal']) && $matches['literal'] !== '') {
                 $routeDefinition->addPart(new RouteDefinitionLiteral($matches['literal']));
@@ -118,13 +96,19 @@ final readonly class Hostname implements HttpRouteInterface
                     throw new Exception\RuntimeException('Found empty parameter name');
                 }
 
-                /** @psalm-var non-empty-string $nameAndDelimitersMatch['name'] */
+                $nameAndDelimitersMatch0          = $nameAndDelimitersMatch[0] ?? '';
+                $nameAndDelimitersMatchDelimiters = $nameAndDelimitersMatch['delimiters'] ?? null;
+                $nameAndDelimitersMatchName       = $nameAndDelimitersMatch['name'] ?? '';
+
+                if ($nameAndDelimitersMatchName === '') {
+                    throw new Exception\RuntimeException('Found empty parameter name');
+                }
 
                 $routeDefinition->addPart(new RouteDefinitionParameter(
-                    $nameAndDelimitersMatch['name'],
-                    $nameAndDelimitersMatch['delimiters'] ?? null
+                    $nameAndDelimitersMatchName,
+                    $nameAndDelimitersMatchDelimiters
                 ));
-                $currentPos += strlen($nameAndDelimitersMatch[0]);
+                $currentPos += strlen($nameAndDelimitersMatch0);
             } elseif ($matches['token'] === '[') {
                 $routeDefinition->assertStartOptional();
             } elseif ($matches['token'] === ']') {
@@ -218,7 +202,7 @@ final readonly class Hostname implements HttpRouteInterface
                     $skip = false;
                 }
 
-                $host .= (string) $mergedParams[$part->name];
+                $host .= (string) ($mergedParams[$part->name] ?? '');
 
                 $assembledParams[] = $part->name;
                 continue;
@@ -250,8 +234,9 @@ final readonly class Hostname implements HttpRouteInterface
         int|null $pathOffset = null,
         array $options = []
     ): ?RouteMatchInterface {
-        $host   = $request->getUri()->getHost();
-        $result = preg_match('(^' . $this->routeRegexBuildResult->regex . '$)', $host, $matches);
+        $host    = $request->getUri()->getHost();
+        $matches = [];
+        $result  = preg_match('(^' . $this->routeRegexBuildResult->regex . '$)', $host, $matches);
 
         if (! $result) {
             return null;

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Laminas\Router\Http;
 
 use Laminas\Router\AssembledUrl;
-use Laminas\Router\Exception;
-use Laminas\Router\Exception\InvalidArgumentException;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\RouteMatchInterface;
 use Override;
@@ -53,36 +51,6 @@ final readonly class Regex implements HttpRouteInterface
     ) {
     }
 
-    /**
-     * @inheritDoc
-     * @throws InvalidArgumentException
-     */
-    #[Override]
-    public static function factory(array $options = []): self
-    {
-        $name  = $options['name'] ?? null;
-        $regex = $options['regex'] ?? null;
-        $spec  = $options['spec'] ?? null;
-        /** @psalm-var array<string, string|int|float|null>  $defaults */
-        $defaults = $options['defaults'] ?? [];
-        /** @psalm-var int|null $priority */
-        $priority = $options['priority'] ?? null;
-
-        if (! is_string($regex) || $regex === '') {
-            throw new Exception\InvalidArgumentException('Missing "regex" in options array');
-        }
-        if (! is_string($spec) || $spec === '') {
-            throw new Exception\InvalidArgumentException('Missing "spec" in options array');
-        }
-        if (! is_string($name)) {
-            throw new Exception\InvalidArgumentException('Missing "name" in options array');
-        }
-
-        /** @psalm-var array<non-empty-string, non-empty-string> $defaults */
-
-        return new self($name, $regex, $spec, $defaults, $priority);
-    }
-
     /** @inheritDoc */
     #[Override]
     public function match(
@@ -90,7 +58,8 @@ final readonly class Regex implements HttpRouteInterface
         int|null $pathOffset = null,
         array $options = []
     ): ?RouteMatchInterface {
-        $path = $request->getUri()->getPath();
+        $path    = $request->getUri()->getPath();
+        $matches = [];
 
         if ($pathOffset !== null) {
             $result = preg_match('(\G' . $this->regex . ')', $path, $matches, 0, $pathOffset);
@@ -102,7 +71,13 @@ final readonly class Regex implements HttpRouteInterface
             return null;
         }
 
-        $matchedLength = strlen($matches[0]);
+        $firstMatch = $matches[0] ?? '';
+
+        if ($firstMatch === '') {
+            return null;
+        }
+
+        $matchedLength = strlen($firstMatch);
         $cleanMatches  = [];
 
         foreach ($matches as $key => $value) {

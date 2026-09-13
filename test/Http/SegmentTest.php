@@ -10,13 +10,16 @@ use Laminas\Router\Exception\InvalidArgumentException;
 use Laminas\Router\Exception\RuntimeException;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\Segment;
+use Laminas\Router\RouteBuilderContainerInterface;
 use Laminas\Translator\TranslatorInterface;
-use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\BuilderTester;
+use LaminasTest\Router\RouteBuilderContainerTestHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 use UnexpectedValueException;
 
+use function assert;
 use function implode;
 use function sprintf;
 use function strlen;
@@ -221,61 +224,59 @@ final class SegmentTest extends TestCase
             });
 
         $this->matchingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            $this->createTranslatedSegment($translator),
             '/framework',
             null,
             [],
-            ['translator' => $translator]
         );
         $this->matchingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            $this->createTranslatedSegment($translator),
             '/baukasten',
             null,
             [],
-            ['translator' => $translator, 'locale' => 'de-DE']
+            ['locale' => 'de-DE']
         );
         $this->matchingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            $this->createTranslatedSegment($translator),
             '/fw',
             null,
             [],
-            ['translator' => $translator, 'locale' => 'fr-FR']
+            ['locale' => 'fr-FR']
         );
         $this->matchingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            $this->createTranslatedSegment($translator),
             '/fw-alternative',
             null,
             [],
-            ['translator' => $translator, 'text_domain' => 'alternative']
+            ['text_domain' => 'alternative']
         );
 
         $this->assemblingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            $this->createTranslatedSegment($translator),
             '/framework',
             null,
             [],
-            ['translator' => $translator]
         );
         $this->assemblingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            $this->createTranslatedSegment($translator),
             '/baukasten',
             null,
             [],
-            ['translator' => $translator, 'locale' => 'de-DE']
+            ['locale' => 'de-DE']
         );
         $this->assemblingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            $this->createTranslatedSegment($translator),
             '/fw',
             null,
             [],
-            ['translator' => $translator, 'locale' => 'fr-FR']
+            ['locale' => 'fr-FR']
         );
         $this->assemblingWithL10n(
-            new Segment('foo', '/{fw}', [], []),
+            $this->createTranslatedSegment($translator),
             '/fw-alternative',
             null,
             [],
-            ['translator' => $translator, 'text_domain' => 'alternative']
+            ['text_domain' => 'alternative']
         );
     }
 
@@ -308,6 +309,7 @@ final class SegmentTest extends TestCase
 
     /**
      * @param array<non-empty-string, string|null|int>|null $params
+    * @param array<array-key, mixed> $options
      */
     #[DataProvider('routeProvider')]
     public function testMatching(
@@ -338,6 +340,7 @@ final class SegmentTest extends TestCase
 
     /**
      * @param array<non-empty-string, string|null|int>|null $params
+    * @param array<array-key, mixed> $options
      */
     #[DataProvider('routeProvider')]
     public function testAssembling(
@@ -364,6 +367,7 @@ final class SegmentTest extends TestCase
 
     /**
      * @param array<non-empty-string, non-empty-string>|null $params
+     * @param array<array-key, mixed> $options
      */
     private function matchingWithL10n(
         Segment $route,
@@ -393,6 +397,7 @@ final class SegmentTest extends TestCase
 
     /**
      * @param array<non-empty-string, non-empty-string>|null $params
+     * @param array<array-key, mixed> $options
      */
     private function assemblingWithL10n(
         Segment $route,
@@ -471,8 +476,8 @@ final class SegmentTest extends TestCase
 
     public function testFactory(): void
     {
-        $tester = new FactoryTester();
-        $tester->testFactory(
+        $tester = new BuilderTester();
+        $tester->testBuilder(
             Segment::class,
             [
                 'route' => 'Missing "route" in options array',
@@ -600,12 +605,36 @@ final class SegmentTest extends TestCase
             },
         );
 
-        $route   = new Segment('foo', '[/{outer}[/{inner}/:bar]]');
+        $services = RouteBuilderContainerTestHelper::createServiceManager(translator: $translator);
+        // @mago-ignore analysis:mixed-assignment
+        $routeBuilderContainer = $services->get(RouteBuilderContainerInterface::class);
+        assert($routeBuilderContainer instanceof RouteBuilderContainerInterface);
+        $route   = $routeBuilderContainer->build([
+            'type'  => Segment::class,
+            'name'  => 'foo',
+            'route' => '[/{outer}[/{inner}/:bar]]',
+        ]);
         $request = (new Request())->withUri(new Uri('http://example.com/OUT/IN/x'));
 
-        $match = $route->match($request, null, ['translator' => $translator]);
+        $match = $route->match($request);
 
         $this->assertInstanceOf(HttpRouteMatch::class, $match);
         $this->assertSame('x', $match->getParam('bar'));
+    }
+
+    private function createTranslatedSegment(TranslatorInterface $translator): Segment
+    {
+        $services = RouteBuilderContainerTestHelper::createServiceManager(translator: $translator);
+        // @mago-ignore analysis:mixed-assignment
+        $routeBuilderContainer = $services->get(RouteBuilderContainerInterface::class);
+        assert($routeBuilderContainer instanceof RouteBuilderContainerInterface);
+        $route = $routeBuilderContainer->build([
+            'type'  => Segment::class,
+            'name'  => 'foo',
+            'route' => '/{fw}',
+        ]);
+        assert($route instanceof Segment);
+
+        return $route;
     }
 }
