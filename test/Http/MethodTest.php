@@ -50,7 +50,7 @@ final class MethodTest extends TestCase
         $request = $request->withMethod($verb);
 
         $match = $route->match($request);
-        $this->assertInstanceOf(HttpRouteMatch::class, $match);
+        static::assertInstanceOf(HttpRouteMatch::class, $match);
     }
 
     public function testNoMatchWithoutVerb(): void
@@ -58,7 +58,7 @@ final class MethodTest extends TestCase
         $route   = new HttpMethod('foo', 'get');
         $request = (new Request())->withMethod('POST');
 
-        $this->assertNull($route->match($request));
+        static::assertNull($route->match($request));
     }
 
     public function testFactory(): void

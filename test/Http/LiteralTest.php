@@ -70,12 +70,12 @@ final class LiteralTest extends TestCase
         $match   = $route->match($request, $offset);
 
         if (! $shouldMatch) {
-            $this->assertNull($match);
+            static::assertNull($match);
         } else {
-            $this->assertInstanceOf(HttpRouteMatch::class, $match);
+            static::assertInstanceOf(HttpRouteMatch::class, $match);
 
             if ($offset === null) {
-                $this->assertEquals(strlen($path), $match->getLength());
+                static::assertSame(strlen($path), $match->getLength());
             }
         }
     }
@@ -92,9 +92,9 @@ final class LiteralTest extends TestCase
         $result = $route->assemble();
 
         if ($offset !== null) {
-            $this->assertEquals($offset, strpos($path, $result->toString(), $offset));
+            static::assertSame($offset, strpos($path, $result->toString(), $offset));
         } else {
-            $this->assertEquals($path, $result->toString());
+            static::assertSame($path, $result->toString());
         }
     }
 
@@ -103,13 +103,13 @@ final class LiteralTest extends TestCase
         $route   = new Literal('foo', '/foo');
         $request = new Request();
 
-        $this->assertNull($route->match($request));
+        static::assertNull($route->match($request));
     }
 
     public function testGetAssembledParams(): void
     {
         $route = new Literal('foo', '/foo');
-        $this->assertEquals([], $route->assemble(['foo' => 'bar'])->assembledParams);
+        static::assertSame([], $route->assemble(['foo' => 'bar'])->assembledParams);
     }
 
     public function testFactory(): void
@@ -133,28 +133,28 @@ final class LiteralTest extends TestCase
     {
         $request = new Request();
         $route   = new Literal('foo', '');
-        $this->assertNull($route->match($request, 0));
+        static::assertNull($route->match($request, 0));
     }
 
     public function testMatchWithOffsetBeyondPathLengthReturnsNull(): void
     {
         $request = (new Request())->withUri(new Uri('http://example.com/foo'));
 
-        $this->assertNull((new Literal('foo', '/foo'))->match($request, 10));
+        static::assertNull((new Literal('foo', '/foo'))->match($request, 10));
     }
 
     public function testMatchWithNegativeOffsetReturnsNull(): void
     {
         $request = (new Request())->withUri(new Uri('http://example.com/foo'));
 
-        $this->assertNull((new Literal('foo', '/foo'))->match($request, -1));
+        static::assertNull((new Literal('foo', '/foo'))->match($request, -1));
     }
 
     public function testMatchWithOffsetMisalignedReturnsNull(): void
     {
         $request = (new Request())->withUri(new Uri('http://example.com/x/foo'));
 
-        $this->assertNull((new Literal('foo', 'foo'))->match($request, 1));
+        static::assertNull((new Literal('foo', 'foo'))->match($request, 1));
     }
 
     public function testMatchWithOffsetReturnsSegmentLength(): void
@@ -162,15 +162,15 @@ final class LiteralTest extends TestCase
         $request = (new Request())->withUri(new Uri('http://example.com/foo'));
         $match   = (new Literal('foo', 'foo'))->match($request, 1);
 
-        $this->assertInstanceOf(HttpRouteMatch::class, $match);
-        $this->assertSame(3, $match->getLength());
+        static::assertInstanceOf(HttpRouteMatch::class, $match);
+        static::assertSame(3, $match->getLength());
     }
 
     public function testMatchWithOffsetAtPathLengthReturnsNull(): void
     {
         $request = (new Request())->withUri(new Uri('http://example.com/foo'));
 
-        $this->assertNull((new Literal('foo', '/foo'))->match($request, 4));
+        static::assertNull((new Literal('foo', '/foo'))->match($request, 4));
     }
 
     public function testMatchWithOffsetEnablesMatchAtLastCharacter(): void
@@ -178,7 +178,7 @@ final class LiteralTest extends TestCase
         $request = (new Request())->withUri(new Uri('http://example.com/foo'));
         $match   = (new Literal('foo', 'o'))->match($request, 3);
 
-        $this->assertInstanceOf(HttpRouteMatch::class, $match);
-        $this->assertSame(1, $match->getLength());
+        static::assertInstanceOf(HttpRouteMatch::class, $match);
+        static::assertSame(1, $match->getLength());
     }
 }

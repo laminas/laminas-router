@@ -178,12 +178,12 @@ final class HostnameTest extends TestCase
         $match   = $route->match($request);
 
         if ($params === null) {
-            $this->assertNull($match);
+            static::assertNull($match);
         } else {
-            $this->assertInstanceOf(HttpRouteMatch::class, $match);
+            static::assertInstanceOf(HttpRouteMatch::class, $match);
 
             foreach ($params as $key => $value) {
-                $this->assertEquals($value, $match->getParam($key));
+                static::assertSame($value, $match->getParam($key));
             }
         }
     }
@@ -203,8 +203,8 @@ final class HostnameTest extends TestCase
         $uri    = new Uri();
         $result = $route->assemble($params, ['uri' => $uri]);
 
-        $this->assertEquals('', $result->toString());
-        $this->assertSame($hostname, $result->host);
+        static::assertSame('', $result->toString());
+        static::assertSame($hostname, $result->host);
     }
 
     public function testNoMatchWithoutUriMethod(): void
@@ -212,7 +212,7 @@ final class HostnameTest extends TestCase
         $route   = new Hostname('foo', 'example.com');
         $request = new Request();
 
-        $this->assertNull($route->match($request));
+        static::assertNull($route->match($request));
     }
 
     public function testNoMatchWithRelativeUri(): void
@@ -221,7 +221,7 @@ final class HostnameTest extends TestCase
         $request = new Request();
         $request = $request->withUri(new Uri('/relative/path'));
 
-        self::assertNull($route->match($request));
+        static::assertNull($route->match($request));
     }
 
     public function testNoMatchWithPlaceholderOnRelativeUri(): void
@@ -230,7 +230,7 @@ final class HostnameTest extends TestCase
         $request = new Request();
         $request = $request->withUri(new Uri('/relative/path'));
 
-        self::assertNull($route->match($request));
+        static::assertNull($route->match($request));
     }
 
     public function testMatchesRelativeUriWithFullyOptionalDefinition(): void
@@ -240,8 +240,8 @@ final class HostnameTest extends TestCase
         $request = $request->withUri(new Uri('/relative/path'));
 
         $match = $route->match($request);
-        self::assertInstanceOf(HttpRouteMatch::class, $match);
-        self::assertArrayNotHasKey('domain', $match->getParams());
+        static::assertInstanceOf(HttpRouteMatch::class, $match);
+        static::assertArrayNotHasKey('domain', $match->getParams());
     }
 
     public function testAssemblingWithMissingParameter(): void
@@ -258,7 +258,7 @@ final class HostnameTest extends TestCase
     {
         $route = new Hostname('foo', ':foo.example.com');
         $uri   = new Uri();
-        $this->assertEquals(
+        static::assertSame(
             ['foo'],
             $route->assemble(['foo' => 'bar', 'baz' => 'bat'], ['uri' => $uri])->assembledParams,
         );
@@ -270,8 +270,8 @@ final class HostnameTest extends TestCase
         $request = (new Request())->withUri(new Uri('http://www.example.com/'));
         $match   = $route->match($request);
 
-        $this->assertInstanceOf(HttpRouteMatch::class, $match);
-        $this->assertSame('prod', $match->getParam('env'));
+        static::assertInstanceOf(HttpRouteMatch::class, $match);
+        static::assertSame('prod', $match->getParam('env'));
     }
 
     public function testAssembleUsesDefaultsWhenParameterMissing(): void
@@ -279,22 +279,22 @@ final class HostnameTest extends TestCase
         $route  = new Hostname('foo', ':foo.example.com', [], ['foo' => 'baz']);
         $result = $route->assemble([]);
 
-        $this->assertSame('baz.example.com', $result->host);
+        static::assertSame('baz.example.com', $result->host);
     }
 
     public function testAssembleOmitsOptionalWhenParameterEqualsDefault(): void
     {
         $route = new Hostname('foo', '[:foo.]example.com', [], ['foo' => 'bar']);
 
-        $this->assertSame('example.com', $route->assemble([])->host);
-        $this->assertSame('example.com', $route->assemble(['foo' => 'bar'])->host);
+        static::assertSame('example.com', $route->assemble([])->host);
+        static::assertSame('example.com', $route->assemble(['foo' => 'bar'])->host);
     }
 
     public function testAssembleIncludesOptionalWhenParameterDiffersFromDefault(): void
     {
         $route = new Hostname('foo', '[:foo.]example.com', [], ['foo' => 'bar']);
 
-        $this->assertSame('baz.example.com', $route->assemble(['foo' => 'baz'])->host);
+        static::assertSame('baz.example.com', $route->assemble(['foo' => 'baz'])->host);
     }
 
     public function testAssembleOmitsNestedOptionalWhenAllParametersEqualDefaults(): void
@@ -306,7 +306,7 @@ final class HostnameTest extends TestCase
             ['foo' => 'a', 'bar' => 'b'],
         );
 
-        $this->assertSame('example.com', $route->assemble([])->host);
+        static::assertSame('example.com', $route->assemble([])->host);
     }
 
     public function testAssembleIncludesNestedOptionalWhenInnerParameterDiffersFromDefault(): void
@@ -318,14 +318,14 @@ final class HostnameTest extends TestCase
             ['foo' => 'a', 'bar' => 'b'],
         );
 
-        $this->assertSame('x.b.example.com', $route->assemble(['foo' => 'x'])->host);
+        static::assertSame('x.b.example.com', $route->assemble(['foo' => 'x'])->host);
     }
 
     public function testAssembleNestedOptionalCollectsAssembledParamsFromBothLevels(): void
     {
         $route = new Hostname('foo', '[[:foo.]:bar.]example.com');
 
-        $this->assertSame(
+        static::assertSame(
             ['foo', 'bar'],
             $route->assemble(['foo' => 'baz', 'bar' => 'bat'])->assembledParams,
         );
@@ -337,12 +337,12 @@ final class HostnameTest extends TestCase
         $request = (new Request())->withUri(new Uri('http://a.b.c.example.com/'));
         $match   = $route->match($request);
 
-        $this->assertInstanceOf(HttpRouteMatch::class, $match);
-        $this->assertSame('a', $match->getParam('one'));
-        $this->assertSame('b', $match->getParam('two'));
-        $this->assertSame('c', $match->getParam('three'));
+        static::assertInstanceOf(HttpRouteMatch::class, $match);
+        static::assertSame('a', $match->getParam('one'));
+        static::assertSame('b', $match->getParam('two'));
+        static::assertSame('c', $match->getParam('three'));
 
-        $this->assertSame(
+        static::assertSame(
             ['one', 'two', 'three'],
             $route->assemble(['one' => 'a', 'two' => 'b', 'three' => 'c'])->assembledParams,
         );
@@ -354,8 +354,8 @@ final class HostnameTest extends TestCase
         $request = (new Request())->withUri((new Uri())->withHost(''));
         $match   = $route->match($request);
 
-        $this->assertInstanceOf(HttpRouteMatch::class, $match);
-        $this->assertSame('', $route->assemble([])->host ?? '');
+        static::assertInstanceOf(HttpRouteMatch::class, $match);
+        static::assertSame('', $route->assemble([])->host ?? '');
     }
 
     /**
@@ -403,8 +403,8 @@ final class HostnameTest extends TestCase
             'priority'    => 5,
         ]);
 
-        $this->assertSame(5, $route->getPriority());
-        $this->assertSame(
+        static::assertSame(5, $route->getPriority());
+        static::assertSame(
             '999.example.com',
             $route->assemble([])->host
         );
@@ -412,10 +412,10 @@ final class HostnameTest extends TestCase
         $match = $route->match(
             (new Request())->withUri(new Uri('http://123.example.com/'))
         );
-        $this->assertInstanceOf(HttpRouteMatch::class, $match);
-        $this->assertSame('123', $match->getParam('foo'));
+        static::assertInstanceOf(HttpRouteMatch::class, $match);
+        static::assertSame('123', $match->getParam('foo'));
 
-        $this->assertNull(
+        static::assertNull(
             $route->match((new Request())->withUri(new Uri('http://abc.example.com/')))
         );
     }

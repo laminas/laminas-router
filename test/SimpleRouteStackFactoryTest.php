@@ -23,6 +23,6 @@ final class SimpleRouteStackFactoryTest extends TestCase
 
         $stack = (new SimpleRouteStackFactory())($container);
 
-        $this->assertInstanceOf(SimpleRouteStack::class, $stack);
+        static::assertInstanceOf(SimpleRouteStack::class, $stack);
     }
 }

@@ -47,8 +47,8 @@ final class RouteBuilderContainerFactoryTest extends TestCase
 
         $routeBuilders = $this->factory->__invoke($container);
 
-        $this->assertInstanceOf(RouteBuilderContainerInterface::class, $routeBuilders);
-        $this->assertTrue($routeBuilders->has('literal'));
+        static::assertInstanceOf(RouteBuilderContainerInterface::class, $routeBuilders);
+        static::assertTrue($routeBuilders->has('literal'));
     }
 
     public function testInvokeWithEmptyConfigUsesDefaultBuilderMap(): void
@@ -73,8 +73,8 @@ final class RouteBuilderContainerFactoryTest extends TestCase
 
         $routeBuilders = $this->factory->__invoke($container);
 
-        $this->assertInstanceOf(RouteBuilderContainerInterface::class, $routeBuilders);
-        $this->assertTrue($routeBuilders->has('literal'));
+        static::assertInstanceOf(RouteBuilderContainerInterface::class, $routeBuilders);
+        static::assertTrue($routeBuilders->has('literal'));
     }
 
     public function testInvokeWithRouteBuildersConfigUsesConfiguredMap(): void
@@ -84,10 +84,10 @@ final class RouteBuilderContainerFactoryTest extends TestCase
 
         $routeBuilders = $this->factory->__invoke($container);
 
-        $this->assertInstanceOf(RouteBuilderContainerInterface::class, $routeBuilders);
-        $this->assertTrue($routeBuilders->has('custom'));
-        $this->assertSame($builder, $routeBuilders->get('custom'));
-        $this->assertFalse($routeBuilders->has('literal'));
+        static::assertInstanceOf(RouteBuilderContainerInterface::class, $routeBuilders);
+        static::assertTrue($routeBuilders->has('custom'));
+        static::assertSame($builder, $routeBuilders->get('custom'));
+        static::assertFalse($routeBuilders->has('literal'));
     }
 
     public function testInvokeWithTraversableConfigUsesConfiguredMap(): void
@@ -97,10 +97,10 @@ final class RouteBuilderContainerFactoryTest extends TestCase
 
         $routeBuilders = $this->factory->__invoke($container);
 
-        $this->assertInstanceOf(RouteBuilderContainerInterface::class, $routeBuilders);
-        $this->assertTrue($routeBuilders->has('custom'));
-        $this->assertSame($builder, $routeBuilders->get('custom'));
-        $this->assertFalse($routeBuilders->has('literal'));
+        static::assertInstanceOf(RouteBuilderContainerInterface::class, $routeBuilders);
+        static::assertTrue($routeBuilders->has('custom'));
+        static::assertSame($builder, $routeBuilders->get('custom'));
+        static::assertFalse($routeBuilders->has('literal'));
     }
 
     public function testBuildUnknownTypeThrows(): void

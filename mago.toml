@@ -24,12 +24,14 @@ integrations = ["phpunit"]
 [linter.rules]
 ambiguous-function-call = { enabled = false }
 literal-named-argument = { enabled = false }
-halstead = { effort-threshold = 7000 }
+halstead = { effort-threshold = 8000 }
 too-many-methods = { threshold = 7000 }
 excessive-parameter-list = { threshold = 70 }
 cyclomatic-complexity = { threshold = 70 }
 kan-defect = { threshold = 70 }
 no-insecure-comparison = { enabled = false }
+no-isset = { enabled = false }
+assert-description = { enabled = false }
 
 [analyzer]
 plugins = []

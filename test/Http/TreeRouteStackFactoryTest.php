@@ -24,13 +24,13 @@ final class TreeRouteStackFactoryTest extends TestCase
 
         $stack = (new TreeRouteStackFactory())($container);
 
-        $this->assertInstanceOf(TreeRouteStack::class, $stack);
+        static::assertInstanceOf(TreeRouteStack::class, $stack);
     }
 
     public function testFactoryIsConfiguredInServiceManager(): void
     {
         $services = RouteBuilderContainerTestHelper::createServiceManager();
 
-        $this->assertInstanceOf(TreeRouteStack::class, $services->get(TreeRouteStack::class));
+        static::assertInstanceOf(TreeRouteStack::class, $services->get(TreeRouteStack::class));
     }
 }

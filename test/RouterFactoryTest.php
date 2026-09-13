@@ -31,7 +31,7 @@ class RouterFactoryTest extends TestCase
         );
 
         $router = $this->factory->__invoke($services);
-        $this->assertInstanceOf(TestAsset\Router::class, $router);
+        static::assertInstanceOf(TestAsset\Router::class, $router);
     }
 
     public function testFactoryCanCreateRouterWhenOnlyHttpRouterConfigPresent(): void
@@ -44,7 +44,7 @@ class RouterFactoryTest extends TestCase
         );
 
         $router = $this->factory->__invoke($services);
-        $this->assertInstanceOf(TestAsset\Router::class, $router);
+        static::assertInstanceOf(TestAsset\Router::class, $router);
     }
 
     public function testDefaultConfig(): void
@@ -54,6 +54,6 @@ class RouterFactoryTest extends TestCase
         $services = new ServiceManager($config);
 
         $router = $this->factory->__invoke($services);
-        $this->assertInstanceOf(TreeRouteStack::class, $router);
+        static::assertInstanceOf(TreeRouteStack::class, $router);
     }
 }

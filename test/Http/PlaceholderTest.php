@@ -56,19 +56,19 @@ final class PlaceholderTest extends TestCase
         $request = $request->withUri(new Uri('http://example.com/'));
         $match   = $route->match($request);
 
-        $this->assertInstanceOf(HttpRouteMatch::class, $match);
+        static::assertInstanceOf(HttpRouteMatch::class, $match);
     }
 
     public function testAssembling(): void
     {
         $route = new Placeholder('foo', []);
-        $this->assertEquals('', $route->assemble()->toString());
+        static::assertSame('', $route->assemble()->toString());
     }
 
     public function testGetAssembledParams(): void
     {
         $route = new Placeholder('foo', []);
-        $this->assertEquals([], $route->assemble([])->assembledParams);
+        static::assertSame([], $route->assemble([])->assembledParams);
     }
 
     public function testFactory(): void
@@ -99,8 +99,8 @@ final class PlaceholderTest extends TestCase
         $request = $request->withUri(new Uri($uri));
         $match   = $router->match($request);
 
-        $this->assertInstanceOf(HttpRouteMatch::class, $match);
-        $this->assertEquals($expectedRouteName, $match->getMatchedRouteName());
+        static::assertInstanceOf(HttpRouteMatch::class, $match);
+        static::assertSame($expectedRouteName, $match->getMatchedRouteName());
     }
 
     /**

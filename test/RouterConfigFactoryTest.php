@@ -29,9 +29,9 @@ final class RouterConfigFactoryTest extends TestCase
 
         $config = ($this->factory)($container);
 
-        self::assertSame(TreeRouteStack::class, $config->routerClass);
-        self::assertSame(LiteralBuilder::class, $config->routeBuilders['literal'] ?? null);
-        self::assertSame(TranslatorInterface::class, $config->translator);
+        static::assertSame(TreeRouteStack::class, $config->routerClass);
+        static::assertSame(LiteralBuilder::class, $config->routeBuilders['literal'] ?? null);
+        static::assertSame(TranslatorInterface::class, $config->translator);
     }
 
     public function testInvokeAcceptsTraversableAndConfiguredValues(): void
@@ -46,11 +46,11 @@ final class RouterConfigFactoryTest extends TestCase
 
         $config = ($this->factory)($container);
 
-        self::assertSame('CustomRouter', $config->routerClass);
+        static::assertSame('CustomRouter', $config->routerClass);
         /** @var class-string $customBuilder */
         $customBuilder = 'CustomBuilder';
-        self::assertSame($customBuilder, $config->routeBuilders['custom'] ?? null);
-        self::assertSame('CustomTranslator', $config->translator);
+        static::assertSame($customBuilder, $config->routeBuilders['custom'] ?? null);
+        static::assertSame('CustomTranslator', $config->translator);
     }
 
     public function testInvalidConfigServiceThrows(): void

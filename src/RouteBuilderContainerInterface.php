@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Laminas\Router;
 
-use Laminas\Router\RouteBuilderInterface;
-use Laminas\Router\RouteInterface;
 use Psr\Container\ContainerInterface;
 
 /**

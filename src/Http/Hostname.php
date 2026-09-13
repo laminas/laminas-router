@@ -6,7 +6,6 @@ namespace Laminas\Router\Http;
 
 use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception;
-use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\RouteBuild\RouteAssemblyBuildResult;
 use Laminas\Router\Http\RouteBuild\RouteRegexBuildResult;
 use Laminas\Router\Http\RouteDefinition\RouteDefinition;

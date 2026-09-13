@@ -21,7 +21,7 @@ final class SchemeTest extends TestCase
         $route = new Scheme('foo', 'https');
         $match = $route->match($request);
 
-        $this->assertInstanceOf(HttpRouteMatch::class, $match);
+        static::assertInstanceOf(HttpRouteMatch::class, $match);
     }
 
     public function testNoMatchingOnDifferentScheme(): void
@@ -32,7 +32,7 @@ final class SchemeTest extends TestCase
         $route = new Scheme('foo', 'https');
         $match = $route->match($request);
 
-        $this->assertNull($match);
+        static::assertNull($match);
     }
 
     public function testAssembling(): void
@@ -41,8 +41,8 @@ final class SchemeTest extends TestCase
         $route  = new Scheme('foo', 'https');
         $result = $route->assemble([], ['uri' => $uri]);
 
-        $this->assertEquals('', $result->toString());
-        $this->assertSame('https', $result->scheme);
+        static::assertSame('', $result->toString());
+        static::assertSame('https', $result->scheme);
     }
 
     public function testNoMatchWithoutUriMethod(): void
@@ -50,13 +50,13 @@ final class SchemeTest extends TestCase
         $route   = new Scheme('foo', 'https');
         $request = new Request();
 
-        $this->assertNull($route->match($request));
+        static::assertNull($route->match($request));
     }
 
     public function testGetAssembledParams(): void
     {
         $route = new Scheme('foo', 'https');
-        $this->assertEquals([], $route->assemble(['foo' => 'bar'])->assembledParams);
+        static::assertSame([], $route->assemble(['foo' => 'bar'])->assembledParams);
     }
 
     public function testFactory(): void

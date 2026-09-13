@@ -74,7 +74,7 @@ final class RegexTest extends TestCase
                 new Regex('foo', '/id/(?<id>\d+)/scale/(?<scale>\d+\.\d+)', '/id/%id%/scale/%scale%'),
                 '/id/42/scale/4.2',
                 null,
-                ['id' => 42, 'scale' => 4.2],
+                ['id' => '42', 'scale' => '4.2'],
             ],
         ];
     }
@@ -90,16 +90,16 @@ final class RegexTest extends TestCase
         $match   = $route->match($request, $offset);
 
         if ($params === null) {
-            $this->assertNull($match);
+            static::assertNull($match);
         } else {
-            $this->assertInstanceOf(HttpRouteMatch::class, $match);
+            static::assertInstanceOf(HttpRouteMatch::class, $match);
 
             if ($offset === null) {
-                $this->assertEquals(strlen($path), $match->getLength());
+                static::assertSame(strlen($path), $match->getLength());
             }
 
             foreach ($params as $key => $value) {
-                $this->assertEquals($value, $match->getParam($key));
+                static::assertSame($value, $match->getParam($key));
             }
         }
     }
@@ -119,9 +119,9 @@ final class RegexTest extends TestCase
         $result = $route->assemble($params);
 
         if ($offset !== null) {
-            $this->assertEquals($offset, strpos($path, $result->toString(), $offset));
+            static::assertSame($offset, strpos($path, $result->toString(), $offset));
         } else {
-            $this->assertEquals($path, $result->toString());
+            static::assertSame($path, $result->toString());
         }
     }
 
@@ -130,27 +130,27 @@ final class RegexTest extends TestCase
         $route   = new Regex('foo', '/foo', '/foo');
         $request = new Request();
 
-        $this->assertNull($route->match($request));
+        static::assertNull($route->match($request));
     }
 
     public function testGetAssembledParams(): void
     {
         $route = new Regex('foo', '/(?<foo>.+)', '/%foo%');
-        $this->assertEquals(['foo'], $route->assemble(['foo' => 'bar', 'baz' => 'bat'])->assembledParams);
+        static::assertSame(['foo'], $route->assemble(['foo' => 'bar', 'baz' => 'bat'])->assembledParams);
     }
 
     public function testAssemblingUsesDefaultsForMissingParams(): void
     {
         $route = new Regex('foo', '/foo', '/foo-%bar%', ['bar' => 'baz']);
 
-        $this->assertSame('/foo-baz', $route->assemble([])->toString());
+        static::assertSame('/foo-baz', $route->assemble([])->toString());
     }
 
     public function testAssemblingParamsOverrideDefaults(): void
     {
         $route = new Regex('foo', '/foo', '/foo-%bar%', ['bar' => 'baz']);
 
-        $this->assertSame('/foo-qux', $route->assemble(['bar' => 'qux'])->toString());
+        static::assertSame('/foo-qux', $route->assemble(['bar' => 'qux'])->toString());
     }
 
     public function testFactory(): void
@@ -181,8 +181,8 @@ final class RegexTest extends TestCase
         $route   = new Regex('foo', '/(?<foo>[^/]+)', '/%foo%');
         $match   = $route->match($request);
 
-        $this->assertNotNull($match);
-        $this->assertSame($raw, $match->getParam('foo'));
+        static::assertNotNull($match);
+        static::assertSame($raw, $match->getParam('foo'));
     }
 
     public function testEncodedDecode(): void
@@ -198,7 +198,7 @@ final class RegexTest extends TestCase
         $route   = new Regex('foo', '/(?<foo>[^/]+)', '/%foo%');
         $match   = $route->match($request);
 
-        $this->assertNotNull($match);
-        $this->assertSame($out, $match->getParam('foo'));
+        static::assertNotNull($match);
+        static::assertSame($out, $match->getParam('foo'));
     }
 }

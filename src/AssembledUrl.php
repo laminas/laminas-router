@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Laminas\Router;
 
 use function array_merge;
+use function count;
 use function http_build_query;
 use function sprintf;
 use function str_starts_with;

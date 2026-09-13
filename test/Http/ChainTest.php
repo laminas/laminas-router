@@ -147,16 +147,16 @@ final class ChainTest extends TestCase
         $match   = $route->match($request, $offset);
 
         if ($params === null) {
-            $this->assertNull($match);
+            static::assertNull($match);
         } else {
-            $this->assertInstanceOf(HttpRouteMatch::class, $match);
+            static::assertInstanceOf(HttpRouteMatch::class, $match);
 
             if ($offset === null) {
-                $this->assertEquals(strlen($path), $match->getLength());
+                static::assertSame(strlen($path), $match->getLength());
             }
 
             foreach ($params as $key => $value) {
-                $this->assertEquals($value, $match->getParam($key));
+                static::assertSame($value, $match->getParam($key));
             }
         }
     }
@@ -175,9 +175,9 @@ final class ChainTest extends TestCase
         $result = $route->assemble($params);
 
         if ($offset !== null) {
-            $this->assertEquals($offset, strpos($path, $result->toString(), $offset));
+            static::assertSame($offset, strpos($path, $result->toString(), $offset));
         } else {
-            $this->assertEquals($path, $result->toString());
+            static::assertSame($path, $result->toString());
         }
     }
 
@@ -185,19 +185,19 @@ final class ChainTest extends TestCase
     {
         $request = (new Request())->withUri(new Uri('http://example.com/foo/bar/extra'));
 
-        $this->assertNull(self::getRoute()->match($request));
+        static::assertNull(self::getRoute()->match($request));
     }
 
     public function testMatchWithZeroOffsetAllowsPartialPath(): void
     {
         $request = (new Request())->withUri(new Uri('http://example.com/foo/bar/extra'));
 
-        $this->assertInstanceOf(HttpRouteMatch::class, self::getRoute()->match($request, 0));
+        static::assertInstanceOf(HttpRouteMatch::class, self::getRoute()->match($request, 0));
     }
 
     public function testAssemblingOmitsOptionalTrailingSegmentWithoutParam(): void
     {
-        $this->assertSame(
+        static::assertSame(
             '/foo',
             self::getRouteWithOptionalParam()->assemble(['controller' => 'foo'])->toString()
         );
@@ -226,7 +226,7 @@ final class ChainTest extends TestCase
             ]
         );
 
-        $this->assertSame('/foo/bar', $route->assemble([], ['has_child' => true])->toString());
+        static::assertSame('/foo/bar', $route->assemble([], ['has_child' => true])->toString());
     }
 
     public function testAssemblingStripsConsumedParamsBetweenSegments(): void
@@ -252,13 +252,13 @@ final class ChainTest extends TestCase
             ]
         );
 
-        $this->assertSame('/x/2', $route->assemble(['id' => 'x'])->toString());
+        static::assertSame('/x/2', $route->assemble(['id' => 'x'])->toString());
     }
 
     public function testGetAssembledParams(): void
     {
         $route = self::getRoute();
-        $this->assertSame(
+        static::assertSame(
             ['controller', 'bar'],
             $route->assemble(['controller' => 'foo', 'bar' => 'baz'])->assembledParams,
         );

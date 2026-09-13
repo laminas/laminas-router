@@ -210,18 +210,18 @@ final class PartTest extends TestCase
         $match   = $route->match($request, $offset);
 
         if ($params === null) {
-            $this->assertNull($match);
+            static::assertNull($match);
         } else {
-            $this->assertInstanceOf(HttpRouteMatch::class, $match);
+            static::assertInstanceOf(HttpRouteMatch::class, $match);
 
             if ($offset === null) {
-                $this->assertEquals(strlen($path), $match->getLength());
+                static::assertSame(strlen($path), $match->getLength());
             }
 
-            $this->assertEquals($routeName, $match->getMatchedRouteName());
+            static::assertEquals($routeName, $match->getMatchedRouteName());
 
             foreach ($params as $key => $value) {
-                $this->assertEquals($value, $match->getParam($key));
+                static::assertSame($value, $match->getParam($key));
             }
         }
     }
@@ -246,9 +246,9 @@ final class PartTest extends TestCase
         $result = $route->assemble($params, ['name' => $routeName]);
 
         if ($offset !== null) {
-            $this->assertEquals($offset, strpos($path, $result->toString(), $offset));
+            static::assertSame($offset, strpos($path, $result->toString(), $offset));
         } else {
-            $this->assertEquals($path, $result->toString());
+            static::assertSame($path, $result->toString());
         }
     }
 
@@ -278,13 +278,13 @@ final class PartTest extends TestCase
         $route   = self::getRoute();
         $request = new Request();
 
-        $this->assertNull($route->match($request));
+        static::assertNull($route->match($request));
     }
 
     public function testGetAssembledParams(): void
     {
         $route = self::getRoute();
-        $this->assertEquals(
+        static::assertSame(
             ['controller'],
             $route->assemble(['controller' => 'foo'], ['name' => 'baz/bat'])->assembledParams,
         );
@@ -340,8 +340,8 @@ final class PartTest extends TestCase
         $request = $request->withUri($uri);
 
         $match = $route->match($request);
-        $this->assertInstanceOf(RouteMatchInterface::class, $match);
-        $this->assertEquals('resource', $match->getParam('action'));
+        static::assertInstanceOf(RouteMatchInterface::class, $match);
+        static::assertSame('resource', $match->getParam('action'));
     }
 
     private function getLocalePartRoute(TranslatorInterface $translator): Part
@@ -399,8 +399,8 @@ final class PartTest extends TestCase
 
         $match = $route->match($request, null, ['text_domain' => 'route']);
 
-        $this->assertInstanceOf(HttpRouteMatch::class, $match);
-        $this->assertSame('index', $match->getMatchedRouteName());
+        static::assertInstanceOf(HttpRouteMatch::class, $match);
+        static::assertSame('index', $match->getMatchedRouteName());
     }
 
     public function testAssemblePropagatesLocaleFromParamsWhenLocaleOptionIsNotSet(): void
@@ -408,7 +408,7 @@ final class PartTest extends TestCase
         $translator = $this->getTranslator(1);
         $route      = $this->getLocalePartRoute($translator);
 
-        $this->assertSame(
+        static::assertSame(
             '/de/hauptseite',
             $route->assemble(
                 ['locale' => 'de'],
@@ -422,7 +422,7 @@ final class PartTest extends TestCase
         $translator = $this->getTranslator(1);
         $route      = $this->getLocalePartRoute($translator);
 
-        $this->assertSame(
+        static::assertSame(
             '/de/homepage',
             $route->assemble(
                 ['locale' => 'de'],
@@ -447,7 +447,7 @@ final class PartTest extends TestCase
             'locale'      => 'en',
         ]);
 
-        $this->assertNull($match);
+        static::assertNull($match);
     }
 
     public function testAssembleStripsParentAssembledParams(): void
@@ -474,14 +474,14 @@ final class PartTest extends TestCase
             ],
         );
 
-        $this->assertSame('/1/2/baz', $route->assemble(['foo' => '1'], ['name' => 'bar'])->toString());
+        static::assertSame('/1/2/baz', $route->assemble(['foo' => '1'], ['name' => 'bar'])->toString());
     }
 
     public function testAssembleChildReturnsPathOnly(): void
     {
         $route = self::getRoute();
 
-        $this->assertSame(
+        static::assertSame(
             '/foo/bar',
             $route->assemble(
                 ['controller' => 'bar'],

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Laminas\Router;
 
-use Laminas\Router\AssembledUrl;
 use Laminas\Router\Exception\RuntimeException;
-use Laminas\Router\PriorityList;
 use Override;
 use Psr\Http\Message\RequestInterface;
 
