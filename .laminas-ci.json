@@ -3,6 +3,10 @@
         "8.5": true
     },
     "backwardCompatibilityCheck": true,
-    "mago-skip-lint": false,
-    "mago-skip-fmt": false
+    "exclude": [
+        {
+            "name": "Mago lint",
+            "php": "8.2"
+        }
+    ]
 }
