@@ -47,7 +47,7 @@ final readonly class Literal implements HttpRouteInterface
         $path = $request->getUri()->getPath();
 
         if ($pathOffset !== null) {
-            if ($pathOffset >= 0 && strlen($path) >= $pathOffset && ! empty($this->route)) {
+            if ($pathOffset >= 0 && strlen($path) >= $pathOffset && $this->route !== '') {
                 if (strpos($path, $this->route, $pathOffset) === $pathOffset) {
                     return new HttpRouteMatch($this->defaults, $this->name, strlen($this->route));
                 }

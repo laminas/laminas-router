@@ -15,7 +15,7 @@ final class AssembledUrlTest extends TestCase
         $base  = new AssembledUrl(assembledParams: ['foo']);
         $other = new AssembledUrl(assembledParams: ['bar']);
 
-        $this->assertSame(['foo', 'bar'], $base->merge($other)->assembledParams);
+        static::assertSame(['foo', 'bar'], $base->merge($other)->assembledParams);
     }
 
     public function testMergeCombinesPathQueryAndScalarProperties(): void

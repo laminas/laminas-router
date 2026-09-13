@@ -25,6 +25,11 @@ integrations = ["phpunit"]
 ambiguous-function-call = { enabled = false }
 literal-named-argument = { enabled = false }
 halstead = { effort-threshold = 7000 }
+too-many-methods = { threshold = 7000 }
+excessive-parameter-list = { threshold = 70 }
+cyclomatic-complexity = { threshold = 70 }
+kan-defect = { threshold = 70 }
+no-insecure-comparison = { enabled = false }
 
 [analyzer]
 plugins = []

@@ -67,7 +67,7 @@ readonly final class AssembledUrl
             $uri .= $pathPart;
         }
 
-        if (! empty($this->query)) {
+        if (count($this->query) !== 0) {
             $uri .= '?' . http_build_query($this->query);
         }
 

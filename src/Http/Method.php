@@ -51,7 +51,7 @@ final readonly class Method implements HttpRouteInterface
         $matchVerbs  = explode(',', strtoupper($this->verb));
         $matchVerbs  = array_map(trim(...), $matchVerbs);
 
-        if (in_array($requestVerb, $matchVerbs)) {
+        if (in_array($requestVerb, $matchVerbs, true)) {
             return new HttpRouteMatch($this->defaults, $this->name, 0);
         }
 
