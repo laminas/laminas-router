@@ -28,9 +28,8 @@ use Laminas\Router\Http\Builder\TreeRouteStackBuilder;
 use Laminas\Router\Http\Builder\TreeRouteStackBuilderFactory;
 use Laminas\Router\Http\TreeRouteStack;
 use Laminas\Router\Http\TreeRouteStackFactory;
-use Laminas\ServiceManager\ConfigInterface;
-use Laminas\ServiceManager\ServiceManager;
 use Laminas\Translator\TranslatorInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Provide base configuration for using the component.
@@ -40,11 +39,13 @@ use Laminas\Translator\TranslatorInterface;
  * - seed and configure the default routers and route builder container.
  * - provide routes to the given routers.
  *
- * @see ConfigInterface
+ * @psalm-type FactoryCallable = callable(ContainerInterface):mixed
+ * @psalm-type DependencyConfiguration = array{
+ *     factories: array<class-string, class-string>,
  *
- * @psalm-import-type ServiceManagerConfiguration from ServiceManager
+ * }
  * @psalm-type RouterConfigShape = array{
- *      dependencies: ServiceManagerConfiguration,
+ *      dependencies: DependencyConfiguration,
  *      router: array{
  *          router_class: class-string<RouteStackInterface>,
  *          route_builders: array<string, class-string<RouteBuilderInterface>>,
@@ -73,7 +74,7 @@ final readonly class ConfigProvider
     /**
      * Provide default container dependency configuration.
      *
-     * @return ServiceManagerConfiguration
+     * @return DependencyConfiguration
      */
     public function getDependencyConfig(): array
     {

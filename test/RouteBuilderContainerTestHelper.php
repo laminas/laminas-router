@@ -18,7 +18,6 @@ use LaminasTest\Router\TestAsset\DummyRouteWithParam;
 use LaminasTest\Router\TestAsset\DummyRouteWithParamBuilder;
 use LaminasTest\Router\TestAsset\Router;
 use LaminasTest\Router\TestAsset\RouterBuilder;
-use LaminasTest\Router\TestAsset\RouterFactory;
 
 use function array_merge;
 use function assert;
@@ -85,7 +84,6 @@ final class RouteBuilderContainerTestHelper
                 HttpDummyRouteWithParamBuilder::class => static fn(): HttpDummyRouteWithParamBuilder
                     => new HttpDummyRouteWithParamBuilder(),
                 RouterBuilder::class                  => static fn(): RouterBuilder => new RouterBuilder(),
-                Router::class                         => RouterFactory::class,
             ],
             $extraFactories,
         );
@@ -97,7 +95,7 @@ final class RouteBuilderContainerTestHelper
 
         $dependencies['services'] = array_merge($defaultServices, $services);
 
-        /** @psalm-suppress MixedArgumentTypeCoercion ServiceManager accepts this merged dependency configuration. */
+        /** @psalm-var ServiceManagerConfiguration $dependencies */
         return new ServiceManager($dependencies);
     }
 

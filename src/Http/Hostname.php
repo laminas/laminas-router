@@ -71,7 +71,9 @@ final readonly class Hostname implements HttpRouteInterface
                 throw new Exception\RuntimeException('Matched hostname literal contains a disallowed character');
             }
 
-            $currentPos += strlen($matches[0]);
+            $firstMatch = $matches[0] ?? '';
+
+            $currentPos += strlen($firstMatch);
 
             if (isset($matches['literal']) && $matches['literal'] !== '') {
                 $routeDefinition->addPart(new RouteDefinitionLiteral($matches['literal']));
@@ -90,13 +92,19 @@ final readonly class Hostname implements HttpRouteInterface
                     throw new Exception\RuntimeException('Found empty parameter name');
                 }
 
-                /** @psalm-var non-empty-string $nameAndDelimitersMatch['name'] */
+                $nameAndDelimitersMatch0          = $nameAndDelimitersMatch[0] ?? '';
+                $nameAndDelimitersMatchDelimiters = $nameAndDelimitersMatch['delimiters'] ?? null;
+                $nameAndDelimitersMatchName       = $nameAndDelimitersMatch['name'] ?? '';
+
+                if ($nameAndDelimitersMatchName === '') {
+                    throw new Exception\RuntimeException('Found empty parameter name');
+                }
 
                 $routeDefinition->addPart(new RouteDefinitionParameter(
-                    $nameAndDelimitersMatch['name'],
-                    $nameAndDelimitersMatch['delimiters'] ?? null
+                    $nameAndDelimitersMatchName,
+                    $nameAndDelimitersMatchDelimiters
                 ));
-                $currentPos += strlen($nameAndDelimitersMatch[0]);
+                $currentPos += strlen($nameAndDelimitersMatch0);
             } elseif ($matches['token'] === '[') {
                 $routeDefinition->assertStartOptional();
             } elseif ($matches['token'] === ']') {

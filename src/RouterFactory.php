@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Laminas\Router;
 
-use Laminas\ServiceManager\Factory\FactoryInterface;
-use Override;
 use Psr\Container\ContainerInterface;
 
 use function assert;
@@ -16,18 +14,15 @@ use function assert;
  * @psalm-internal \Laminas\Router
  * @psalm-internal \LaminasTest\Router
  */
-final readonly class RouterFactory implements FactoryInterface
+final readonly class RouterFactory
 {
     /**
      * Create and return the router
      *
      * Delegates to the HttpRouter service.
      */
-    #[Override]
     public function __invoke(
-        ContainerInterface $container,
-        string $requestedName,
-        ?array $options = null
+        ContainerInterface $container
     ): RouteStackInterface {
         $router = $container->get(RouteStackInterface::class);
 

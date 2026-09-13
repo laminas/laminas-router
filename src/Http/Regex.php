@@ -70,7 +70,13 @@ final readonly class Regex implements HttpRouteInterface
             return null;
         }
 
-        $matchedLength = strlen($matches[0]);
+        $firstMatch = $matches[0] ?? '';
+
+        if ($firstMatch === '') {
+            return null;
+        }
+
+        $matchedLength = strlen($firstMatch);
         $cleanMatches  = [];
 
         foreach ($matches as $key => $value) {

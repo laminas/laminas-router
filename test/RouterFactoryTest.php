@@ -11,6 +11,7 @@ use Laminas\Router\RouterFactory;
 use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\TestCase;
 
+/** @psalm-import-type ServiceManagerConfiguration from ServiceManager */
 class RouterFactoryTest extends TestCase
 {
     protected HttpRouterFactory|RouterFactory $factory;
@@ -24,9 +25,12 @@ class RouterFactoryTest extends TestCase
     {
         $services = RouteBuilderContainerTestHelper::createServiceManager(
             routerConfig: ['router_class' => TestAsset\Router::class],
+            extraFactories: [
+                TestAsset\Router::class => TestAsset\RouterFactory::class,
+            ]
         );
 
-        $router = $this->factory->__invoke($services, 'router');
+        $router = $this->factory->__invoke($services);
         $this->assertInstanceOf(TestAsset\Router::class, $router);
     }
 
@@ -34,17 +38,22 @@ class RouterFactoryTest extends TestCase
     {
         $services = RouteBuilderContainerTestHelper::createServiceManager(
             routerConfig: ['router_class' => TestAsset\Router::class],
+            extraFactories: [
+                TestAsset\Router::class => TestAsset\RouterFactory::class,
+            ]
         );
 
-        $router = $this->factory->__invoke($services, 'router');
+        $router = $this->factory->__invoke($services);
         $this->assertInstanceOf(TestAsset\Router::class, $router);
     }
 
     public function testDefaultConfig(): void
     {
-        $services = new ServiceManager((new ConfigProvider())->getDependencyConfig());
+        /** @psalm-var ServiceManagerConfiguration $config */
+        $config   = (new ConfigProvider())->getDependencyConfig();
+        $services = new ServiceManager($config);
 
-        $router = $this->factory->__invoke($services, 'router');
+        $router = $this->factory->__invoke($services);
         $this->assertInstanceOf(TreeRouteStack::class, $router);
     }
 }

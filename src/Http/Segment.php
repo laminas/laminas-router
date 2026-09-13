@@ -72,7 +72,8 @@ final readonly class Segment implements HttpRouteInterface
         while ($currentPos < $length) {
             preg_match('(\G(?P<literal>[^:{\[\]]*)(?P<token>[:{\[\]]|$))', $def, $matches, 0, $currentPos);
 
-            $currentPos += strlen($matches[0]);
+            $matches0    = $matches[0] ?? '';
+            $currentPos += strlen($matches0);
 
             if (isset($matches['literal']) && $matches['literal'] !== '') {
                 $routeDefinition->addPart(new RouteDefinitionLiteral($matches['literal']));
@@ -91,21 +92,31 @@ final readonly class Segment implements HttpRouteInterface
                     throw new Exception\RuntimeException('Found empty parameter name');
                 }
 
-                /** @psalm-var non-empty-string $nameAndDelimitersMatch['name'] */
+                $nameAndDelimitersMatchName       = $nameAndDelimitersMatch['name'] ?? '';
+                $nameAndDelimitersMatchDelimiters = $nameAndDelimitersMatch['delimiters'] ?? null;
+                $nameAndDelimitersMatch0          = $nameAndDelimitersMatch[0] ?? '';
+
+                if ($nameAndDelimitersMatchName === '') {
+                    throw new Exception\RuntimeException('Found empty parameter name');
+                }
+
                 $routeDefinition->addPart(new RouteDefinitionParameter(
-                    $nameAndDelimitersMatch['name'],
-                    $nameAndDelimitersMatch['delimiters'] ?? null
+                    $nameAndDelimitersMatchName,
+                    $nameAndDelimitersMatchDelimiters
                 ));
 
-                $currentPos += strlen($nameAndDelimitersMatch[0]);
+                $currentPos += strlen($nameAndDelimitersMatch0);
             } elseif ($matches['token'] === '{') {
                 if (! preg_match('(\G(?P<literal>[^}]+)\})', $def, $literalMatch, 0, $currentPos)) {
                     throw new Exception\RuntimeException('Translated literal missing closing bracket');
                 }
 
-                $currentPos += strlen($literalMatch[0]);
+                $literalMatch0       = $literalMatch[0] ?? '';
+                $literalMatchLiteral = $literalMatch['literal'] ?? '';
 
-                $routeDefinition->addPart(new RouteDefinitionTranslatedLiteral($literalMatch['literal']));
+                $currentPos += strlen($literalMatch0);
+
+                $routeDefinition->addPart(new RouteDefinitionTranslatedLiteral($literalMatchLiteral));
             } elseif ($matches['token'] === '[') {
                 $routeDefinition->assertStartOptional();
             } elseif ($matches['token'] === ']') {
@@ -297,7 +308,7 @@ final readonly class Segment implements HttpRouteInterface
             $result = preg_match('(^' . $regex . '$)', $path, $matches);
         }
 
-        if (! $result) {
+        if (! $result || ! isset($matches[0])) {
             return null;
         }
 
