@@ -146,7 +146,7 @@ readonly class TreeRouteStack extends SimpleRouteStack
     {
         /** @var mixed $name */
         $name = $options['name'] ?? '';
-        var_dump($name);
+
         if (! is_string($name) || $name === '') {
             throw new Exception\InvalidArgumentException('Missing "name" option');
         }
