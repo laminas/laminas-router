@@ -27,6 +27,7 @@ interface RouteInterface
      * Assemble the route.
      *
      * @param array<string, string|int|float|null> $params
+     * @param array<array-key, mixed> $options
      */
     public function assemble(array $params = [], array $options = []): AssembledUrl;
 

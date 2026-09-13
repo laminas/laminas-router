@@ -119,11 +119,13 @@ readonly class SimpleRouteStack implements RouteStackInterface
     /**
      * Create a route from array specifications.
      *
+     * @param array<array-key, mixed> $specs
      * @return TRoute
      * @throws Exception\InvalidArgumentException
      */
     protected function routeFromArray(string $name, array $specs): RouteInterface
     {
+        /** @var mixed $type */
         $type = $specs['type'] ?? null;
         /** @var array<string, string> $option */
         $option = $specs['options'] ?? [];
@@ -168,12 +170,15 @@ readonly class SimpleRouteStack implements RouteStackInterface
 
     /**
      * @inheritDoc
+        * @param array<string, string|int|float|null> $params
+     * @param array<array-key, mixed> $options
      * @throws Exception\InvalidArgumentException
      * @throws RuntimeException
      */
     #[Override]
     public function assemble(array $params = [], array $options = []): AssembledUrl
     {
+        /** @var mixed $name */
         $name = $options['name'] ?? null;
         if (! is_string($name) || $name === '') {
             throw new Exception\InvalidArgumentException('Missing "name" option');

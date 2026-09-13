@@ -38,7 +38,10 @@ final readonly class Chain extends TreeRouteStack implements HttpRouteInterface
         parent::__construct($routeBuilderContainer, array_reverse($routes), $defaultParams, $priority);
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     * @param array<array-key, mixed> $options
+     */
     #[Override]
     public function match(
         RequestInterface $request,
@@ -72,7 +75,11 @@ final readonly class Chain extends TreeRouteStack implements HttpRouteInterface
         return $match;
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     * @param array<string, string|int|float|null> $params
+     * @param array<array-key, mixed> $options
+     */
     #[Override]
     public function assemble(array $params = [], array $options = []): AssembledUrl
     {

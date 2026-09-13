@@ -18,6 +18,9 @@ use Psr\Container\ContainerInterface;
  */
 interface RouteBuilderContainerInterface extends ContainerInterface
 {
+    /**
+     * @param array<array-key, mixed> $options
+     */
     public function build(array $options): RouteInterface;
 
     /**

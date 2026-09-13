@@ -68,6 +68,10 @@ final readonly class Segment implements HttpRouteInterface
         $currentPos      = 0;
         $length          = strlen($def);
         $routeDefinition = new RouteDefinition();
+        /** @var array<string, string> $matches */
+        $matches = [];
+        /** @var array<string, string> $nameAndDelimitersMatch */
+        $nameAndDelimitersMatch = [];
 
         while ($currentPos < $length) {
             preg_match('(\G(?P<literal>[^:{\[\]]*)(?P<token>[:{\[\]]|$))', $def, $matches, 0, $currentPos);
@@ -107,6 +111,7 @@ final readonly class Segment implements HttpRouteInterface
 
                 $currentPos += strlen($nameAndDelimitersMatch0);
             } elseif ($matches['token'] === '{') {
+                $literalMatch = [];
                 if (! preg_match('(\G(?P<literal>[^}]+)\})', $def, $literalMatch, 0, $currentPos)) {
                     throw new Exception\RuntimeException('Translated literal missing closing bracket');
                 }
@@ -183,6 +188,7 @@ final readonly class Segment implements HttpRouteInterface
      *
      * @param list<RouteDefinitionPartInterface> $parts
      * @param array<string, string|null|int|float> $mergedParams
+     * @param array<array-key, mixed> $options
      * @throws Exception\InvalidArgumentException
      * @throws Exception\RuntimeException
      */
@@ -236,7 +242,7 @@ final readonly class Segment implements HttpRouteInterface
                     $skip = false;
                 }
 
-                $path .= SegmentPathEncoder::encode((string) $mergedParams[$part->name]);
+                $path .= SegmentPathEncoder::encode((string) ($mergedParams[$part->name] ?? ''));
 
                 $assembledParams[] = $part->name;
                 continue;
@@ -275,6 +281,7 @@ final readonly class Segment implements HttpRouteInterface
 
     /**
      * @inheritDoc
+     * @param array<array-key, mixed> $options
      * @throws Exception\RuntimeException
      */
     #[Override]
@@ -283,8 +290,9 @@ final readonly class Segment implements HttpRouteInterface
         int|null $pathOffset = null,
         array $options = []
     ): ?RouteMatchInterface {
-        $path  = $request->getUri()->getPath();
-        $regex = $this->routeRegexBuildResult->regex;
+        $path    = $request->getUri()->getPath();
+        $regex   = $this->routeRegexBuildResult->regex;
+        $matches = [];
 
         if (count($this->routeRegexBuildResult->translationKeys) > 0) {
             $translator = $this->translator;

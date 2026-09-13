@@ -342,9 +342,8 @@ final class TreeRouteStackTest extends TestCase
 
         $reflectedClass    = new ReflectionClass($stack);
         $reflectedProperty = $reflectedClass->getProperty('routes');
-        $routes            = $reflectedProperty->getValue($stack);
-
-        self::assertInstanceOf(PriorityList::class, $routes);
+        /** @var PriorityList $routes */
+        $routes = $reflectedProperty->getValue($stack);
 
         $foo = $routes->get('foo');
 

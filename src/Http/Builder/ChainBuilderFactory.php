@@ -19,6 +19,7 @@ final readonly class ChainBuilderFactory
 {
     public function __invoke(ContainerInterface $container): ChainBuilder
     {
+        /** @var RouteBuilderContainerInterface $routeBuilder */
         $routeBuilder = $container->get(RouteBuilderContainerInterface::class);
 
         assert($routeBuilder instanceof RouteBuilderContainerInterface);

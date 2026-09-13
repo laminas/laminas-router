@@ -28,12 +28,14 @@ final readonly class HttpRouterFactory
     public function __invoke(
         ContainerInterface $container
     ): RouteStackInterface {
-        $config                = $container->get(RouterConfig::class);
+        /** @var RouterConfig $config */
+        $config = $container->get(RouterConfig::class);
+        /** @var RouteBuilderContainerInterface $routeBuilderContainer */
         $routeBuilderContainer = $container->get(RouteBuilderContainerInterface::class);
 
-        assert($config instanceof RouterConfig);
         assert($routeBuilderContainer instanceof RouteBuilderContainerInterface);
 
+        /** @var RouteStackInterface $router */
         $router = $container->get($config->routerClass);
 
         assert($router instanceof RouteStackInterface);

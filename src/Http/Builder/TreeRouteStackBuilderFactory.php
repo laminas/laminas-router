@@ -19,6 +19,7 @@ final readonly class TreeRouteStackBuilderFactory
 {
     public function __invoke(ContainerInterface $container): TreeRouteStackBuilder
     {
+        /** @var RouteBuilderContainerInterface $routeBuilder */
         $routeBuilder = $container->get(RouteBuilderContainerInterface::class);
 
         assert($routeBuilder instanceof RouteBuilderContainerInterface);

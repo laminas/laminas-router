@@ -24,6 +24,7 @@ final readonly class RouterFactory
     public function __invoke(
         ContainerInterface $container
     ): RouteStackInterface {
+        /** @var RouteStackInterface $router */
         $router = $container->get(RouteStackInterface::class);
 
         assert($router instanceof RouteStackInterface);

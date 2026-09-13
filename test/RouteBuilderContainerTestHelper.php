@@ -101,6 +101,7 @@ final class RouteBuilderContainerTestHelper
 
     public static function create(): RouteBuilderContainerInterface
     {
+        // @mago-ignore analysis:mixed-assignment
         $routeBuilderContainer = self::createServiceManager()->get(RouteBuilderContainerInterface::class);
         assert($routeBuilderContainer instanceof RouteBuilderContainerInterface);
 

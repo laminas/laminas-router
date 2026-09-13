@@ -88,8 +88,12 @@ final readonly class RouteBuilderContainer implements RouteBuilderContainerInter
         ];
     }
 
+    /**
+     * @param array<array-key, mixed> $options
+     */
     public function build(array $options): RouteInterface
     {
+        /** @var mixed $type */
         $type = $options['type'] ?? '';
 
         if (! is_string($type) || $type === '') {
@@ -111,6 +115,7 @@ final readonly class RouteBuilderContainer implements RouteBuilderContainerInter
             ));
         }
 
+        /** @var mixed $builder */
         $builder = $this->container->get($serviceId);
 
         if (! $builder instanceof RouteBuilderInterface) {

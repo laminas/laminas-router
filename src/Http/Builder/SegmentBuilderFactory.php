@@ -20,10 +20,10 @@ final readonly class SegmentBuilderFactory
 {
     public function __invoke(ContainerInterface $container): SegmentBuilder
     {
+        /** @var RouterConfig $config */
         $config = $container->get(RouterConfig::class);
 
-        assert($config instanceof RouterConfig);
-
+        /** @var mixed $translator */
         $translator = $container->has($config->translator) ? $container->get($config->translator) : null;
         assert($translator instanceof TranslatorInterface || $translator === null);
 

@@ -10,9 +10,12 @@ use Laminas\Translator\TranslatorInterface;
 use Psr\Container\ContainerInterface;
 use Traversable;
 
+use function array_filter;
 use function is_array;
 use function is_string;
 use function iterator_to_array;
+
+use const ARRAY_FILTER_USE_BOTH;
 
 /**
  * @internal
@@ -24,6 +27,7 @@ final readonly class RouterConfigFactory
 {
     public function __invoke(ContainerInterface $container): RouterConfig
     {
+        /** @var mixed $config */
         $config = $container->has('config') ? $container->get('config') : [];
 
         if ($config instanceof Traversable) {
@@ -34,11 +38,13 @@ final readonly class RouterConfigFactory
             throw new RuntimeException('Config service must return an array or Traversable');
         }
 
+        /** @var mixed $routerConfig */
         $routerConfig = $config['router'] ?? [];
         if (! is_array($routerConfig)) {
             throw new RuntimeException('Config key "router" must be an array');
         }
 
+        /** @var mixed $routerClassValue */
         $routerClassValue = $routerConfig['router_class'] ?? TreeRouteStack::class;
         if (! is_string($routerClassValue)) {
             throw new RuntimeException('Config key "router.router_class" must be a class name');
@@ -46,6 +52,7 @@ final readonly class RouterConfigFactory
         /** @var class-string<RouteStackInterface> $routerClass */
         $routerClass = $routerClassValue;
 
+        /** @var mixed $routeBuildersValue */
         $routeBuildersValue = $routerConfig['route_builders'] ?? RouteBuilderContainer::defaultBuilderMap();
         if (! is_array($routeBuildersValue)) {
             throw new RuntimeException(
@@ -53,17 +60,21 @@ final readonly class RouterConfigFactory
             );
         }
 
-        foreach ($routeBuildersValue as $type => $builder) {
-            if (! is_string($type) || ! is_string($builder)) {
-                throw new RuntimeException(
-                    'Config key "router.route_builders" must contain string keys and values'
-                );
-            }
+        $invalidRouteBuilders = array_filter(
+            $routeBuildersValue,
+            static fn(mixed $builder, int|string $type): bool => ! is_string($type) || ! is_string($builder),
+            ARRAY_FILTER_USE_BOTH,
+        );
+        if ($invalidRouteBuilders !== []) {
+            throw new RuntimeException(
+                'Config key "router.route_builders" must contain string keys and values'
+            );
         }
 
         /** @var array<string, class-string<RouteBuilderInterface>> $routeBuilders */
         $routeBuilders = $routeBuildersValue;
-        $translator    = $routerConfig['translator'] ?? TranslatorInterface::class;
+        /** @var mixed $translator */
+        $translator = $routerConfig['translator'] ?? TranslatorInterface::class;
         if (! is_string($translator)) {
             throw new RuntimeException('Config key "router.translator" must be a class name');
         }

@@ -6,8 +6,6 @@ namespace Laminas\Router;
 
 use Psr\Container\ContainerInterface;
 
-use function assert;
-
 /**
  * @internal
  *
@@ -18,9 +16,8 @@ final readonly class RouteBuilderContainerFactory
 {
     public function __invoke(ContainerInterface $container): RouteBuilderContainerInterface
     {
+        /** @var RouterConfig $config */
         $config = $container->get(RouterConfig::class);
-
-        assert($config instanceof RouterConfig);
 
         return new RouteBuilderContainer($container, $config->routeBuilders);
     }

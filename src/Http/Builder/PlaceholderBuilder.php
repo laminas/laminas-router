@@ -18,6 +18,7 @@ final readonly class PlaceholderBuilder implements RouteBuilderInterface
     /** @inheritDoc */
     public function build(array $options): Placeholder
     {
+        /** @var string|null $name */
         $name = $options['name'] ?? null;
         /** @psalm-var array<string, string|int|float|null> $defaults */
         $defaults = $options['defaults'] ?? [];

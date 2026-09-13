@@ -13,6 +13,9 @@ use Psr\Http\Message\RequestInterface;
  */
 interface HttpRouteInterface extends RouteInterface
 {
+    /**
+     * @param array<array-key, mixed> $options
+     */
     public function match(
         RequestInterface $request,
         int|null $pathOffset = null,

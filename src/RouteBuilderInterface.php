@@ -15,6 +15,7 @@ namespace Laminas\Router;
 interface RouteBuilderInterface
 {
     /**
+     * @param array<array-key, mixed> $options
      * @return TRoute
      */
     public function build(array $options): RouteInterface;

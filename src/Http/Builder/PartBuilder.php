@@ -10,9 +10,6 @@ use Laminas\Router\Http\Part;
 use Laminas\Router\RouteBuilderContainerInterface;
 use Laminas\Router\RouteBuilderInterface;
 
-use function assert;
-use function is_array;
-use function is_bool;
 use function is_int;
 
 /**
@@ -29,7 +26,9 @@ final readonly class PartBuilder implements RouteBuilderInterface
     /** @inheritDoc */
     public function build(array $options): Part
     {
-        $routes       = $options['route'] ?? null;
+        /** @var array<array-key, mixed>|HttpRouteInterface|null $routes */
+        $routes = $options['route'] ?? null;
+        /** @var bool $mayTerminate */
         $mayTerminate = $options['may_terminate'] ?? false;
         /** @var array<non-empty-string, TRoute> $childRoutes */
         $childRoutes = $options['child_routes'] ?? [];
@@ -39,9 +38,6 @@ final readonly class PartBuilder implements RouteBuilderInterface
         if ($routes === null) {
             throw new Exception\InvalidArgumentException('Missing "route" in options array');
         }
-
-        assert(is_bool($mayTerminate));
-        assert(is_array($routes) || $routes instanceof HttpRouteInterface);
 
         /** @psalm-var int|null $priority */
         $priority = $options['priority'] ?? null;

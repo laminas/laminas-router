@@ -16,6 +16,7 @@ final readonly class DummyRouteWithParamBuilder implements RouteBuilderInterface
 {
     public function build(array $options): DummyRouteWithParam
     {
+        /** @var mixed $name */
         $name = $options['name'] ?? null;
         if (! is_string($name)) {
             throw new InvalidArgumentException('Missing "name" in options array');

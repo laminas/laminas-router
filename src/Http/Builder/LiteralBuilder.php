@@ -18,7 +18,9 @@ final readonly class LiteralBuilder implements RouteBuilderInterface
     /** @inheritDoc */
     public function build(array $options): Literal
     {
-        $name  = $options['name'] ?? null;
+        /** @var string|null $name */
+        $name = $options['name'] ?? null;
+        /** @var string|null $route */
         $route = $options['route'] ?? null;
         /** @psalm-var array<string, string|int|float|null> $defaults */
         $defaults = $options['defaults'] ?? [];

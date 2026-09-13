@@ -18,6 +18,7 @@ final readonly class MethodBuilder implements RouteBuilderInterface
     /** @inheritDoc */
     public function build(array $options): Method
     {
+        /** @var string|null $name */
         $name = $options['name'] ?? null;
         /** @var mixed $verb */
         $verb = $options['verb'] ?? null;

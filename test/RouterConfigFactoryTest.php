@@ -30,7 +30,7 @@ final class RouterConfigFactoryTest extends TestCase
         $config = ($this->factory)($container);
 
         self::assertSame(TreeRouteStack::class, $config->routerClass);
-        self::assertSame(LiteralBuilder::class, $config->routeBuilders['literal']);
+        self::assertSame(LiteralBuilder::class, $config->routeBuilders['literal'] ?? null);
         self::assertSame(TranslatorInterface::class, $config->translator);
     }
 
@@ -49,7 +49,7 @@ final class RouterConfigFactoryTest extends TestCase
         self::assertSame('CustomRouter', $config->routerClass);
         /** @var class-string $customBuilder */
         $customBuilder = 'CustomBuilder';
-        self::assertSame($customBuilder, $config->routeBuilders['custom']);
+        self::assertSame($customBuilder, $config->routeBuilders['custom'] ?? null);
         self::assertSame('CustomTranslator', $config->translator);
     }
 

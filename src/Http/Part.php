@@ -67,7 +67,10 @@ final readonly class Part extends TreeRouteStack implements HttpRouteInterface
         }
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     * @param array<array-key, mixed> $options
+     */
     #[Override]
     public function match(
         RequestInterface $request,
@@ -110,6 +113,8 @@ final readonly class Part extends TreeRouteStack implements HttpRouteInterface
 
     /**
      * @inheritDoc
+      * @param array<string, string|int|float|null> $params
+      * @param array<array-key, mixed> $options
      * @throws Exception\RuntimeException
      */
     #[Override]

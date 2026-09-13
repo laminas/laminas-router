@@ -18,7 +18,9 @@ final readonly class HostnameBuilder implements RouteBuilderInterface
     /** @inheritDoc */
     public function build(array $options): Hostname
     {
-        $name  = $options['name'] ?? null;
+        /** @var string|null $name */
+        $name = $options['name'] ?? null;
+        /** @var string|null $route */
         $route = $options['route'] ?? null;
         /** @psalm-var array<non-empty-string, string> $constraints */
         $constraints = $options['constraints'] ?? [];

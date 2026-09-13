@@ -309,6 +309,7 @@ final class SegmentTest extends TestCase
 
     /**
      * @param array<non-empty-string, string|null|int>|null $params
+    * @param array<array-key, mixed> $options
      */
     #[DataProvider('routeProvider')]
     public function testMatching(
@@ -339,6 +340,7 @@ final class SegmentTest extends TestCase
 
     /**
      * @param array<non-empty-string, string|null|int>|null $params
+    * @param array<array-key, mixed> $options
      */
     #[DataProvider('routeProvider')]
     public function testAssembling(
@@ -365,6 +367,7 @@ final class SegmentTest extends TestCase
 
     /**
      * @param array<non-empty-string, non-empty-string>|null $params
+     * @param array<array-key, mixed> $options
      */
     private function matchingWithL10n(
         Segment $route,
@@ -394,6 +397,7 @@ final class SegmentTest extends TestCase
 
     /**
      * @param array<non-empty-string, non-empty-string>|null $params
+     * @param array<array-key, mixed> $options
      */
     private function assemblingWithL10n(
         Segment $route,
@@ -601,7 +605,8 @@ final class SegmentTest extends TestCase
             },
         );
 
-        $services              = RouteBuilderContainerTestHelper::createServiceManager(translator: $translator);
+        $services = RouteBuilderContainerTestHelper::createServiceManager(translator: $translator);
+        // @mago-ignore analysis:mixed-assignment
         $routeBuilderContainer = $services->get(RouteBuilderContainerInterface::class);
         assert($routeBuilderContainer instanceof RouteBuilderContainerInterface);
         $route   = $routeBuilderContainer->build([
@@ -619,7 +624,8 @@ final class SegmentTest extends TestCase
 
     private function createTranslatedSegment(TranslatorInterface $translator): Segment
     {
-        $services              = RouteBuilderContainerTestHelper::createServiceManager(translator: $translator);
+        $services = RouteBuilderContainerTestHelper::createServiceManager(translator: $translator);
+        // @mago-ignore analysis:mixed-assignment
         $routeBuilderContainer = $services->get(RouteBuilderContainerInterface::class);
         assert($routeBuilderContainer instanceof RouteBuilderContainerInterface);
         $route = $routeBuilderContainer->build([

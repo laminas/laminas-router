@@ -18,6 +18,7 @@ final readonly class SchemeBuilder implements RouteBuilderInterface
     /** @inheritDoc */
     public function build(array $options): Scheme
     {
+        /** @var string|null $name */
         $name = $options['name'] ?? null;
         /** @psalm-var string|null $scheme */
         $scheme = $options['scheme'] ?? null;

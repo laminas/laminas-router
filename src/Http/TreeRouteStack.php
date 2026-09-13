@@ -19,7 +19,9 @@ use function array_key_exists;
 use function array_merge;
 use function assert;
 use function explode;
+use function is_a;
 use function is_array;
+use function is_object;
 use function is_string;
 use function sprintf;
 use function strlen;
@@ -51,14 +53,19 @@ readonly class TreeRouteStack extends SimpleRouteStack
     #[Override]
     public function addRoute(string $name, array|RouteInterface $route, ?int $priority = null): void
     {
-        if ($route instanceof RouteInterface && ! $route instanceof HttpRouteInterface) {
+        if (is_object($route) && ! is_a($route, HttpRouteInterface::class)) {
             throw new Exception\InvalidArgumentException(
                 'Only HttpRouteInterface instances or array specifications are allowed.'
             );
         }
-        if (is_array($route)) {
-            $route = $this->routeFromArray($name, $route);
+
+        if ($route instanceof HttpRouteInterface) {
+            parent::addRoute($name, $route, $priority);
+            return;
         }
+
+        /** @psalm-suppress PossiblyInvalidArgument The preceding object guard leaves an array specification. */
+        $route = $this->routeFromArray($name, $route);
 
         assert($route instanceof HttpRouteInterface);
 
@@ -67,7 +74,7 @@ readonly class TreeRouteStack extends SimpleRouteStack
 
     /**
      * @inheritDoc
-     * @param  array $specs
+    * @param  array<array-key, mixed> $specs
      * @return TRoute
      * @throws Exception\InvalidArgumentException When route definition is not an array nor traversable.
      * @throws Exception\InvalidArgumentException When chain routes are not an array nor traversable.
@@ -103,6 +110,7 @@ readonly class TreeRouteStack extends SimpleRouteStack
     /**
      * @inheritDoc
      * @param int|null $pathOffset
+     * @param array<array-key, mixed> $options
      */
     #[Override]
     public function match(
@@ -130,8 +138,13 @@ readonly class TreeRouteStack extends SimpleRouteStack
     /**
      * @return array{name : non-empty-string, child : string|null}
      */
+    /**
+     * @param array<array-key, mixed> $options
+     * @return array{name: non-empty-string, child: string|null}
+     */
     private function getRouteName(array $options): array
     {
+        /** @var mixed $name */
         $name = $options['name'] ?? '';
         if (! is_string($name) || $name === '') {
             throw new Exception\InvalidArgumentException('Missing "name" option');
@@ -151,6 +164,7 @@ readonly class TreeRouteStack extends SimpleRouteStack
 
     /**
      * @inheritDoc
+        * @param array<string, string|int|float|null> $params
      * @throws Exception\InvalidArgumentException
      * @throws Exception\RuntimeException
      */
@@ -228,6 +242,9 @@ readonly class TreeRouteStack extends SimpleRouteStack
         return $this->priority;
     }
 
+    /**
+     * @param array<array-key, mixed> $specs
+     */
     private function buildChainRoute(string $name, array $specs): RouteInterface
     {
         if (! isset($specs['chain_routes'])) {

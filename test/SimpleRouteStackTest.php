@@ -363,6 +363,9 @@ final class SimpleRouteStackTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<array-key, mixed> $routeSpec
+     */
     #[DataProvider('routeTypeProvider')]
     public function testSimpleRouteStackSetsPriorityForAllKnownRouteTypes(array $routeSpec, int $expectedPriority): void
     {

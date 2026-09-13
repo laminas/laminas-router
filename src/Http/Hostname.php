@@ -65,6 +65,10 @@ final readonly class Hostname implements HttpRouteInterface
         $currentPos      = 0;
         $length          = strlen($def);
         $routeDefinition = new RouteDefinition();
+        /** @var array<string, string> $matches */
+        $matches = [];
+        /** @var array<string, string> $nameAndDelimitersMatch */
+        $nameAndDelimitersMatch = [];
 
         while ($currentPos < $length) {
             if (! preg_match('(\G(?P<literal>[a-z0-9-.]*)(?P<token>[:\[\]]|$))', $def, $matches, 0, $currentPos)) {
@@ -198,7 +202,7 @@ final readonly class Hostname implements HttpRouteInterface
                     $skip = false;
                 }
 
-                $host .= (string) $mergedParams[$part->name];
+                $host .= (string) ($mergedParams[$part->name] ?? '');
 
                 $assembledParams[] = $part->name;
                 continue;
@@ -230,8 +234,9 @@ final readonly class Hostname implements HttpRouteInterface
         int|null $pathOffset = null,
         array $options = []
     ): ?RouteMatchInterface {
-        $host   = $request->getUri()->getHost();
-        $result = preg_match('(^' . $this->routeRegexBuildResult->regex . '$)', $host, $matches);
+        $host    = $request->getUri()->getHost();
+        $matches = [];
+        $result  = preg_match('(^' . $this->routeRegexBuildResult->regex . '$)', $host, $matches);
 
         if (! $result) {
             return null;

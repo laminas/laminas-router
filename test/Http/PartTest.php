@@ -32,7 +32,8 @@ final class PartTest extends TestCase
     public static function getRouteBuilderContainer(
         TranslatorInterface|null $translator = null,
     ): RouteBuilderContainerInterface {
-        $services              = RouteBuilderContainerTestHelper::createServiceManager(translator: $translator);
+        $services = RouteBuilderContainerTestHelper::createServiceManager(translator: $translator);
+        // @mago-ignore analysis:mixed-assignment
         $routeBuilderContainer = $services->get(RouteBuilderContainerInterface::class);
         assert($routeBuilderContainer instanceof RouteBuilderContainerInterface);
 

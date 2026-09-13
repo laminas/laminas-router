@@ -19,6 +19,7 @@ final readonly class SimpleRouteStackBuilderFactory
 {
     public function __invoke(ContainerInterface $container): SimpleRouteStackBuilder
     {
+        /** @var RouteBuilderContainerInterface $routeBuilder */
         $routeBuilder = $container->get(RouteBuilderContainerInterface::class);
 
         assert($routeBuilder instanceof RouteBuilderContainerInterface);

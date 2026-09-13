@@ -58,7 +58,8 @@ final readonly class Regex implements HttpRouteInterface
         int|null $pathOffset = null,
         array $options = []
     ): ?RouteMatchInterface {
-        $path = $request->getUri()->getPath();
+        $path    = $request->getUri()->getPath();
+        $matches = [];
 
         if ($pathOffset !== null) {
             $result = preg_match('(\G' . $this->regex . ')', $path, $matches, 0, $pathOffset);

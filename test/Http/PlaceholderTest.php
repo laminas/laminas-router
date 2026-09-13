@@ -85,6 +85,9 @@ final class PlaceholderTest extends TestCase
         );
     }
 
+    /**
+     * @param array<array-key, mixed> $additionalConfig
+     */
     #[DataProvider('placeholderProvider')]
     public function testPlaceholderDefault(array $additionalConfig, string $uri, string $expectedRouteName): void
     {

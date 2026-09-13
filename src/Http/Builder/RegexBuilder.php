@@ -18,9 +18,12 @@ final readonly class RegexBuilder implements RouteBuilderInterface
     /** @inheritDoc */
     public function build(array $options): Regex
     {
-        $name  = $options['name'] ?? null;
+        /** @var string|null $name */
+        $name = $options['name'] ?? null;
+        /** @var string|null $regex */
         $regex = $options['regex'] ?? null;
-        $spec  = $options['spec'] ?? null;
+        /** @var string|null $spec */
+        $spec = $options['spec'] ?? null;
         /** @psalm-var array<string, string|int|float|null> $defaults */
         $defaults = $options['defaults'] ?? [];
         /** @psalm-var int|null $priority */
