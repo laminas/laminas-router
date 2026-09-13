@@ -12,28 +12,23 @@ use Laminas\Router\Http\Hostname;
 use Laminas\Router\Http\HttpRouteInterface;
 use Laminas\Router\Http\TreeRouteStack;
 use Laminas\Router\PriorityList;
-use Laminas\Router\RoutePluginManager;
-use Laminas\ServiceManager\ServiceManager;
-use LaminasTest\Router\FactoryTester;
+use Laminas\Router\RouteBuilderContainerInterface;
+use LaminasTest\Router\BuilderTester;
+use LaminasTest\Router\RouteBuilderContainerTestHelper;
 use LaminasTest\Router\TestAsset\DummyRoute;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
 final class TreeRouteStackTest extends TestCase
 {
-    private function createRoutePluginManager(): RoutePluginManager
+    private function createRouteBuilderContainer(): RouteBuilderContainerInterface
     {
-        return new RoutePluginManager(new ServiceManager(), [
-            'invokables' => [
-                TestAsset\DummyRoute::class          => TestAsset\DummyRoute::class,
-                TestAsset\DummyRouteWithParam::class => TestAsset\DummyRouteWithParam::class,
-            ],
-        ]);
+        return RouteBuilderContainerTestHelper::create();
     }
 
     public function testAddRouteRequiresHttpSpecificRoute(): void
     {
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Only HttpRouteInterface instances or array specifications are allowed.');
@@ -43,12 +38,7 @@ final class TreeRouteStackTest extends TestCase
 
     public function testAddRouteViaStringRequiresHttpSpecificRoute(): void
     {
-        $plugins = new RoutePluginManager(new ServiceManager(), [
-            'invokables' => [
-                DummyRoute::class => DummyRoute::class,
-            ],
-        ]);
-        $stack   = new TreeRouteStack($plugins);
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Given route does not implement HTTP route interface');
@@ -59,40 +49,40 @@ final class TreeRouteStackTest extends TestCase
 
     public function testNoMatchWithoutUriMethod(): void
     {
-        $stack   = new TreeRouteStack($this->createRoutePluginManager());
+        $stack   = new TreeRouteStack($this->createRouteBuilderContainer());
         $request = new Request();
 
-        $this->assertNull($stack->match($request));
+        static::assertNull($stack->match($request));
     }
 
     public function testNoOffsetIsPassed(): void
     {
-        $stack = new TreeRouteStack($this->createRoutePluginManager());
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
         $stack->addRoute('foo', [
             'type' => TestAsset\DummyRoute::class,
         ]);
 
         $match = $stack->match(new Request());
 
-        self::assertNotNull($match);
-        $this->assertEquals(null, $match->getParam('offset'));
+        static::assertNotNull($match);
+        static::assertNull($match->getParam('offset'));
     }
 
     public function testAssemble(): void
     {
         /** @var TreeRouteStack<HttpRouteInterface> $stack */
-        $stack = new TreeRouteStack($this->createRoutePluginManager());
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
         $stack->addRoute('foo', new TestAsset\DummyRoute('foo'));
         $result = $stack->assemble([], ['name' => 'foo']);
 
-        $this->assertFalse($result->forceCanonical);
-        $this->assertEquals('', $result->toString());
+        static::assertFalse($result->forceCanonical);
+        static::assertSame('', $result->toString());
     }
 
     public function testAssembleCanonicalUriWithoutRequestUri(): void
     {
         /** @var TreeRouteStack<HttpRouteInterface> $stack */
-        $stack = new TreeRouteStack($this->createRoutePluginManager());
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
         $stack->addRoute('foo', new TestAsset\DummyRoute('foo'));
 
         $this->expectException(RuntimeException::class);
@@ -104,24 +94,24 @@ final class TreeRouteStackTest extends TestCase
     {
         $uri = new Uri('http://example.com:8080/');
         /** @var TreeRouteStack<HttpRouteInterface> $stack */
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
 
         $stack->addRoute('foo', new TestAsset\DummyRoute('foo'));
         $result = $stack->assemble([], ['name' => 'foo', 'force_canonical' => true, 'uri' => $uri]);
 
-        $this->assertSame(8080, $result->port);
-        $this->assertTrue($result->forceCanonical);
-        $this->assertEquals('http://example.com:8080/', $result->toString());
+        static::assertSame(8080, $result->port);
+        static::assertTrue($result->forceCanonical);
+        static::assertSame('http://example.com:8080/', $result->toString());
     }
 
     public function testAssembleCanonicalUriWithGivenUri(): void
     {
         $uri = new Uri('http://example.com:8080/');
         /** @var TreeRouteStack<HttpRouteInterface> $stack */
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
 
         $stack->addRoute('foo', new TestAsset\DummyRoute('foo'));
-        $this->assertEquals(
+        static::assertSame(
             'http://example.com:8080/',
             $stack->assemble([], ['name' => 'foo', 'uri' => $uri, 'force_canonical' => true])->toString()
         );
@@ -130,12 +120,12 @@ final class TreeRouteStackTest extends TestCase
     public function testAssembleCanonicalUriWithHostnameRoute(): void
     {
         /** @var TreeRouteStack<HttpRouteInterface> $stack */
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
         $stack->addRoute('foo', new Hostname('foo', 'example.com'));
         $uri = new Uri();
         $uri = $uri->withScheme('http');
 
-        $this->assertEquals(
+        static::assertSame(
             'http://example.com/',
             $stack->assemble([], ['name' => 'foo', 'uri' => $uri])->toString()
         );
@@ -144,7 +134,7 @@ final class TreeRouteStackTest extends TestCase
     public function testAssembleCanonicalUriWithHostnameRouteWithoutScheme(): void
     {
         /** @var TreeRouteStack<HttpRouteInterface> $stack */
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
         $stack->addRoute('foo', new Hostname('foo', 'example.com'));
         $uri = new Uri();
 
@@ -158,15 +148,15 @@ final class TreeRouteStackTest extends TestCase
         $uri = new Uri();
         $uri = $uri->withScheme('http');
         /** @var TreeRouteStack<HttpRouteInterface> $stack */
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
         $stack->addRoute('foo', new Hostname('foo', 'example.com'));
 
-        $this->assertEquals('http://example.com/', $stack->assemble([], ['name' => 'foo', 'uri' => $uri])->toString());
+        static::assertSame('http://example.com/', $stack->assemble([], ['name' => 'foo', 'uri' => $uri])->toString());
     }
 
     public function testAssembleWithQueryParams(): void
     {
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
         $stack->addRoute(
             'index',
             [
@@ -177,7 +167,7 @@ final class TreeRouteStackTest extends TestCase
             ]
         );
 
-        $this->assertEquals(
+        static::assertSame(
             '/?foo=bar',
             $stack->assemble([], ['name' => 'index', 'query' => ['foo' => 'bar']])->toString()
         );
@@ -185,7 +175,7 @@ final class TreeRouteStackTest extends TestCase
 
     public function testAssembleWithEncodedPath(): void
     {
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
         $stack->addRoute(
             'index',
             [
@@ -196,12 +186,12 @@ final class TreeRouteStackTest extends TestCase
             ]
         );
 
-        $this->assertEquals('/this%2Fthat', $stack->assemble([], ['name' => 'index'])->toString());
+        static::assertSame('/this%2Fthat', $stack->assemble([], ['name' => 'index'])->toString());
     }
 
     public function testAssembleWithEncodedPathAndQueryParams(): void
     {
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
         $stack->addRoute(
             'index',
             [
@@ -212,7 +202,7 @@ final class TreeRouteStackTest extends TestCase
             ]
         );
 
-        $this->assertEquals(
+        static::assertSame(
             '/this%2Fthat?foo=bar',
             $stack->assemble(
                 [],
@@ -226,7 +216,7 @@ final class TreeRouteStackTest extends TestCase
         $uri   = new Uri();
         $uri   = $uri->withScheme('http');
         $uri   = $uri->withHost('example.com');
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
 
         $stack->addRoute(
             'secure',
@@ -245,7 +235,7 @@ final class TreeRouteStackTest extends TestCase
                 ],
             ]
         );
-        $this->assertEquals(
+        static::assertSame(
             'https://example.com/',
             $stack->assemble([], ['name' => 'secure/index', 'uri' => $uri])->toString()
         );
@@ -253,7 +243,7 @@ final class TreeRouteStackTest extends TestCase
 
     public function testAssembleWithFragment(): void
     {
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
         $stack->addRoute(
             'index',
             [
@@ -264,12 +254,12 @@ final class TreeRouteStackTest extends TestCase
             ]
         );
 
-        $this->assertEquals('/#foobar', $stack->assemble([], ['name' => 'index', 'fragment' => 'foobar'])->toString());
+        static::assertSame('/#foobar', $stack->assemble([], ['name' => 'index', 'fragment' => 'foobar'])->toString());
     }
 
     public function testAssembleWithoutNameOption(): void
     {
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Missing "name" option');
@@ -278,7 +268,7 @@ final class TreeRouteStackTest extends TestCase
 
     public function testAssembleNonExistentRoute(): void
     {
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Route with name "foo" not found');
@@ -287,7 +277,7 @@ final class TreeRouteStackTest extends TestCase
 
     public function testAssembleNonExistentChildRoute(): void
     {
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
         $stack->addRoute(
             'index',
             [
@@ -306,24 +296,24 @@ final class TreeRouteStackTest extends TestCase
     public function testDefaultParamIsUsedForAssembling(): void
     {
         /** @var TreeRouteStack<HttpRouteInterface> $stack */
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()), defaultParams: ['foo' => 'bar']);
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer(), defaultParams: ['foo' => 'bar']);
         $stack->addRoute('foo', new TestAsset\DummyRouteWithParam('foo'));
 
-        $this->assertEquals('bar', $stack->assemble([], ['name' => 'foo'])->toString());
+        static::assertSame('bar', $stack->assemble([], ['name' => 'foo'])->toString());
     }
 
     public function testDefaultParamDoesNotOverrideParamForAssembling(): void
     {
         /** @var TreeRouteStack<HttpRouteInterface> $stack */
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()), defaultParams: ['foo' => 'baz']);
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer(), defaultParams: ['foo' => 'baz']);
         $stack->addRoute('foo', new TestAsset\DummyRouteWithParam('foo'));
 
-        $this->assertEquals('bar', $stack->assemble(['foo' => 'bar'], ['name' => 'foo'])->toString());
+        static::assertSame('bar', $stack->assemble(['foo' => 'bar'], ['name' => 'foo'])->toString());
     }
 
     public function testPriorityIsPassedToPartRoute(): void
     {
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
         $stack->addRoutes([
             'foo' => [
                 'type'          => 'Literal',
@@ -352,20 +342,19 @@ final class TreeRouteStackTest extends TestCase
 
         $reflectedClass    = new ReflectionClass($stack);
         $reflectedProperty = $reflectedClass->getProperty('routes');
-        $routes            = $reflectedProperty->getValue($stack);
-
-        self::assertInstanceOf(PriorityList::class, $routes);
+        /** @var PriorityList $routes */
+        $routes = $reflectedProperty->getValue($stack);
 
         $foo = $routes->get('foo');
 
-        self::assertNotNull($foo);
+        static::assertNotNull($foo);
 
-        $this->assertEquals(1000, $foo->getPriority());
+        static::assertSame(1000, $foo->getPriority());
     }
 
     public function testChainRouteAssemblingWithChildrenAndSecureScheme(): void
     {
-        $stack = new TreeRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new TreeRouteStack($this->createRouteBuilderContainer());
 
         $uri = new Uri();
         $uri = $uri->withHost('localhost');
@@ -391,16 +380,16 @@ final class TreeRouteStackTest extends TestCase
             ]
         );
 
-        $this->assertEquals(
+        static::assertSame(
             'https://localhost/foo/baz',
             $stack->assemble([], ['name' => 'foo/baz', 'uri' => $uri])->toString()
         );
     }
 
-    public function testFactory(): void
+    public function testBuilder(): void
     {
-        $tester = new FactoryTester();
-        $tester->testFactory(
+        $tester = new BuilderTester();
+        $tester->testBuilder(
             TreeRouteStack::class,
             [],
             []

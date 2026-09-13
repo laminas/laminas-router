@@ -23,7 +23,6 @@ use Psr\Http\Message\RequestInterface;
 use function array_key_exists;
 use function array_merge;
 use function count;
-use function is_string;
 use function preg_match;
 use function preg_quote;
 use function sprintf;
@@ -53,36 +52,10 @@ final readonly class Segment implements HttpRouteInterface
         array $constraints = [],
         private array $defaults = [],
         private int|null $priority = null,
+        private ?Translator $translator = null,
     ) {
         $this->parts                 = $this->parseRouteDefinition($route);
         $this->routeRegexBuildResult = $this->buildRegex($this->parts->getParts(), $constraints);
-    }
-
-    /**
-     * @inheritDoc
-     * @throws Exception\InvalidArgumentException
-     */
-    #[Override]
-    public static function factory(array $options = []): self
-    {
-        $name  = $options['name'] ?? null;
-        $route = $options['route'] ?? null;
-        /** @psalm-var array<non-empty-string, string> $constraints */
-        $constraints = $options['constraints'] ?? [];
-        /** @psalm-var array<string, string|int|float|null>  $defaults */
-        $defaults = $options['defaults'] ?? [];
-        /** @psalm-var int|null $priority */
-        $priority = $options['priority'] ?? null;
-
-        if (! is_string($route)) {
-            throw new Exception\InvalidArgumentException('Missing "route" in options array');
-        }
-
-        if (! is_string($name)) {
-            throw new Exception\InvalidArgumentException('Missing "name" in options array');
-        }
-
-        return new self($name, $route, $constraints, $defaults, $priority);
     }
 
     /**
@@ -95,11 +68,16 @@ final readonly class Segment implements HttpRouteInterface
         $currentPos      = 0;
         $length          = strlen($def);
         $routeDefinition = new RouteDefinition();
+        /** @var array<string, string> $matches */
+        $matches = [];
+        /** @var array<string, string> $nameAndDelimitersMatch */
+        $nameAndDelimitersMatch = [];
 
         while ($currentPos < $length) {
             preg_match('(\G(?P<literal>[^:{\[\]]*)(?P<token>[:{\[\]]|$))', $def, $matches, 0, $currentPos);
 
-            $currentPos += strlen($matches[0]);
+            $matches0    = $matches[0] ?? '';
+            $currentPos += strlen($matches0);
 
             if (isset($matches['literal']) && $matches['literal'] !== '') {
                 $routeDefinition->addPart(new RouteDefinitionLiteral($matches['literal']));
@@ -118,21 +96,32 @@ final readonly class Segment implements HttpRouteInterface
                     throw new Exception\RuntimeException('Found empty parameter name');
                 }
 
-                /** @psalm-var non-empty-string $nameAndDelimitersMatch['name'] */
+                $nameAndDelimitersMatchName       = $nameAndDelimitersMatch['name'] ?? '';
+                $nameAndDelimitersMatchDelimiters = $nameAndDelimitersMatch['delimiters'] ?? null;
+                $nameAndDelimitersMatch0          = $nameAndDelimitersMatch[0] ?? '';
+
+                if ($nameAndDelimitersMatchName === '') {
+                    throw new Exception\RuntimeException('Found empty parameter name');
+                }
+
                 $routeDefinition->addPart(new RouteDefinitionParameter(
-                    $nameAndDelimitersMatch['name'],
-                    $nameAndDelimitersMatch['delimiters'] ?? null
+                    $nameAndDelimitersMatchName,
+                    $nameAndDelimitersMatchDelimiters
                 ));
 
-                $currentPos += strlen($nameAndDelimitersMatch[0]);
+                $currentPos += strlen($nameAndDelimitersMatch0);
             } elseif ($matches['token'] === '{') {
+                $literalMatch = [];
                 if (! preg_match('(\G(?P<literal>[^}]+)\})', $def, $literalMatch, 0, $currentPos)) {
                     throw new Exception\RuntimeException('Translated literal missing closing bracket');
                 }
 
-                $currentPos += strlen($literalMatch[0]);
+                $literalMatch0       = $literalMatch[0] ?? '';
+                $literalMatchLiteral = $literalMatch['literal'] ?? '';
 
-                $routeDefinition->addPart(new RouteDefinitionTranslatedLiteral($literalMatch['literal']));
+                $currentPos += strlen($literalMatch0);
+
+                $routeDefinition->addPart(new RouteDefinitionTranslatedLiteral($literalMatchLiteral));
             } elseif ($matches['token'] === '[') {
                 $routeDefinition->assertStartOptional();
             } elseif ($matches['token'] === ']') {
@@ -199,6 +188,7 @@ final readonly class Segment implements HttpRouteInterface
      *
      * @param list<RouteDefinitionPartInterface> $parts
      * @param array<string, string|null|int|float> $mergedParams
+     * @param array<array-key, mixed> $options
      * @throws Exception\InvalidArgumentException
      * @throws Exception\RuntimeException
      */
@@ -209,13 +199,11 @@ final readonly class Segment implements HttpRouteInterface
         bool $hasChild,
         array $options,
     ): RouteAssemblyBuildResult {
-        $translator = null;
+        $translator = $this->translator;
         $textDomain = null;
         $locale     = null;
 
         if (count($this->routeRegexBuildResult->translationKeys) > 0) {
-            /** @var mixed $translator */
-            $translator = $options['translator'] ?? null;
             /** @psalm-var string $textDomain */
             $textDomain = $options['text_domain'] ?? 'default';
             /** @psalm-var string|null $locale */
@@ -254,7 +242,7 @@ final readonly class Segment implements HttpRouteInterface
                     $skip = false;
                 }
 
-                $path .= SegmentPathEncoder::encode((string) $mergedParams[$part->name]);
+                $path .= SegmentPathEncoder::encode((string) ($mergedParams[$part->name] ?? ''));
 
                 $assembledParams[] = $part->name;
                 continue;
@@ -293,6 +281,7 @@ final readonly class Segment implements HttpRouteInterface
 
     /**
      * @inheritDoc
+     * @param array<array-key, mixed> $options
      * @throws Exception\RuntimeException
      */
     #[Override]
@@ -301,11 +290,12 @@ final readonly class Segment implements HttpRouteInterface
         int|null $pathOffset = null,
         array $options = []
     ): ?RouteMatchInterface {
-        $path  = $request->getUri()->getPath();
-        $regex = $this->routeRegexBuildResult->regex;
+        $path    = $request->getUri()->getPath();
+        $regex   = $this->routeRegexBuildResult->regex;
+        $matches = [];
 
         if (count($this->routeRegexBuildResult->translationKeys) > 0) {
-            $translator = $options['translator'] ?? null;
+            $translator = $this->translator;
             /** @psalm-var string $textDomain */
             $textDomain = $options['text_domain'] ?? 'default';
             /** @psalm-var string|null $locale */
@@ -326,7 +316,7 @@ final readonly class Segment implements HttpRouteInterface
             $result = preg_match('(^' . $regex . '$)', $path, $matches);
         }
 
-        if (! $result) {
+        if (! $result || ! isset($matches[0])) {
             return null;
         }
 

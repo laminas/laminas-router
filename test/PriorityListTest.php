@@ -23,8 +23,8 @@ final class PriorityListTest extends TestCase
     {
         $this->list->insert('foo', new TestAsset\DummyRoute('foo'), 0);
 
-        $this->assertCount(1, $this->list->getAsArray());
-        $this->assertSame(['foo'], array_keys([...$this->list->getAsArray()]));
+        static::assertCount(1, $this->list->getAsArray());
+        static::assertSame(['foo'], array_keys([...$this->list->getAsArray()]));
     }
 
     public function testInsertDuplicateRouteThrowsException(): void
@@ -44,7 +44,7 @@ final class PriorityListTest extends TestCase
         $this->list->remove('foo');
         $this->list->insert('foo', $route, 0);
 
-        $this->assertEquals($route, $this->list->get('foo'));
+        static::assertSame($route, $this->list->get('foo'));
     }
 
     public function testRemove(): void
@@ -52,11 +52,11 @@ final class PriorityListTest extends TestCase
         $this->list->insert('foo', new TestAsset\DummyRoute('foo'), 0);
         $this->list->insert('bar', new TestAsset\DummyRoute('bar'), 0);
 
-        $this->assertCount(2, $this->list->getAsArray());
+        static::assertCount(2, $this->list->getAsArray());
 
         $this->list->remove('foo');
 
-        $this->assertCount(1, $this->list->getAsArray());
+        static::assertCount(1, $this->list->getAsArray());
     }
 
     public function testRemovingNonExistentRouteDoesNotYieldError(): void
@@ -70,11 +70,11 @@ final class PriorityListTest extends TestCase
         $this->list->insert('foo', new TestAsset\DummyRoute('foo'), 0);
         $this->list->insert('bar', new TestAsset\DummyRoute('bar'), 0);
 
-        $this->assertCount(2, $this->list->getAsArray());
+        static::assertCount(2, $this->list->getAsArray());
 
         $this->list->clear();
 
-        $this->assertCount(0, $this->list->getAsArray());
+        static::assertCount(0, $this->list->getAsArray());
     }
 
     public function testGet(): void
@@ -83,8 +83,8 @@ final class PriorityListTest extends TestCase
 
         $this->list->insert('foo', $route, 0);
 
-        $this->assertEquals($route, $this->list->get('foo'));
-        $this->assertNull($this->list->get('bar'));
+        static::assertSame($route, $this->list->get('foo'));
+        static::assertNull($this->list->get('bar'));
     }
 
     public function testLIFOOnly(): void
@@ -93,7 +93,7 @@ final class PriorityListTest extends TestCase
         $this->list->insert('bar', new TestAsset\DummyRoute('bar'), 0);
         $this->list->insert('baz', new TestAsset\DummyRoute('baz'), 0);
 
-        $this->assertEquals(['baz', 'bar', 'foo'], array_keys([...$this->list->getAsArray()]));
+        static::assertSame(['baz', 'bar', 'foo'], array_keys([...$this->list->getAsArray()]));
     }
 
     public function testPriorityOnly(): void
@@ -102,7 +102,7 @@ final class PriorityListTest extends TestCase
         $this->list->insert('bar', new TestAsset\DummyRoute('bar'), 0);
         $this->list->insert('baz', new TestAsset\DummyRoute('baz'), 2);
 
-        $this->assertEquals(['baz', 'foo', 'bar'], array_keys([...$this->list->getAsArray()]));
+        static::assertSame(['baz', 'foo', 'bar'], array_keys([...$this->list->getAsArray()]));
     }
 
     public function testLIFOWithPriority(): void
@@ -111,7 +111,7 @@ final class PriorityListTest extends TestCase
         $this->list->insert('bar', new TestAsset\DummyRoute('bar'), 0);
         $this->list->insert('baz', new TestAsset\DummyRoute('baz'), 1);
 
-        $this->assertEquals(['baz', 'bar', 'foo'], array_keys([...$this->list->getAsArray()]));
+        static::assertSame(['baz', 'bar', 'foo'], array_keys([...$this->list->getAsArray()]));
     }
 
     public function testPriorityWithNegativesAndNull(): void
@@ -120,6 +120,6 @@ final class PriorityListTest extends TestCase
         $this->list->insert('bar', new TestAsset\DummyRoute('bar'), 1);
         $this->list->insert('baz', new TestAsset\DummyRoute('baz'), -1);
 
-        $this->assertEquals(['bar', 'foo', 'baz'], array_keys([...$this->list->getAsArray()]));
+        static::assertSame(['bar', 'foo', 'baz'], array_keys([...$this->list->getAsArray()]));
     }
 }

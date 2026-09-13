@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Laminas\Router\Http\Builder;
 
+use Laminas\Router\RouteBuilderContainerInterface;
+use Psr\Container\ContainerInterface;
+
+use function assert;
+
 /**
  * @internal
  *
@@ -12,8 +17,13 @@ namespace Laminas\Router\Http\Builder;
  */
 final readonly class TreeRouteStackBuilderFactory
 {
-    public function __invoke(): TreeRouteStackBuilder
+    public function __invoke(ContainerInterface $container): TreeRouteStackBuilder
     {
-        return new TreeRouteStackBuilder();
+        /** @var RouteBuilderContainerInterface $routeBuilder */
+        $routeBuilder = $container->get(RouteBuilderContainerInterface::class);
+
+        assert($routeBuilder instanceof RouteBuilderContainerInterface);
+
+        return new TreeRouteStackBuilder($routeBuilder);
     }
 }

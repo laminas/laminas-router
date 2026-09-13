@@ -13,34 +13,34 @@ final class HttpRouteMatchTest extends TestCase
     {
         $match = new HttpRouteMatch(['foo' => 'bar'], 'foo');
 
-        $this->assertEquals(['foo' => 'bar'], $match->getParams());
+        static::assertSame(['foo' => 'bar'], $match->getParams());
     }
 
     public function testMatchedRouteNameIsSet(): void
     {
         $match = new HttpRouteMatch([], 'foo');
 
-        $this->assertEquals('foo', $match->getMatchedRouteName());
+        static::assertSame('foo', $match->getMatchedRouteName());
     }
 
     public function testGetParam(): void
     {
         $match = new HttpRouteMatch(['foo' => 'bar'], 'foo');
 
-        $this->assertEquals('bar', $match->getParam('foo'));
+        static::assertSame('bar', $match->getParam('foo'));
     }
 
     public function testGetNonExistentParamWithoutDefault(): void
     {
         $match = new HttpRouteMatch([], 'foo');
 
-        $this->assertNull($match->getParam('foo'));
+        static::assertNull($match->getParam('foo'));
     }
 
     public function testGetNonExistentParamWithDefault(): void
     {
         $match = new HttpRouteMatch([], 'foo');
 
-        $this->assertEquals('bar', $match->getParam('foo', 'bar'));
+        static::assertSame('bar', $match->getParam('foo', 'bar'));
     }
 }

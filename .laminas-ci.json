@@ -2,5 +2,11 @@
     "ignore_php_platform_requirements": {
         "8.5": true
     },
-    "backwardCompatibilityCheck": true
+    "backwardCompatibilityCheck": true,
+    "exclude": [
+        {
+            "name": "Mago lint",
+            "php": "8.2"
+        }
+    ]
 }

@@ -15,7 +15,7 @@ final class AssembledUrlTest extends TestCase
         $base  = new AssembledUrl(assembledParams: ['foo']);
         $other = new AssembledUrl(assembledParams: ['bar']);
 
-        $this->assertSame(['foo', 'bar'], $base->merge($other)->assembledParams);
+        static::assertSame(['foo', 'bar'], $base->merge($other)->assembledParams);
     }
 
     public function testMergeCombinesPathQueryAndScalarProperties(): void
@@ -41,21 +41,21 @@ final class AssembledUrlTest extends TestCase
 
         $merged = $base->merge($other);
 
-        $this->assertSame('/base/other', $merged->path);
-        $this->assertSame(['keep' => 'a', 'override' => 'new', 'add' => 'b'], $merged->query);
-        $this->assertSame('other.example', $merged->host);
-        $this->assertSame('https', $merged->scheme);
-        $this->assertSame('other', $merged->fragment);
-        $this->assertTrue($merged->forceCanonical);
-        $this->assertSame(443, $merged->port);
+        static::assertSame('/base/other', $merged->path);
+        static::assertSame(['keep' => 'a', 'override' => 'new', 'add' => 'b'], $merged->query);
+        static::assertSame('other.example', $merged->host);
+        static::assertSame('https', $merged->scheme);
+        static::assertSame('other', $merged->fragment);
+        static::assertTrue($merged->forceCanonical);
+        static::assertSame(443, $merged->port);
 
         $fallback = new AssembledUrl(path: '/x');
         $merged   = $base->merge($fallback);
 
-        $this->assertSame('base.example', $merged->host);
-        $this->assertSame('http', $merged->scheme);
-        $this->assertSame('base', $merged->fragment);
-        $this->assertSame(8080, $merged->port);
+        static::assertSame('base.example', $merged->host);
+        static::assertSame('http', $merged->scheme);
+        static::assertSame('base', $merged->fragment);
+        static::assertSame(8080, $merged->port);
     }
 
     public function testMergeForceCanonicalIsTrueWhenEitherSideIsTrue(): void
@@ -63,9 +63,9 @@ final class AssembledUrlTest extends TestCase
         $false = new AssembledUrl(forceCanonical: false);
         $true  = new AssembledUrl(forceCanonical: true);
 
-        $this->assertTrue($false->merge($true)->forceCanonical);
-        $this->assertTrue($true->merge($false)->forceCanonical);
-        $this->assertFalse($false->merge($false)->forceCanonical);
+        static::assertTrue($false->merge($true)->forceCanonical);
+        static::assertTrue($true->merge($false)->forceCanonical);
+        static::assertFalse($false->merge($false)->forceCanonical);
     }
 
     /**
@@ -82,7 +82,7 @@ final class AssembledUrlTest extends TestCase
             port: $port,
         );
 
-        $this->assertSame($expected, $url->toString());
+        static::assertSame($expected, $url->toString());
     }
 
     /** @return iterable<non-empty-string, array{non-empty-string, int, string}> */
@@ -107,7 +107,7 @@ final class AssembledUrlTest extends TestCase
             port: $port,
         );
 
-        $this->assertSame($expected, $url->toString());
+        static::assertSame($expected, $url->toString());
     }
 
     /** @return iterable<non-empty-string, array{non-empty-string, int, string}> */

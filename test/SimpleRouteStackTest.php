@@ -16,88 +16,82 @@ use Laminas\Router\Http\Regex;
 use Laminas\Router\Http\Scheme;
 use Laminas\Router\Http\Segment;
 use Laminas\Router\PriorityList;
+use Laminas\Router\RouteBuilderContainerInterface;
 use Laminas\Router\RouteInterface;
 use Laminas\Router\RouteMatchInterface;
-use Laminas\Router\RoutePluginManager;
 use Laminas\Router\SimpleRouteStack;
-use Laminas\ServiceManager\ServiceManager;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class SimpleRouteStackTest extends TestCase
 {
-    private function createRoutePluginManager(): RoutePluginManager
+    private function createRouteBuilderContainer(): RouteBuilderContainerInterface
     {
-        return new RoutePluginManager(new ServiceManager(), [
-            'invokables' => [
-                TestAsset\DummyRoute::class          => TestAsset\DummyRoute::class,
-                TestAsset\DummyRouteWithParam::class => TestAsset\DummyRouteWithParam::class,
-            ],
-        ]);
+        return RouteBuilderContainerTestHelper::create();
     }
 
     public function testAddRoutesAsArray(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer());
         $stack->addRoutes([
             'foo' => new TestAsset\DummyRoute('foo'),
         ]);
 
-        $this->assertInstanceOf(RouteMatchInterface::class, $stack->match(new Request()));
+        static::assertInstanceOf(RouteMatchInterface::class, $stack->match(new Request()));
     }
 
     public function testSetRoutesAsArray(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer());
         $stack->setRoutes([
             'foo' => new TestAsset\DummyRoute('foo'),
         ]);
 
-        $this->assertInstanceOf(RouteMatchInterface::class, $stack->match(new Request()));
+        static::assertInstanceOf(RouteMatchInterface::class, $stack->match(new Request()));
 
         $stack->setRoutes([]);
 
-        $this->assertNull($stack->match(new Request()));
+        static::assertNull($stack->match(new Request()));
     }
 
     public function testRemoveRouteAsArray(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer());
         $stack->addRoutes([
             'foo' => new TestAsset\DummyRoute('foo'),
         ]);
 
         $stack->removeRoute('foo');
-        $this->assertNull($stack->match(new Request()));
+        static::assertNull($stack->match(new Request()));
     }
 
     public function testAddRouteAsArrayWithoutOptions(): void
     {
-        $stack = new SimpleRouteStack($this->createRoutePluginManager());
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer());
         $stack->addRoute('foo', [
             'type' => TestAsset\DummyRoute::class,
         ]);
 
-        $this->assertInstanceOf(RouteMatchInterface::class, $stack->match(new Request()));
+        static::assertInstanceOf(RouteMatchInterface::class, $stack->match(new Request()));
     }
 
     public function testAddRouteAsArrayWithOptions(): void
     {
-        $stack = new SimpleRouteStack($this->createRoutePluginManager());
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer());
         $stack->addRoute('foo', [
             'type'    => TestAsset\DummyRoute::class,
             'options' => [],
         ]);
 
-        $this->assertInstanceOf(RouteMatchInterface::class, $stack->match(new Request()));
+        static::assertInstanceOf(RouteMatchInterface::class, $stack->match(new Request()));
     }
 
     public function testAddRouteAsArrayWithoutType(): void
     {
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer());
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Missing "type" option');
@@ -107,7 +101,7 @@ final class SimpleRouteStackTest extends TestCase
     public function testAddDuplicateRouteThrowsException(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer());
 
         $stack->addRoute('foo', new TestAsset\DummyRoute('foo'));
 
@@ -118,7 +112,7 @@ final class SimpleRouteStackTest extends TestCase
 
     public function testAddRouteAsArrayWithPriority(): void
     {
-        $stack = new SimpleRouteStack($this->createRoutePluginManager());
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer());
 
         $stack->addRoute('foo', [
             'type'     => TestAsset\DummyRouteWithParam::class,
@@ -131,14 +125,14 @@ final class SimpleRouteStackTest extends TestCase
 
         $match = $stack->match(new Request());
 
-        self::assertNotNull($match);
-        $this->assertEquals('bar', $match->getParam('foo'));
+        static::assertNotNull($match);
+        static::assertSame('bar', $match->getParam('foo'));
     }
 
     public function testAddRouteWithPriority(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack($this->createRoutePluginManager());
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer());
 
         $route = new TestAsset\DummyRouteWithParam('baz', 2);
         $stack->addRoute('baz', $route);
@@ -150,21 +144,21 @@ final class SimpleRouteStackTest extends TestCase
 
         $match = $stack->match(new Request());
 
-        self::assertNotNull($match);
-        $this->assertEquals('bar', $match->getParam('foo'));
+        static::assertNotNull($match);
+        static::assertSame('bar', $match->getParam('foo'));
     }
 
     public function testAssemble(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer());
         $stack->addRoute('foo', new TestAsset\DummyRoute('foo'));
-        $this->assertEquals('', $stack->assemble([], ['name' => 'foo'])->toString());
+        static::assertSame('', $stack->assemble([], ['name' => 'foo'])->toString());
     }
 
     public function testAssembleWithoutNameOption(): void
     {
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer());
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Missing "name" option');
@@ -173,7 +167,7 @@ final class SimpleRouteStackTest extends TestCase
 
     public function testAssembleNonExistentRoute(): void
     {
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer());
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Route with name "foo" not found');
@@ -183,66 +177,65 @@ final class SimpleRouteStackTest extends TestCase
     public function testDefaultParamIsNotAddedToMatchWhenRouteIsAnObject(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), defaultParams: ['foo' => 'bar']);
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer(), defaultParams: ['foo' => 'bar']);
         $stack->addRoute('foo', new TestAsset\DummyRoute('foo'));
 
         $match = $stack->match(new Request());
-        self::assertNotNull($match);
+        static::assertNotNull($match);
 
-        $this->assertNull($match->getParam('foo'));
+        static::assertNull($match->getParam('foo'));
     }
 
     public function testDefaultParamIsAddedToMatchWhenRouteIsAnArray(): void
     {
-        $stack = new SimpleRouteStack($this->createRoutePluginManager(), defaultParams: ['foo' => 'bar']);
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer(), defaultParams: ['foo' => 'bar']);
         $stack->addRoute('foo', [
             'type' => TestAsset\DummyRoute::class,
         ]);
 
         $match = $stack->match(new Request());
-        self::assertNotNull($match);
+        static::assertNotNull($match);
 
-        $this->assertEquals('bar', $match->getParam('foo'));
+        static::assertSame('bar', $match->getParam('foo'));
     }
 
     public function testDefaultParamDoesNotOverrideParam(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), defaultParams: ['foo' => 'bar']);
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer(), defaultParams: ['foo' => 'bar']);
         $stack->addRoute('foo', new TestAsset\DummyRouteWithParam('foo'));
 
         $match = $stack->match(new Request());
 
-        self::assertNotNull($match);
-        $this->assertEquals('bar', $match->getParam('foo'));
+        static::assertNotNull($match);
+        static::assertSame('bar', $match->getParam('foo'));
     }
 
     public function testDefaultParamIsUsedForAssembling(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), defaultParams: ['foo' => 'bar']);
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer(), defaultParams: ['foo' => 'bar']);
         $stack->addRoute('foo', new TestAsset\DummyRouteWithParam('foo'));
 
-        $this->assertEquals('bar', $stack->assemble([], ['name' => 'foo'])->toString());
+        static::assertSame('bar', $stack->assemble([], ['name' => 'foo'])->toString());
     }
 
     public function testDefaultParamDoesNotOverrideParamForAssembling(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()), defaultParams: ['foo' => 'bar']);
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer(), defaultParams: ['foo' => 'bar']);
         $stack->addRoute('foo', new TestAsset\DummyRouteWithParam('foo'));
 
-        $this->assertEquals('bar', $stack->assemble(['foo' => 'bar'], ['name' => 'foo'])->toString());
+        static::assertSame('bar', $stack->assemble(['foo' => 'bar'], ['name' => 'foo'])->toString());
     }
 
-    public function testFactory(): void
+    public function testBuilder(): void
     {
-        $tester = new FactoryTester();
-        $tester->testFactory(
+        $tester = new BuilderTester();
+        $tester->testBuilder(
             SimpleRouteStack::class,
             [],
             [
-                'route_plugins'  => new RoutePluginManager(new ServiceManager()),
                 'routes'         => [],
                 'default_params' => [],
             ]
@@ -251,42 +244,40 @@ final class SimpleRouteStackTest extends TestCase
 
     public function testGetRoutes(): void
     {
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
-        $this->assertInstanceOf(PriorityList::class, $stack->getRoutes());
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer());
+        static::assertInstanceOf(PriorityList::class, $stack->getRoutes());
     }
 
     public function testGetRouteByName(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer());
         $route = new TestAsset\DummyRoute('foo');
         $stack->addRoute('foo', $route);
 
-        $this->assertEquals($route, $stack->getRoute('foo'));
+        static::assertSame($route, $stack->getRoute('foo'));
     }
 
     public function testHasRoute(): void
     {
         /** @var SimpleRouteStack<RouteInterface> $stack */
-        $stack = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
-        $this->assertFalse($stack->hasRoute('foo'));
+        $stack = new SimpleRouteStack($this->createRouteBuilderContainer());
+        static::assertFalse($stack->hasRoute('foo'));
 
         $stack->addRoute('foo', new TestAsset\DummyRoute('foo'));
-        $this->assertTrue($stack->hasRoute('foo'));
+        static::assertTrue($stack->hasRoute('foo'));
     }
 
     /** @return array<class-string, array{0: array, 1: int}> */
     public static function routeTypeProvider(): array
     {
-        $routePlugins = new RoutePluginManager(new ServiceManager());
         return [
             Chain::class       => [
                 [
                     'type'     => Chain::class,
                     'priority' => 1,
                     'options'  => [
-                        'routes'        => [],
-                        'route_plugins' => $routePlugins,
+                        'routes' => [],
                     ],
                 ],
                 1,
@@ -372,15 +363,18 @@ final class SimpleRouteStackTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<array-key, mixed> $routeSpec
+     */
     #[DataProvider('routeTypeProvider')]
     public function testSimpleRouteStackSetsPriorityForAllKnownRouteTypes(array $routeSpec, int $expectedPriority): void
     {
         /** @var SimpleRouteStack<RouteInterface> $router */
-        $router = new SimpleRouteStack(new RoutePluginManager(new ServiceManager()));
+        $router = new SimpleRouteStack($this->createRouteBuilderContainer());
         $router->addRoute('name', $routeSpec);
 
         $route = $router->getRoute('name');
-        self::assertNotNull($route);
-        self::assertEquals($expectedPriority, $route->getPriority());
+        static::assertNotNull($route);
+        static::assertSame($expectedPriority, $route->getPriority());
     }
 }

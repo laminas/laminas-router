@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Laminas\Router\Http;
 
 use Laminas\Router\AssembledUrl;
-use Laminas\Router\Exception;
-use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\RouteMatchInterface;
 use Override;
 use Psr\Http\Message\RequestInterface;
 
-use function is_string;
 use function strlen;
 use function strpos;
 
@@ -39,31 +36,6 @@ final readonly class Literal implements HttpRouteInterface
     ) {
     }
 
-    /**
-     * @inheritDoc
-     * @throws Exception\InvalidArgumentException
-     */
-    #[Override]
-    public static function factory(array $options = []): self
-    {
-        $name  = $options['name'] ?? null;
-        $route = $options['route'] ?? null;
-        /** @psalm-var array<string, string|int|float|null> $defaults */
-        $defaults = $options['defaults'] ?? [];
-        /** @psalm-var int|null $priority */
-        $priority = $options['priority'] ?? null;
-
-        if (! is_string($route)) {
-            throw new Exception\InvalidArgumentException('Missing "route" in options array');
-        }
-
-        if (! is_string($name)) {
-            throw new Exception\InvalidArgumentException('Missing "name" in options array');
-        }
-
-        return new self($name, $route, $defaults, $priority);
-    }
-
     /** @inheritDoc */
     #[Override]
     public function match(
@@ -74,7 +46,7 @@ final readonly class Literal implements HttpRouteInterface
         $path = $request->getUri()->getPath();
 
         if ($pathOffset !== null) {
-            if ($pathOffset >= 0 && strlen($path) >= $pathOffset && ! empty($this->route)) {
+            if ($pathOffset >= 0 && strlen($path) >= $pathOffset && $this->route !== '') {
                 if (strpos($path, $this->route, $pathOffset) === $pathOffset) {
                     return new HttpRouteMatch($this->defaults, $this->name, strlen($this->route));
                 }

@@ -16,12 +16,6 @@ use Psr\Http\Message\RequestInterface;
 final class Router implements RouteStackInterface
 {
     /** @inheritDoc */
-    public static function factory(array $options = []): self
-    {
-        return new self();
-    }
-
-    /** @inheritDoc */
     public function match(RequestInterface $request): null
     {
         return null;

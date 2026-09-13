@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Laminas\Router;
 
 use function array_merge;
+use function count;
 use function http_build_query;
 use function sprintf;
 use function str_starts_with;
@@ -67,7 +68,7 @@ readonly final class AssembledUrl
             $uri .= $pathPart;
         }
 
-        if (! empty($this->query)) {
+        if (count($this->query) !== 0) {
             $uri .= '?' . http_build_query($this->query);
         }
 

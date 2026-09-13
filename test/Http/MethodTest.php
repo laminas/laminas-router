@@ -8,7 +8,7 @@ use Laminas\Diactoros\Request;
 use Laminas\Diactoros\Uri;
 use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\Method as HttpMethod;
-use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\BuilderTester;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -50,7 +50,7 @@ final class MethodTest extends TestCase
         $request = $request->withMethod($verb);
 
         $match = $route->match($request);
-        $this->assertInstanceOf(HttpRouteMatch::class, $match);
+        static::assertInstanceOf(HttpRouteMatch::class, $match);
     }
 
     public function testNoMatchWithoutVerb(): void
@@ -58,13 +58,13 @@ final class MethodTest extends TestCase
         $route   = new HttpMethod('foo', 'get');
         $request = (new Request())->withMethod('POST');
 
-        $this->assertNull($route->match($request));
+        static::assertNull($route->match($request));
     }
 
     public function testFactory(): void
     {
-        $tester = new FactoryTester();
-        $tester->testFactory(
+        $tester = new BuilderTester();
+        $tester->testBuilder(
             HttpMethod::class,
             [
                 'verb' => 'Missing "verb" in options array',

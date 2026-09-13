@@ -11,9 +11,8 @@ use Laminas\Router\Http\HttpRouteMatch;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Placeholder;
 use Laminas\Router\Http\TreeRouteStack;
-use Laminas\Router\RoutePluginManager;
-use Laminas\ServiceManager\ServiceManager;
-use LaminasTest\Router\FactoryTester;
+use LaminasTest\Router\BuilderTester;
+use LaminasTest\Router\RouteBuilderContainerTestHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -57,25 +56,25 @@ final class PlaceholderTest extends TestCase
         $request = $request->withUri(new Uri('http://example.com/'));
         $match   = $route->match($request);
 
-        $this->assertInstanceOf(HttpRouteMatch::class, $match);
+        static::assertInstanceOf(HttpRouteMatch::class, $match);
     }
 
     public function testAssembling(): void
     {
         $route = new Placeholder('foo', []);
-        $this->assertEquals('', $route->assemble()->toString());
+        static::assertSame('', $route->assemble()->toString());
     }
 
     public function testGetAssembledParams(): void
     {
         $route = new Placeholder('foo', []);
-        $this->assertEquals([], $route->assemble([])->assembledParams);
+        static::assertSame([], $route->assemble([])->assembledParams);
     }
 
     public function testFactory(): void
     {
-        $tester = new FactoryTester();
-        $tester->testFactory(
+        $tester = new BuilderTester();
+        $tester->testBuilder(
             Placeholder::class,
             [
                 'name' => 'Missing "name" in options array',
@@ -86,21 +85,22 @@ final class PlaceholderTest extends TestCase
         );
     }
 
+    /**
+     * @param array<array-key, mixed> $additionalConfig
+     */
     #[DataProvider('placeholderProvider')]
     public function testPlaceholderDefault(array $additionalConfig, string $uri, string $expectedRouteName): void
     {
         $routeConfig = array_replace_recursive(self::$routeConfig, $additionalConfig);
-        $router      = TreeRouteStack::factory([
-            'routes'        => $routeConfig,
-            'route_plugins' => new RoutePluginManager(new ServiceManager()),
-        ]);
+        /** @var array<non-empty-string|array-key, array> $routeConfig */
+        $router = new TreeRouteStack(RouteBuilderContainerTestHelper::create(), $routeConfig);
 
         $request = new Request();
         $request = $request->withUri(new Uri($uri));
         $match   = $router->match($request);
 
-        $this->assertInstanceOf(HttpRouteMatch::class, $match);
-        $this->assertEquals($expectedRouteName, $match->getMatchedRouteName());
+        static::assertInstanceOf(HttpRouteMatch::class, $match);
+        static::assertSame($expectedRouteName, $match->getMatchedRouteName());
     }
 
     /**
